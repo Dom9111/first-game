@@ -18,6 +18,8 @@
       --cloud: rgba(255, 255, 255, 0.8);
       --panel: rgba(9, 15, 27, 0.45);
       --text: #eef6ff;
+      --button: #ffd166;
+      --buttonDark: #f4b942;
     }
 
     * {
@@ -74,6 +76,64 @@
       backdrop-filter: blur(4px);
     }
 
+    .overlay {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      background: rgba(9, 15, 27, 0.45);
+      z-index: 20;
+    }
+
+    .overlay.hidden {
+      display: none;
+    }
+
+    .panel {
+      background: rgba(15, 25, 38, 0.8);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 18px;
+      padding: 26px 28px;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+    }
+
+    .panel h1 {
+      margin: 0 0 10px;
+      font-size: clamp(2rem, 4vw, 3rem);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .panel p {
+      margin: 0 0 18px;
+      color: #eaf4ff;
+      font-size: 1rem;
+    }
+
+    .play-button {
+      border: none;
+      background: linear-gradient(180deg, var(--button), var(--buttonDark));
+      color: #1d1d1d;
+      font-size: 1.1rem;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      border-radius: 999px;
+      padding: 14px 28px;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      box-shadow: 0 10px 25px rgba(244, 185, 66, 0.35);
+    }
+
+    .play-button:hover {
+      transform: translateY(-2px);
+    }
+
+    .play-button:active {
+      transform: translateY(1px);
+    }
+
     .message {
       position: absolute;
       left: 50%;
@@ -97,6 +157,15 @@
       <div>Coins: <span id="coinCount">0</span></div>
       <div>Best: <span id="bestScore">0</span></div>
     </div>
+
+    <div id="startOverlay" class="overlay">
+      <div class="panel">
+        <h1>Sky Sprint</h1>
+        <p>Jump over obstacles and collect coins.</p>
+        <button id="playButton" class="play-button">Play</button>
+      </div>
+    </div>
+
     <canvas id="gameCanvas" width="960" height="540"></canvas>
     <div class="message" id="message">Press Space to Start</div>
   </div>
@@ -108,6 +177,8 @@
     const coinEl = document.getElementById('coinCount');
     const bestEl = document.getElementById('bestScore');
     const messageEl = document.getElementById('message');
+    const startOverlay = document.getElementById('startOverlay');
+    const playButton = document.getElementById('playButton');
 
     const groundY = canvas.height - 60;
     const game = {
@@ -161,6 +232,7 @@
       messageEl.textContent = 'Run!';
       scoreEl.textContent = '0';
       coinEl.textContent = '0';
+      startOverlay.classList.add('hidden');
     }
 
     function updateBest() {
@@ -237,6 +309,10 @@
       game.running = false;
       updateBest();
       messageEl.textContent = 'Game Over! Press Space';
+      startOverlay.classList.remove('hidden');
+      playButton.textContent = 'Play Again';
+      document.querySelector('.panel h1').textContent = 'Game Over';
+      document.querySelector('.panel p').textContent = 'You crashed! Hit play to restart.';
     }
 
     function handleInput(event) {
@@ -266,7 +342,6 @@
         spawnCloud();
       }
 
-      // spawn obstacles and coins over time
       game.lastSpawn += 1;
       game.coinTimer += 1;
 
@@ -280,14 +355,12 @@
         game.coinTimer = 0;
       }
 
-      // clouds
       for (let i = clouds.length - 1; i >= 0; i--) {
         const cloud = clouds[i];
         cloud.x -= cloud.speed;
         if (cloud.x < -200) clouds.splice(i, 1);
       }
 
-      // physics
       player.vy += player.gravity;
       player.y += player.vy;
 
@@ -297,7 +370,6 @@
         player.grounded = true;
       }
 
-      // move obstacles
       for (let i = obstacles.length - 1; i >= 0; i--) {
         const obs = obstacles[i];
         obs.x -= game.speed;
@@ -313,7 +385,6 @@
         }
       }
 
-      // pickups
       for (let i = pickups.length - 1; i >= 0; i--) {
         const coin = pickups[i];
         coin.x -= game.speed;
@@ -335,7 +406,6 @@
         }
       }
 
-      // particles
       for (let i = particles.length - 1; i >= 0; i--) {
         const p = particles[i];
         p.x += p.vx;
@@ -344,7 +414,6 @@
         if (p.life <= 0) particles.splice(i, 1);
       }
 
-      // hud
       scoreEl.textContent = Math.floor(game.score);
       coinEl.textContent = game.coins;
       updateBest();
@@ -360,7 +429,6 @@
       ctx.fillStyle = sky;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // far mountains
       ctx.fillStyle = 'rgba(32, 60, 91, 0.7)';
       ctx.beginPath();
       ctx.moveTo(0, canvas.height);
@@ -372,7 +440,6 @@
       ctx.closePath();
       ctx.fill();
 
-      // clouds
       for (const cloud of clouds) {
         ctx.fillStyle = 'rgba(255,255,255,0.8)';
         ctx.beginPath();
@@ -397,28 +464,23 @@
       const px = player.x;
       const py = player.y;
 
-      // shadow
       ctx.fillStyle = 'rgba(0,0,0,0.18)';
       ctx.beginPath();
       ctx.ellipse(px + player.w / 2, groundY + 10, 22, 8, 0, 0, Math.PI * 2);
       ctx.fill();
 
-      // body
       ctx.fillStyle = player.grounded ? '#f43f5e' : '#ff6b6b';
       ctx.fillRect(px + 8, py + 10, 22, 28);
 
-      // head
       ctx.fillStyle = '#ffd6a5';
       ctx.beginPath();
       ctx.arc(px + 19, py + 8, 12, 0, Math.PI * 2);
       ctx.fill();
 
-      // face
       ctx.fillStyle = '#0d1b2a';
       ctx.fillRect(px + 13, py + 4, 4, 4);
       ctx.fillRect(px + 22, py + 4, 4, 4);
 
-      // legs
       ctx.strokeStyle = '#1d3557';
       ctx.lineWidth = 4;
       ctx.beginPath();
@@ -480,6 +542,17 @@
       requestAnimationFrame(tick);
     }
 
+    function resetOverlayText() {
+      document.querySelector('.panel h1').textContent = 'Sky Sprint';
+      document.querySelector('.panel p').textContent = 'Jump over obstacles and collect coins.';
+      playButton.textContent = 'Play';
+    }
+
+    playButton.addEventListener('click', () => {
+      resetOverlayText();
+      startGame();
+    });
+
     window.addEventListener('keydown', handleInput);
     canvas.addEventListener('pointerdown', () => {
       if (!game.running) {
@@ -489,7 +562,6 @@
       }
     });
 
-    // seed clouds
     for (let i = 0; i < 8; i++) spawnCloud();
     updateBest();
     render();
