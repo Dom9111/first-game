@@ -3,624 +3,587 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Neon Drift 3D</title>
+    <title>Brick Guide</title>
     <style>
       :root {
-        --bg1: #070b17;
-        --bg2: #101b33;
-        --panel: rgba(11, 17, 30, 0.7);
-        --panel-border: rgba(255, 255, 255, 0.12);
-        --text: #eaf6ff;
-        --accent: #6ee7ff;
-        --accent2: #a78bfa;
-        --gold: #ffd166;
-        --danger: #ff5d8f;
-        --good: #7ef29a;
+        --bg: #f5f0e6;
+        --panel: #ffffff;
+        --panel-alt: #f9f3ea;
+        --ink: #1d2333;
+        --muted: #5b6477;
+        --gold: #f5b942;
+        --red: #d94f3d;
+        --blue: #3c7ef4;
+        --green: #4aa36a;
+        --purple: #7458d6;
+        --orange: #f29b38;
+        --shadow: rgba(25, 30, 40, 0.12);
+        --line: rgba(29, 35, 51, 0.08);
       }
 
       * { box-sizing: border-box; }
 
       html, body {
         margin: 0;
-        width: 100%;
-        height: 100%;
-        background: radial-gradient(circle at top, #14213d 0%, var(--bg1) 52%, #020611 100%);
-        color: var(--text);
+        min-height: 100%;
         font-family: Arial, Helvetica, sans-serif;
-        overflow: hidden;
+        background: linear-gradient(180deg, #f8f4eb 0%, #efe6d3 100%);
+        color: var(--ink);
       }
 
       body {
-        display: grid;
-        place-items: center;
-      }
-
-      .game-shell {
-        position: relative;
-        width: min(94vw, 1000px);
-        height: min(72vw, 560px);
-        max-height: 560px;
-        border-radius: 18px;
-        overflow: hidden;
-        border: 2px solid rgba(255,255,255,0.14);
-        background: linear-gradient(180deg, #0f1b34 0%, #152a49 30%, #0f1120 100%);
-        box-shadow: 0 30px 80px rgba(0,0,0,0.5);
-      }
-
-      canvas {
-        display: block;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(180deg, #0b1020 0%, #132844 38%, #1a254b 100%);
-      }
-
-      .hud {
-        position: absolute;
-        top: 18px;
-        left: 18px;
-        right: 18px;
         display: flex;
-        justify-content: space-between;
-        gap: 12px;
-        pointer-events: none;
-        z-index: 10;
+        justify-content: center;
+        padding: 28px;
       }
 
-      .stat {
-        background: rgba(9, 15, 26, 0.42);
-        border: 1px solid var(--panel-border);
-        backdrop-filter: blur(6px);
-        border-radius: 999px;
-        padding: 8px 16px;
-        font-weight: 800;
+      .app {
+        width: min(1200px, 100%);
+        display: grid;
+        grid-template-columns: 340px minmax(0, 1fr);
+        background: rgba(255,255,255,0.65);
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        box-shadow: 0 24px 80px var(--shadow);
+        overflow: hidden;
+      }
+
+      .sidebar {
+        background: linear-gradient(180deg, #fffaf2 0%, #f7efe6 100%);
+        padding: 24px 18px;
+        border-right: 1px solid var(--line);
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 20px;
+        font-weight: 900;
         letter-spacing: 0.08em;
         text-transform: uppercase;
-        font-size: 0.72rem;
+        font-size: 0.78rem;
       }
 
-      .overlay {
+      .logo {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, var(--red), var(--gold));
+        position: relative;
+        box-shadow: inset 0 -6px 0 rgba(0,0,0,0.15);
+      }
+
+      .logo::before,
+      .logo::after {
+        content: "";
         position: absolute;
-        inset: 0;
-        display: grid;
-        place-items: center;
-        background: rgba(3, 7, 18, 0.45);
-        z-index: 20;
+        inset: 8px;
+        border-radius: 6px;
+        border: 3px solid rgba(255,255,255,0.85);
       }
 
-      .overlay.hidden { display: none; }
-
-      .panel {
-        width: min(80%, 420px);
-        background: rgba(12, 17, 30, 0.8);
-        border: 1px solid rgba(255,255,255,0.12);
-        border-radius: 22px;
-        padding: 28px 24px 22px;
-        text-align: center;
-        box-shadow: 0 22px 60px rgba(0, 0, 0, 0.45);
+      .logo::after {
+        inset: 14px 8px 8px 14px;
       }
 
-      .panel h1 {
-        margin: 0 0 12px;
-        font-size: clamp(2rem, 3.5vw, 3.3rem);
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
+      .build-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
       }
 
-      .panel p {
-        margin: 0 0 18px;
-        color: rgba(234, 246, 255, 0.9);
-        line-height: 1.5;
+      .build-item {
+        width: 100%;
+        text-align: left;
+        border: 1px solid var(--line);
+        background: var(--panel);
+        border-radius: 16px;
+        padding: 12px 14px;
+        cursor: pointer;
+        transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
+      }
+
+      .build-item:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 10px 24px rgba(0,0,0,0.06);
+      }
+
+      .build-item.active {
+        border-color: rgba(116, 88, 214, 0.45);
+        background: linear-gradient(180deg, #f4f0ff 0%, #ffffff 100%);
+      }
+
+      .build-item h3 {
+        margin: 0 0 4px;
         font-size: 1rem;
       }
 
-      .primary-btn {
-        border: none;
-        background: linear-gradient(180deg, #7dd3fc, #7c3aed);
-        color: white;
-        font-weight: 900;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        padding: 14px 26px;
-        border-radius: 999px;
-        cursor: pointer;
-        box-shadow: 0 16px 30px rgba(124, 58, 237, 0.35);
-        transition: transform 0.15s ease;
+      .meta {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        font-size: 0.72rem;
+        color: var(--muted);
       }
 
-      .primary-btn:hover { transform: translateY(-2px); }
-      .primary-btn:active { transform: translateY(1px); }
+      .content {
+        padding: 28px;
+      }
 
-      .message {
-        position: absolute;
-        left: 50%;
-        bottom: 20px;
-        transform: translateX(-50%);
-        padding: 10px 18px;
+      .hero {
+        background: linear-gradient(135deg, #ffefbf 0%, #f3d7a3 100%);
+        border: 1px solid rgba(0,0,0,0.05);
+        border-radius: 22px;
+        padding: 22px 24px;
+        display: grid;
+        grid-template-columns: minmax(0, 1.4fr) minmax(220px, 0.8fr);
+        gap: 18px;
+        align-items: center;
+      }
+
+      .hero h1 {
+        margin: 0 0 8px;
+        font-size: clamp(2rem, 3vw, 3rem);
+        line-height: 1.05;
+      }
+
+      .subtitle {
+        margin: 0;
+        color: var(--muted);
+        font-size: 1rem;
+        line-height: 1.5;
+      }
+
+      .badge-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 18px;
+      }
+
+      .badge {
+        background: rgba(255,255,255,0.65);
+        border: 1px solid rgba(0,0,0,0.06);
+        border-radius: 999px;
         font-size: 0.72rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        padding: 7px 10px;
         font-weight: 800;
-        letter-spacing: 0.12em;
+      }
+
+      .mini-visual {
+        height: 180px;
+        border-radius: 18px;
+        position: relative;
+        background: linear-gradient(180deg, #e7ecff 0%, #dbe7ff 100%);
+        border: 1px solid rgba(0,0,0,0.06);
+        overflow: hidden;
+      }
+
+      .block {
+        position: absolute;
+        border-radius: 8px;
+        box-shadow: inset 0 -8px 0 rgba(0,0,0,0.12);
+      }
+
+      .block.red { background: linear-gradient(180deg, #ff8b7b, #d94f3d); }
+      .block.blue { background: linear-gradient(180deg, #87b8ff, #3c7ef4); }
+      .block.yellow { background: linear-gradient(180deg, #ffe29a, #f5b942); }
+      .block.green { background: linear-gradient(180deg, #9ee0af, #4aa36a); }
+      .block.purple { background: linear-gradient(180deg, #bca8ff, #7458d6); }
+      .block.gray { background: linear-gradient(180deg, #dfe7f0, #8aa0b8); }
+      .block.white { background: linear-gradient(180deg, #ffffff, #dfe7f0); }
+
+      .details-grid {
+        margin-top: 24px;
+        display: grid;
+        grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.8fr);
+        gap: 20px;
+      }
+
+      .card {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        padding: 20px;
+      }
+
+      .card h2 {
+        margin: 0 0 16px;
+        font-size: 1.1rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      .steps {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .steps li {
+        display: grid;
+        grid-template-columns: 38px minmax(0, 1fr);
+        gap: 10px;
+        align-items: start;
+        background: var(--panel-alt);
+        border: 1px solid rgba(29,35,51,0.04);
+        border-radius: 14px;
+        padding: 10px 12px;
+      }
+
+      .step-number {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        font-weight: 900;
+        color: white;
+        background: linear-gradient(135deg, var(--purple), var(--blue));
+      }
+
+      .steps p {
+        margin: 0;
+        line-height: 1.5;
+        color: var(--ink);
+      }
+
+      .toolbox {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .stat-box {
+        background: var(--panel-alt);
+        border-radius: 14px;
+        border: 1px solid rgba(0,0,0,0.04);
+        padding: 14px 16px;
+      }
+
+      .stat-box strong {
+        display: block;
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--muted);
+        margin-bottom: 6px;
+      }
+
+      .stat-box span {
+        font-size: 1.1rem;
+        font-weight: 800;
+      }
+
+      .button-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 20px;
+      }
+
+      button {
+        border: none;
+        background: linear-gradient(135deg, var(--red), var(--orange));
+        color: white;
+        font-weight: 900;
+        letter-spacing: 0.08em;
         text-transform: uppercase;
         border-radius: 999px;
-        background: rgba(7, 12, 22, 0.52);
-        border: 1px solid rgba(255,255,255,0.1);
-        z-index: 12;
+        padding: 12px 16px;
+        cursor: pointer;
+      }
+
+      .secondary {
+        background: linear-gradient(135deg, var(--blue), var(--purple));
+      }
+
+      @media (max-width: 900px) {
+        .app {
+          grid-template-columns: 1fr;
+        }
+
+        .sidebar {
+          border-right: 0;
+          border-bottom: 1px solid var(--line);
+        }
+
+        .hero,
+        .details-grid {
+          grid-template-columns: 1fr;
+        }
       }
     </style>
   </head>
   <body>
-    <div class="game-shell">
-      <div class="hud">
-        <div class="stat">Score: <span id="score">0</span></div>
-        <div class="stat">Best: <span id="bestScore">0</span></div>
-      </div>
-
-      <div id="startOverlay" class="overlay">
-        <div class="panel">
-          <h1>Neon Drift</h1>
-          <p>Thread the glowing lanes, dodge barriers, and grab energy gems.</p>
-          <button id="playButton" class="primary-btn">Play</button>
+    <div class="app">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="logo"></div>
+          <span>Brick Guide</span>
         </div>
-      </div>
+        <div class="build-list" id="buildList"></div>
+      </aside>
 
-      <canvas id="gameCanvas" width="960" height="540"></canvas>
-      <div id="message" class="message">Use A/D or ← → to move</div>
+      <main class="content">
+        <section class="hero">
+          <div>
+            <h1 id="buildTitle">Mini Race Car</h1>
+            <p class="subtitle" id="buildDescription"></p>
+            <div class="badge-row" id="buildBadges"></div>
+          </div>
+          <div class="mini-visual" id="miniVisual"></div>
+        </section>
+
+        <div class="details-grid">
+          <section class="card">
+            <h2>Build Steps</h2>
+            <ol class="steps" id="stepsList"></ol>
+          </section>
+
+          <aside class="card toolbox">
+            <div class="stat-box">
+              <strong>Pieces</strong>
+              <span id="pieceCount"></span>
+            </div>
+            <div class="stat-box">
+              <strong>Difficulty</strong>
+              <span id="difficulty"></span>
+            </div>
+            <div class="stat-box">
+              <strong>Best for</strong>
+              <span id="ageGroup"></span>
+            </div>
+            <div class="stat-box">
+              <strong>Key bricks</strong>
+              <span id="keyBricks"></span>
+            </div>
+
+            <div class="button-row">
+              <button id="randomBuildBtn">Random build</button>
+              <button id="nextBuildBtn" class="secondary">Next build</button>
+            </div>
+          </aside>
+        </div>
+      </main>
     </div>
 
     <script>
-      const canvas = document.getElementById('gameCanvas');
-      const ctx = canvas.getContext('2d');
-      const scoreEl = document.getElementById('score');
-      const bestEl = document.getElementById('bestScore');
-      const messageEl = document.getElementById('message');
-      const overlay = document.getElementById('startOverlay');
-      const playButton = document.getElementById('playButton');
-
-      const lanePositions = [-1.7, 0, 1.7];
-      const roadDepth = 1500;
-
-      const state = {
-        running: false,
-        over: false,
-        score: 0,
-        best: Number(localStorage.getItem('neon-drift-best') || 0),
-        speed: 200,
-        spawnTimer: 0,
-        gemTimer: 0,
-        flash: 0,
-        lastTime: 0
-      };
-
-      const player = {
-        lane: 1,
-        targetLane: 1,
-        y: 0,
-        vy: 0,
-        jump: 0,
-        onGround: true
-      };
-
-      const obstacles = [];
-      const gems = [];
-      const sparks = [];
-
-      function clamp(value, min, max) {
-        return Math.min(max, Math.max(min, value));
-      }
-
-      function lerp(a, b, t) {
-        return a + (b - a) * t;
-      }
-
-      function updateBest() {
-        if (state.score > state.best) {
-          state.best = Math.floor(state.score);
-          localStorage.setItem('neon-drift-best', String(state.best));
+      const builds = [
+        {
+          id: 1,
+          name: 'Mini Race Car',
+          category: 'Vehicle',
+          difficulty: 'Easy',
+          age: '6+',
+          pieces: 42,
+          description: 'A fast little racer with a streamlined body, spoiler, and bold colors for a quick weekend build.',
+          bricks: '2x4 plates, 2x2 tiles, wheels, spoiler',
+          steps: [
+            'Start with a wide baseplate and add two axles evenly spaced under the chassis.',
+            'Attach the four wheels and lock them tightly so the car rolls straight.',
+            'Build the cabin using stacked tiles and a small front bumper for the sporty look.',
+            'Add the spoiler and a tiny windshield to finish the racer profile.',
+            'Test the wheels and adjust the axle alignment for a smoother roll.'
+          ],
+          colors: ['red', 'yellow', 'blue']
+        },
+        {
+          id: 2,
+          name: 'Cozy Tree House',
+          category: 'Town',
+          difficulty: 'Medium',
+          age: '7+',
+          pieces: 88,
+          description: 'A simple family tree house with a balcony, ladder, and warm roof details.',
+          bricks: '1x2 bricks, 2x3 tiles, roof slopes, round plates',
+          steps: [
+            'Build the trunk as a tall central column with a few branches on each side.',
+            'Add a sturdy floor platform above the trunk and widen it into a small deck.',
+            'Construct the walls using stacked bricks and leave one side open for the doorway.',
+            'Place the roof slopes at an angle and add a chimney for character.',
+            'Finish with a tiny ladder and a balcony railing to make it feel lived in.'
+          ],
+          colors: ['green', 'yellow', 'brown']
+        },
+        {
+          id: 3,
+          name: 'Space Rover',
+          category: 'Adventure',
+          difficulty: 'Medium',
+          age: '8+',
+          pieces: 96,
+          description: 'A moon rover with a big front light, storage pod, and durable wheel design.',
+          bricks: 'round tiles, dark bricks, axle pieces, angled panels',
+          steps: [
+            'Create the chassis with a wide rectangular base and add the wheel mounts at all corners.',
+            'Attach the front telescope arm and add a bright light panel to the front section.',
+            'Build a cargo box on the back and connect it to the main body using small plates.',
+            'Add side handles and antenna detail to make the rover look mission-ready.',
+            'Check that both sides are balanced before displaying it proudly.'
+          ],
+          colors: ['blue', 'gray', 'white']
+        },
+        {
+          id: 4,
+          name: 'Pirate Ship',
+          category: 'Fantasy',
+          difficulty: 'Hard',
+          age: '9+',
+          pieces: 121,
+          description: 'A compact pirate ship with sails, a deck, and a hidden chest of treasure.',
+          bricks: 'slope bricks, sails, mast pieces, anchor',
+          steps: [
+            'Lay down the hull with a pointed front and wider back so the ship has a classic shape.',
+            'Build the deck and add a tiny captain cabin close to the rear.',
+            'Place the mast and secure two sail pieces using thin bars and clips.',
+            'Add the anchor, flag, and a small treasure chest to the deck.',
+            'Make sure the ship can stand level before displaying it on a shelf.'
+          ],
+          colors: ['red', 'gold', 'blue']
+        },
+        {
+          id: 5,
+          name: 'Robot Helper',
+          category: 'Tech',
+          difficulty: 'Easy',
+          age: '6+',
+          pieces: 58,
+          description: 'A cheerful little robot with moving arms, bright eyes, and a helpful pose.',
+          bricks: 'round plates, tiles, hinge pieces, technic bars',
+          steps: [
+            'Build the body as a compact box with a large front panel for the face.',
+            'Add the eyes and a cheerful display panel using bright tiles.',
+            'Attach two arm pieces with simple hinges so they swing naturally.',
+            'Create the legs using stacked plates for a sturdy stance.',
+            'Finish with a tiny accessory tray or side panel for the helper look.'
+          ],
+          colors: ['blue', 'yellow', 'white']
         }
-        bestEl.textContent = state.best;
-      }
+      ];
 
-      function resetGame() {
-        state.running = true;
-        state.over = false;
-        state.score = 0;
-        state.speed = 220;
-        state.spawnTimer = 0;
-        state.gemTimer = 0;
-        state.flash = 0;
-        obstacles.length = 0;
-        gems.length = 0;
-        sparks.length = 0;
-        player.lane = 1;
-        player.targetLane = 1;
-        player.y = 0;
-        player.vy = 0;
-        player.jump = 0;
-        player.onGround = true;
-        scoreEl.textContent = '0';
-        messageEl.textContent = 'Stay alive';
-        overlay.classList.add('hidden');
-      }
+      const buildList = document.getElementById('buildList');
+      const buildTitle = document.getElementById('buildTitle');
+      const buildDescription = document.getElementById('buildDescription');
+      const buildBadges = document.getElementById('buildBadges');
+      const stepsList = document.getElementById('stepsList');
+      const pieceCount = document.getElementById('pieceCount');
+      const difficulty = document.getElementById('difficulty');
+      const ageGroup = document.getElementById('ageGroup');
+      const keyBricks = document.getElementById('keyBricks');
+      const miniVisual = document.getElementById('miniVisual');
+      const randomBuildBtn = document.getElementById('randomBuildBtn');
+      const nextBuildBtn = document.getElementById('nextBuildBtn');
 
-      function endGame() {
-        state.running = false;
-        state.over = true;
-        updateBest();
-        messageEl.textContent = 'Crashed! Press Space';
-        overlay.classList.remove('hidden');
-        document.querySelector('.panel h1').textContent = 'Game Over';
-        document.querySelector('.panel p').textContent = 'You clipped the traffic. Try another run.';
-        playButton.textContent = 'Play Again';
-      }
+      let selectedIndex = 0;
 
-      function resetOverlayText() {
-        document.querySelector('.panel h1').textContent = 'Neon Drift';
-        document.querySelector('.panel p').textContent = 'Thread the glowing lanes, dodge barriers, and grab energy gems.';
-        playButton.textContent = 'Play';
-      }
+      function renderBuilds() {
+        buildList.innerHTML = '';
 
-      function spawnObstacle() {
-        const lane = Math.floor(Math.random() * 3);
-        const kind = Math.random() < 0.7 ? 'block' : 'barrier';
-        obstacles.push({
-          lane,
-          z: roadDepth + 60,
-          kind,
-          width: 1.35,
-          height: kind === 'block' ? 1.7 : 2.2,
-          depth: 1.4
+        builds.forEach((build, index) => {
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'build-item' + (index === selectedIndex ? ' active' : '');
+          button.innerHTML = `
+            <h3>${build.name}</h3>
+            <div class="meta">
+              <span>${build.category}</span>
+              <span>•</span>
+              <span>${build.pieces} pieces</span>
+            </div>
+          `;
+          button.addEventListener('click', () => {
+            selectedIndex = index;
+            renderSelectedBuild();
+          });
+          buildList.appendChild(button);
         });
       }
 
-      function spawnGem() {
-        const lane = Math.floor(Math.random() * 3);
-        gems.push({ lane, z: roadDepth + 100, collected: false });
-      }
+      function renderMiniVisual(colors) {
+        miniVisual.innerHTML = '';
 
-      function addBurst(x, y, color, amount = 18) {
-        for (let i = 0; i < amount; i++) {
-          sparks.push({
-            x,
-            y,
-            vx: (Math.random() - 0.5) * 7,
-            vy: (Math.random() - 0.5) * 7,
-            life: 20 + Math.random() * 18,
-            size: 2 + Math.random() * 4,
-            color
-          });
-        }
-      }
-
-      function performJump() {
-        if (!state.running || state.over) return;
-        if (player.onGround) {
-          player.vy = 620;
-          player.onGround = false;
-        }
-      }
-
-      function setLane(direction) {
-        if (!state.running || state.over) return;
-        player.targetLane = clamp(player.targetLane + direction, 0, 2);
-      }
-
-      function handleInput(event) {
-        if (event.code === 'Space' || event.code === 'ArrowUp' || event.code === 'KeyW') {
-          event.preventDefault();
-          if (!state.running) {
-            resetOverlayText();
-            resetGame();
-          } else {
-            performJump();
-          }
-          return;
-        }
-
-        if (event.code === 'ArrowLeft' || event.code === 'KeyA') {
-          event.preventDefault();
-          setLane(-1);
-        }
-
-        if (event.code === 'ArrowRight' || event.code === 'KeyD') {
-          event.preventDefault();
-          setLane(1);
-        }
-      }
-
-      function projectWorld(x, y, z) {
-        const horizonY = 170;
-        const scale = 1 - z / (roadDepth + 480);
-        const screenX = canvas.width / 2 + x * (160 + scale * 360);
-        const screenY = lerp(horizonY, canvas.height - 40, 1 - scale);
-        return {
-          x: screenX,
-          y: screenY - y * (120 + scale * 260),
-          scale
+        const paletteMap = {
+          red: 'red',
+          blue: 'blue',
+          yellow: 'yellow',
+          green: 'green',
+          purple: 'purple',
+          gray: 'gray',
+          white: 'white',
+          brown: 'red'
         };
+
+        const shapes = [
+          { left: 22, top: 62, size: 42, color: paletteMap[colors[0]] || 'red', type: 'block' },
+          { left: 64, top: 46, size: 42, color: paletteMap[colors[1]] || 'yellow', type: 'block' },
+          { left: 104, top: 62, size: 42, color: paletteMap[colors[2]] || 'blue', type: 'block' },
+          { left: 54, top: 98, size: 24, color: 'yellow', type: 'block' },
+          { left: 92, top: 98, size: 24, color: 'purple', type: 'block' }
+        ];
+
+        shapes.forEach(item => {
+          const block = document.createElement('div');
+          block.className = `block ${item.color}`;
+          block.style.left = item.left + 'px';
+          block.style.top = item.top + 'px';
+          block.style.width = item.size + 'px';
+          block.style.height = item.size + 'px';
+          miniVisual.appendChild(block);
+        });
       }
 
-      function drawBackground() {
-        const sky = ctx.createLinearGradient(0, 0, 0, canvas.height);
-        sky.addColorStop(0, '#070b17');
-        sky.addColorStop(0.22, '#132849');
-        sky.addColorStop(0.58, '#20406e');
-        sky.addColorStop(1, '#0d1425');
-        ctx.fillStyle = sky;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      function renderSelectedBuild() {
+        const build = builds[selectedIndex];
+        buildTitle.textContent = build.name;
+        buildDescription.textContent = build.description;
 
-        const moonX = canvas.width * 0.76;
-        const moonY = 80;
-        const moonGlow = ctx.createRadialGradient(moonX, moonY, 18, moonX, moonY, 140);
-        moonGlow.addColorStop(0, 'rgba(255,255,255,0.96)');
-        moonGlow.addColorStop(0.2, 'rgba(191,224,255,0.8)');
-        moonGlow.addColorStop(1, 'rgba(117,163,255,0)');
-        ctx.fillStyle = moonGlow;
-        ctx.fillRect(moonX - 110, moonY - 110, 220, 220);
+        buildBadges.innerHTML = '';
+        const badges = [build.category, build.difficulty, `${build.age}`];
+        badges.forEach(text => {
+          const badge = document.createElement('span');
+          badge.className = 'badge';
+          badge.textContent = text;
+          buildBadges.appendChild(badge);
+        });
 
-        ctx.fillStyle = 'rgba(150, 175, 255, 0.14)';
-        for (let i = 0; i < 60; i++) {
-          const x = ((i * 79) % canvas.width) + (i % 2) * 10;
-          const y = ((i * 53) % 200) + 8;
-          ctx.fillRect(x, y, 2, 2);
-        }
+        stepsList.innerHTML = '';
+        build.steps.forEach((step, index) => {
+          const li = document.createElement('li');
+          li.innerHTML = `
+            <div class="step-number">${index + 1}</div>
+            <p>${step}</p>
+          `;
+          stepsList.appendChild(li);
+        });
 
-        for (let i = 0; i < 6; i++) {
-          const x = i * 170 + 60;
-          const mountainHeight = 70 + (i % 2) * 30;
-          ctx.fillStyle = i % 2 ? 'rgba(24,35,58,0.8)' : 'rgba(18,27,44,0.8)';
-          ctx.beginPath();
-          ctx.moveTo(x, 260);
-          ctx.lineTo(x + 85, 190 - mountainHeight);
-          ctx.lineTo(x + 160, 260);
-          ctx.closePath();
-          ctx.fill();
-        }
+        pieceCount.textContent = `${build.pieces} pieces`;
+        difficulty.textContent = build.difficulty;
+        ageGroup.textContent = build.age;
+        keyBricks.textContent = build.bricks;
+
+        renderMiniVisual(build.colors);
+        renderBuilds();
       }
 
-      function drawRoad() {
-        const centerX = canvas.width / 2;
-        const horizonY = 170;
-
-        for (let i = 0; i < 32; i++) {
-          const t1 = i / 32;
-          const t2 = (i + 1) / 32;
-          const y1 = lerp(horizonY, canvas.height, t1 * t1);
-          const y2 = lerp(horizonY, canvas.height, t2 * t2);
-          const width1 = lerp(95, canvas.width * 0.78, t1);
-          const width2 = lerp(95, canvas.width * 0.78, t2);
-
-          ctx.fillStyle = i % 2 === 0 ? '#121f36' : '#1b2c4b';
-          ctx.beginPath();
-          ctx.moveTo(centerX - width1 / 2, y1);
-          ctx.lineTo(centerX + width1 / 2, y1);
-          ctx.lineTo(centerX + width2 / 2, y2);
-          ctx.lineTo(centerX - width2 / 2, y2);
-          ctx.closePath();
-          ctx.fill();
-        }
-
-        for (let i = 0; i < 22; i++) {
-          const t = i / 22;
-          const y = lerp(horizonY, canvas.height, t * t);
-          const width = lerp(60, canvas.width * 0.62, t);
-          ctx.strokeStyle = 'rgba(255,255,255,0.24)';
-          ctx.lineWidth = 2;
-          ctx.beginPath();
-          ctx.moveTo(centerX - width / 2, y);
-          ctx.lineTo(centerX + width / 2, y);
-          ctx.stroke();
-        }
-
-        for (let i = 0; i < 7; i++) {
-          const x = centerX - 170 + i * 60;
-          const laneLineY = 220 + i * 48;
-          ctx.strokeStyle = 'rgba(255,255,255,0.20)';
-          ctx.beginPath();
-          ctx.moveTo(x, laneLineY);
-          ctx.lineTo(x + 20, laneLineY + 28);
-          ctx.stroke();
-        }
-      }
-
-      function drawObstacle(obs) {
-        const laneOffset = lanePositions[obs.lane];
-        const norm = 1 - obs.z / roadDepth;
-        const screenX = canvas.width / 2 + laneOffset * (150 + norm * 240);
-        const width = 34 + norm * 74;
-        const height = 32 + norm * 72;
-        const y = lerp(180, canvas.height - 70, 1 - norm * 0.92);
-
-        const color = obs.kind === 'block' ? '#ff5d8f' : '#6ee7ff';
-        ctx.fillStyle = color;
-        ctx.fillRect(screenX - width / 2, y - height, width, height);
-
-        ctx.fillStyle = 'rgba(255,255,255,0.18)';
-        ctx.fillRect(screenX - width / 2 + 6, y - height + 10, width - 12, 8);
-
-        ctx.strokeStyle = 'rgba(0,0,0,0.25)';
-        ctx.lineWidth = 3;
-        ctx.strokeRect(screenX - width / 2, y - height, width, height);
-      }
-
-      function drawGem(gem) {
-        const laneOffset = lanePositions[gem.lane];
-        const norm = 1 - gem.z / roadDepth;
-        const x = canvas.width / 2 + laneOffset * (150 + norm * 240);
-        const y = lerp(190, canvas.height - 100, 1 - norm * 0.92);
-        const size = 10 + norm * 18;
-
-        ctx.save();
-        ctx.translate(x, y);
-        ctx.rotate((performance.now() * 0.01) % (Math.PI * 2));
-        ctx.fillStyle = '#ffd166';
-        ctx.beginPath();
-        for (let i = 0; i < 4; i++) {
-          const angle = ((Math.PI / 2) * i) + Math.PI / 4;
-          ctx.lineTo(Math.cos(angle) * size, Math.sin(angle) * size);
-        }
-        ctx.closePath();
-        ctx.fill();
-        ctx.restore();
-      }
-
-      function drawPlayer() {
-        const targetX = canvas.width / 2 + player.lane * 150;
-        const baseY = canvas.height - 72;
-        const bob = Math.sin(performance.now() * 0.012) * 3;
-        const lift = player.jump * 0.8;
-
-        ctx.fillStyle = 'rgba(0,0,0,0.25)';
-        ctx.beginPath();
-        ctx.ellipse(targetX, baseY + 18, 40, 12, 0, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.fillStyle = '#7c3aed';
-        ctx.fillRect(targetX - 28, baseY - 30 - lift + bob, 56, 24);
-
-        ctx.fillStyle = '#7dd3fc';
-        ctx.fillRect(targetX - 20, baseY - 52 - lift + bob, 40, 26);
-
-        ctx.fillStyle = '#e2e8f0';
-        ctx.fillRect(targetX - 18, baseY - 57 - lift + bob, 12, 10);
-        ctx.fillRect(targetX + 6, baseY - 57 - lift + bob, 12, 10);
-
-        ctx.fillStyle = '#111827';
-        ctx.fillRect(targetX - 14, baseY - 46 - lift + bob, 8, 8);
-        ctx.fillRect(targetX + 6, baseY - 46 - lift + bob, 8, 8);
-
-        ctx.strokeStyle = '#f8fafc';
-        ctx.lineWidth = 4;
-        ctx.beginPath();
-        ctx.moveTo(targetX - 16, baseY - 4 - lift + bob);
-        ctx.lineTo(targetX - 28, baseY + 18 - lift + bob);
-        ctx.moveTo(targetX + 16, baseY - 4 - lift + bob);
-        ctx.lineTo(targetX + 28, baseY + 18 - lift + bob);
-        ctx.stroke();
-      }
-
-      function drawParticles() {
-        for (const particle of sparks) {
-          ctx.globalAlpha = Math.max(0, particle.life / 30);
-          ctx.fillStyle = particle.color;
-          ctx.fillRect(particle.x, particle.y, particle.size, particle.size);
-        }
-        ctx.globalAlpha = 1;
-      }
-
-      function render() {
-        drawBackground();
-        drawRoad();
-
-        for (const gem of gems) drawGem(gem);
-        for (const obs of obstacles) drawObstacle(obs);
-        drawParticles();
-        drawPlayer();
-      }
-
-      function update(dt) {
-        state.score += dt * 18;
-        state.speed += dt * 4.5;
-        state.spawnTimer += dt;
-        state.gemTimer += dt;
-
-        player.lane = lerp(player.lane, player.targetLane, 0.18);
-
-        if (state.spawnTimer > 0.78) {
-          spawnObstacle();
-          state.spawnTimer = 0;
-        }
-
-        if (state.gemTimer > 1.2) {
-          spawnGem();
-          state.gemTimer = 0;
-        }
-
-        if (!player.onGround) {
-          player.vy -= 1200 * dt;
-          player.jump += player.vy * dt;
-          if (player.jump <= 0) {
-            player.jump = 0;
-            player.vy = 0;
-            player.onGround = true;
-          }
-        }
-
-        for (let i = obstacles.length - 1; i >= 0; i--) {
-          const obs = obstacles[i];
-          obs.z -= state.speed * dt;
-
-          const sameLane = Math.abs(obs.lane - player.targetLane) < 0.55;
-          const nearPlayer = obs.z < 120 && obs.z > 0;
-          if (sameLane && nearPlayer && player.jump < 0.9) {
-            addBurst(canvas.width / 2 + player.lane * 150, canvas.height - 100, '#ff5d8f', 30);
-            endGame();
-            return;
-          }
-
-          if (obs.z < -80) obstacles.splice(i, 1);
-        }
-
-        for (let i = gems.length - 1; i >= 0; i--) {
-          const gem = gems[i];
-          gem.z -= state.speed * dt;
-
-          const sameLane = Math.abs(gem.lane - player.targetLane) < 0.55;
-          const nearPlayer = gem.z < 120 && gem.z > 0;
-
-          if (sameLane && nearPlayer) {
-            state.score += 30;
-            addBurst(canvas.width / 2 + player.lane * 150, canvas.height - 120, '#ffd166', 14);
-            gems.splice(i, 1);
-            continue;
-          }
-
-          if (gem.z < -80) gems.splice(i, 1);
-        }
-
-        for (let i = sparks.length - 1; i >= 0; i--) {
-          const spark = sparks[i];
-          spark.x += spark.vx;
-          spark.y += spark.vy;
-          spark.life -= 1;
-          if (spark.life <= 0) sparks.splice(i, 1);
-        }
-
-        scoreEl.textContent = Math.floor(state.score);
-        updateBest();
-      }
-
-      function loop(timestamp) {
-        const dt = Math.min((timestamp - (state.lastTime || timestamp)) / 1000, 0.033);
-        state.lastTime = timestamp;
-
-        if (state.running) update(dt);
-        render();
-        requestAnimationFrame(loop);
-      }
-
-      playButton.addEventListener('click', () => {
-        resetOverlayText();
-        resetGame();
+      randomBuildBtn.addEventListener('click', () => {
+        const random = Math.floor(Math.random() * builds.length);
+        selectedIndex = random;
+        renderSelectedBuild();
       });
 
-      window.addEventListener('keydown', handleInput);
-      window.addEventListener('pointerdown', (event) => {
-        if (event.clientX < canvas.width / 2) {
-          setLane(-1);
-        } else {
-          setLane(1);
-        }
-
-        if (!state.running) {
-          resetOverlayText();
-          resetGame();
-        } else {
-          performJump();
-        }
+      nextBuildBtn.addEventListener('click', () => {
+        selectedIndex = (selectedIndex + 1) % builds.length;
+        renderSelectedBuild();
       });
 
-      updateBest();
-      render();
-      requestAnimationFrame(loop);
+      renderSelectedBuild();
     </script>
   </body>
 </html>
