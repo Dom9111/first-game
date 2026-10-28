@@ -6,13 +6,13 @@
     <title>Mom Hits Counter</title>
     <style>
       :root {
-        --bg1: #fff0f3;
-        --bg2: #ffd6df;
-        --card: rgba(255,255,255,0.78);
-        --ink: #2a1c2a;
+        --bg1: #fff1f6;
+        --bg2: #ffd7e5;
+        --card: rgba(255,255,255,0.8);
+        --ink: #2d1c2d;
         --accent: #d94f7c;
         --accent2: #8a4de0;
-        --line: rgba(42,28,42,0.08);
+        --line: rgba(45, 28, 45, 0.08);
       }
 
       * { box-sizing: border-box; }
@@ -28,25 +28,33 @@
       }
 
       .app {
-        width: min(420px, 90vw);
+        width: min(440px, 90vw);
         background: var(--card);
         border: 1px solid var(--line);
-        border-radius: 28px;
-        box-shadow: 0 30px 70px rgba(80, 35, 59, 0.15);
-        padding: 28px 24px;
+        border-radius: 30px;
+        box-shadow: 0 30px 80px rgba(80, 35, 59, 0.12);
+        padding: 28px 22px 24px;
         text-align: center;
       }
 
       h1 {
-        margin: 0 0 14px;
+        margin: 0 0 12px;
         font-size: clamp(1.8rem, 5vw, 2.5rem);
         letter-spacing: -0.04em;
       }
 
       .count {
-        font-size: clamp(3rem, 10vw, 5rem);
+        font-size: clamp(4rem, 12vw, 6rem);
         font-weight: 900;
-        margin: 18px 0 22px;
+        line-height: 1;
+        margin: 18px 0 20px;
+      }
+
+      .button-row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px;
       }
 
       button {
@@ -55,18 +63,22 @@
         border-radius: 999px;
         background: linear-gradient(135deg, var(--accent), var(--accent2));
         color: white;
-        font-size: 1rem;
+        font-size: 0.9rem;
         font-weight: 900;
         letter-spacing: 0.08em;
         text-transform: uppercase;
-        padding: 16px 28px;
-        box-shadow: 0 14px 28px rgba(134, 83, 170, 0.25);
+        padding: 15px 24px;
+        box-shadow: 0 14px 28px rgba(134, 83, 170, 0.2);
+      }
+
+      .reset {
+        background: linear-gradient(135deg, #555c73, #7c6f98);
       }
 
       .sub {
-        margin-top: 18px;
-        font-size: 0.95rem;
-        color: rgba(42,28,42,0.8);
+        margin-top: 16px;
+        font-size: 0.92rem;
+        color: rgba(45, 28, 45, 0.75);
       }
     </style>
   </head>
@@ -74,18 +86,33 @@
     <div class="app">
       <h1>Every time mom hits you</h1>
       <div class="count" id="count">0</div>
-      <button id="hitBtn" type="button">Hit</button>
+
+      <div class="button-row">
+        <button id="hitBtn" type="button">Hit</button>
+        <button id="resetBtn" class="reset" type="button">Reset</button>
+      </div>
+
       <div class="sub">Tap the button to count the hits.</div>
     </div>
 
     <script>
       const countEl = document.getElementById('count');
       const hitBtn = document.getElementById('hitBtn');
+      const resetBtn = document.getElementById('resetBtn');
       let count = 0;
+
+      function updateCount() {
+        countEl.textContent = count;
+      }
 
       hitBtn.addEventListener('click', () => {
         count += 1;
-        countEl.textContent = count;
+        updateCount();
+      });
+
+      resetBtn.addEventListener('click', () => {
+        count = 0;
+        updateCount();
       });
     </script>
   </body>
