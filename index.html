@@ -3,485 +3,673 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sketch Quest</title>
+    <title>Blender Style 3D Space</title>
     <style>
       :root {
-        --bg1: #f7f2ea;
-        --bg2: #e9d6bc;
-        --ink: #1d2432;
-        --muted: #5b6475;
-        --card: rgba(255,255,255,0.8);
-        --line: rgba(29,35,51,0.08);
-        --easy: #4aa36a;
-        --medium: #f5b942;
-        --hard: #d94f3d;
-        --purple: #7458d6;
-        --blue: #3c7ef4;
-        --shadow: rgba(25, 30, 40, 0.12);
+        --bg: #0b1020;
+        --bg-2: #111b2f;
+        --panel: rgba(17, 24, 39, 0.9);
+        --panel-2: rgba(23, 32, 47, 0.96);
+        --line: rgba(148, 163, 184, 0.18);
+        --text: #edf3ff;
+        --muted: #9aa8bf;
+        --accent: #67e8f9;
+        --accent-2: #8b5cf6;
+        --orange: #f59e0b;
+        --green: #34d399;
+        --red: #fb7185;
+        --shadow: rgba(16, 20, 32, 0.55);
       }
 
       * { box-sizing: border-box; }
 
       html, body {
         margin: 0;
-        min-height: 100%;
-        font-family: Arial, Helvetica, sans-serif;
-        background: linear-gradient(180deg, var(--bg1) 0%, var(--bg2) 100%);
-        color: var(--ink);
+        width: 100%;
+        height: 100%;
+        font-family: Inter, "Segoe UI", sans-serif;
+        background:
+          radial-gradient(circle at 20% 20%, rgba(103, 232, 249, 0.18), transparent 25%),
+          radial-gradient(circle at 80% 0%, rgba(139, 92, 246, 0.2), transparent 22%),
+          linear-gradient(180deg, var(--bg) 0%, #070d1b 100%);
+        color: var(--text);
       }
 
       body {
         display: grid;
         place-items: center;
         min-height: 100vh;
-        padding: 28px;
+        padding: 24px;
       }
 
       .app {
-        width: min(1100px, 100%);
-        border-radius: 28px;
-        background: rgba(255,255,255,0.72);
-        border: 1px solid var(--line);
-        box-shadow: 0 30px 90px var(--shadow);
+        width: min(1400px, 100%);
+        height: min(880px, 92vh);
+        display: flex;
+        flex-direction: column;
+        border-radius: 22px;
         overflow: hidden;
+        background: rgba(8, 12, 20, 0.82);
+        border: 1px solid var(--line);
+        box-shadow: 0 30px 100px rgba(0, 0, 0, 0.45);
       }
 
-      .header {
+      .topbar {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        gap: 16px;
-        padding: 22px 28px 16px;
+        gap: 18px;
+        padding: 15px 18px;
+        background: rgba(15, 23, 42, 0.8);
         border-bottom: 1px solid var(--line);
-        background: linear-gradient(180deg, rgba(255,255,255,0.35), rgba(255,255,255,0.15));
       }
 
       .brand {
         display: flex;
         align-items: center;
         gap: 12px;
-        font-weight: 900;
-        letter-spacing: 0.11em;
+        font-weight: 800;
+        letter-spacing: 0.12em;
         text-transform: uppercase;
-        font-size: 0.8rem;
+        color: var(--text);
       }
 
-      .logo {
-        width: 34px;
-        height: 34px;
-        border-radius: 12px;
-        background: linear-gradient(135deg, var(--purple), var(--blue));
-        position: relative;
+      .brand-mark {
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        box-shadow: 0 0 18px rgba(103, 232, 249, 0.5);
       }
 
-      .logo::before,
-      .logo::after {
-        content: "";
-        position: absolute;
-        inset: 8px;
-        border-radius: 6px;
-        border: 3px solid rgba(255,255,255,0.9);
-      }
-
-      .logo::after {
-        inset: 13px 8px 8px 13px;
-      }
-
-      .stats {
+      .toolbar {
         display: flex;
-        gap: 10px;
+        align-items: center;
+        gap: 8px;
         flex-wrap: wrap;
       }
 
+      .toolbar button,
+      .action-row button,
       .chip {
-        background: rgba(255,255,255,0.7);
         border: 1px solid var(--line);
-        border-radius: 999px;
+        background: rgba(148, 163, 184, 0.06);
+        color: var(--text);
+        border-radius: 10px;
         padding: 8px 12px;
-        font-size: 0.72rem;
+        font-size: 0.74rem;
         letter-spacing: 0.08em;
         text-transform: uppercase;
         font-weight: 800;
       }
 
-      .layout {
+      .toolbar button:hover,
+      .action-row button:hover {
+        border-color: rgba(103, 232, 249, 0.45);
+      }
+
+      .action-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .primary {
+        background: linear-gradient(135deg, rgba(103, 232, 249, 0.25), rgba(139, 92, 246, 0.35)) !important;
+        border-color: rgba(103, 232, 249, 0.35) !important;
+      }
+
+      .workspace {
         display: grid;
-        grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.8fr);
-        gap: 24px;
-        padding: 24px 28px 28px;
+        grid-template-columns: 260px minmax(0, 1fr) 260px;
+        flex: 1;
+        min-height: 0;
       }
 
       .panel {
-        background: var(--card);
-        border: 1px solid var(--line);
-        border-radius: 24px;
-        padding: 22px;
+        background: rgba(15, 23, 42, 0.58);
+        border-right: 1px solid var(--line);
       }
 
-      .prompt-card {
-        min-height: 380px;
+      .sidebar,
+      .inspector {
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
-        background: linear-gradient(180deg, #fffaf1 0%, #fff 100%);
+        gap: 14px;
+        padding: 16px;
       }
 
-      .label-row {
+      .box {
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: rgba(15, 23, 42, 0.8);
+      }
+
+      .box-header {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 12px;
-        margin-bottom: 18px;
-      }
-
-      .eyebrow {
-        font-size: 0.72rem;
+        padding: 12px 14px;
+        border-bottom: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 0.7rem;
         letter-spacing: 0.12em;
         text-transform: uppercase;
-        color: var(--muted);
-        font-weight: 900;
-      }
-
-      .difficulty {
-        border-radius: 999px;
-        padding: 7px 12px;
-        font-size: 0.72rem;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        font-weight: 900;
-      }
-
-      .difficulty.easy { background: rgba(74,163,106,0.12); color: var(--easy); }
-      .difficulty.medium { background: rgba(245,185,66,0.14); color: #ad7f00; }
-      .difficulty.hard { background: rgba(217,79,61,0.12); color: var(--hard); }
-
-      .prompt {
-        font-size: clamp(2rem, 4vw, 3.2rem);
-        line-height: 1.05;
-        margin: 0 0 14px;
-        letter-spacing: -0.05em;
-      }
-
-      .details {
-        color: var(--muted);
-        line-height: 1.6;
-        margin: 0;
-        font-size: 1rem;
-      }
-
-      .button-row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-top: 22px;
-      }
-
-      button {
-        border: none;
-        background: linear-gradient(135deg, var(--purple), var(--blue));
-        color: white;
-        font-weight: 900;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        border-radius: 999px;
-        padding: 12px 16px;
-        cursor: pointer;
-      }
-
-      .secondary {
-        background: linear-gradient(135deg, var(--red), var(--orange));
-      }
-
-      .side-panel {
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-      }
-
-      .filter-row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-      }
-
-      .filter {
-        border-radius: 999px;
-        border: 1px solid var(--line);
-        background: white;
-        font-size: 0.75rem;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
         font-weight: 800;
-        padding: 8px 12px;
-        color: var(--ink);
       }
 
-      .filter.active {
-        background: linear-gradient(135deg, #f4efe9, #f0f3ff);
-        border-color: rgba(116,88,214,0.3);
+      .box-body {
+        padding: 12px;
       }
 
-      .list {
+      .object-list {
         list-style: none;
         margin: 0;
         padding: 0;
         display: flex;
         flex-direction: column;
-        gap: 10px;
-        max-height: 500px;
-        overflow: auto;
+        gap: 8px;
       }
 
-      .list li {
+      .object-list li {
+        padding: 10px 12px;
+        border-radius: 10px;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 10px;
-        background: rgba(255,255,255,0.8);
-        border: 1px solid var(--line);
-        border-radius: 14px;
-        padding: 10px 12px;
+        gap: 8px;
+        background: rgba(148, 163, 184, 0.04);
+        border: 1px solid transparent;
       }
 
-      .list li button {
-        background: transparent;
-        color: var(--ink);
-        padding: 0;
-        text-transform: none;
-        letter-spacing: 0;
-        font-weight: 700;
-        border-radius: 0;
+      .object-list li.active {
+        border-color: rgba(103, 232, 249, 0.35);
+        background: rgba(103, 232, 249, 0.06);
       }
 
       .dot {
-        width: 10px;
-        height: 10px;
+        width: 8px;
+        height: 8px;
         border-radius: 50%;
-        flex-shrink: 0;
+        background: var(--green);
+        box-shadow: 0 0 12px rgba(52, 211, 153, 0.8);
       }
 
-      .easy-dot { background: var(--easy); }
-      .medium-dot { background: var(--medium); }
-      .hard-dot { background: var(--hard); }
+      .dot.orange { background: var(--orange); box-shadow: 0 0 12px rgba(245, 158, 11, 0.8); }
+      .dot.purple { background: var(--accent-2); box-shadow: 0 0 12px rgba(139, 92, 246, 0.8); }
+      .dot.red { background: var(--red); box-shadow: 0 0 12px rgba(251, 113, 133, 0.8); }
 
-      @media (max-width: 900px) {
-        .layout {
+      .metric {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .metric .stat {
+        background: rgba(148, 163, 184, 0.04);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 10px;
+      }
+
+      .label {
+        color: var(--muted);
+        font-size: 0.62rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin-bottom: 6px;
+      }
+
+      .value {
+        font-weight: 800;
+      }
+
+      .viewport-shell {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        background: linear-gradient(180deg, rgba(11,16,32,0.8), rgba(10,14,24,0.9));
+      }
+
+      .viewport-toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 16px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .viewport-name {
+        font-size: 0.72rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--muted);
+        font-weight: 800;
+      }
+
+      .viewport-controls {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .mini-btn {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: rgba(148, 163, 184, 0.04);
+        color: var(--text);
+        font-size: 0.7rem;
+        padding: 6px 9px;
+      }
+
+      .viewport {
+        position: relative;
+        flex: 1;
+        overflow: hidden;
+        background:
+          radial-gradient(circle at center, rgba(15, 23, 42, 0.45) 0%, rgba(8, 12, 20, 0.9) 40%, rgba(2, 6, 13, 1) 100%),
+          linear-gradient(180deg, rgba(17, 24, 39, 0.7), rgba(3, 7, 18, 0.9));
+      }
+
+      .stars,
+      .stars::before,
+      .stars::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-repeat: repeat;
+        background-image:
+          radial-gradient(2px 2px at 10% 20%, rgba(255,255,255,0.7), transparent 90%),
+          radial-gradient(1.5px 1.5px at 35% 28%, rgba(103, 232, 249, 0.85), transparent 90%),
+          radial-gradient(2px 2px at 60% 15%, rgba(255,255,255,0.8), transparent 90%),
+          radial-gradient(1.5px 1.5px at 80% 35%, rgba(139, 92, 246, 0.8), transparent 90%),
+          radial-gradient(1.5px 1.5px at 28% 74%, rgba(255,255,255,0.8), transparent 90%),
+          radial-gradient(2px 2px at 75% 72%, rgba(255,255,255,0.8), transparent 90%),
+          radial-gradient(2px 2px at 52% 58%, rgba(103, 232, 249, 0.7), transparent 90%);
+        opacity: 0.9;
+      }
+
+      .stars::before {
+        transform: scale(1.2) translateY(12px);
+        opacity: 0.7;
+      }
+
+      .stars::after {
+        transform: scale(1.4) translateY(-8px);
+        opacity: 0.5;
+      }
+
+      .grid {
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(103, 232, 249, 0.08) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(103, 232, 249, 0.08) 1px, transparent 1px);
+        background-size: 28px 28px;
+        transform: perspective(900px) rotateX(70deg) scale(1.7);
+        transform-origin: center center;
+        opacity: 0.65;
+      }
+
+      .scene {
+        position: absolute;
+        left: 50%;
+        top: 55%;
+        width: 360px;
+        height: 360px;
+        margin-left: -180px;
+        margin-top: -180px;
+        transform-style: preserve-3d;
+        perspective: 1000px;
+        filter: drop-shadow(0 50px 70px rgba(0,0,0,0.45));
+      }
+
+      .orbit-ring {
+        position: absolute;
+        inset: 50% auto auto 50%;
+        width: 300px;
+        height: 300px;
+        margin-left: -150px;
+        margin-top: -150px;
+        border: 1px solid rgba(103, 232, 249, 0.4);
+        border-radius: 50%;
+        transform: rotateX(75deg) rotateZ(18deg);
+        box-shadow: 0 0 25px rgba(103, 232, 249, 0.18);
+      }
+
+      .planet {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 130px;
+        height: 130px;
+        margin-left: -65px;
+        margin-top: -65px;
+        border-radius: 50%;
+        background: radial-gradient(circle at 35% 30%, #bae6fd 0%, #60a5fa 25%, #4f46e5 58%, #1e1b4b 100%);
+        box-shadow:
+          inset -22px -12px 35px rgba(0, 0, 0, 0.35),
+          0 0 40px rgba(96, 165, 250, 0.4);
+        transform: translateZ(20px);
+      }
+
+      .ring {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 180px;
+        height: 180px;
+        margin-left: -90px;
+        margin-top: -90px;
+        border: 14px solid rgba(244, 114, 182, 0.7);
+        border-left-color: transparent;
+        border-right-color: transparent;
+        border-radius: 50%;
+        transform: rotateX(70deg) rotateY(20deg) rotateZ(30deg);
+        box-shadow: 0 0 16px rgba(244, 114, 182, 0.35);
+      }
+
+      .cube {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 140px;
+        height: 140px;
+        margin-left: -70px;
+        margin-top: -70px;
+        transform-style: preserve-3d;
+      }
+
+      .face {
+        position: absolute;
+        inset: 0;
+        border: 1px solid rgba(103, 232, 249, 0.45);
+        background: rgba(96, 165, 250, 0.08);
+        box-shadow: inset 0 0 18px rgba(103, 232, 249, 0.12);
+      }
+
+      .front { transform: translateZ(70px); }
+      .back { transform: rotateY(180deg) translateZ(70px); }
+      .right { transform: rotateY(90deg) translateZ(70px); }
+      .left { transform: rotateY(-90deg) translateZ(70px); }
+      .top { transform: rotateX(90deg) translateZ(70px); }
+      .bottom { transform: rotateX(-90deg) translateZ(70px); }
+
+      .satellite {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #fca5a5, #f9a8d4);
+        box-shadow: 0 0 20px rgba(251, 113, 133, 0.72);
+      }
+
+      .satellite.one { transform: translate3d(150px, -80px, 30px); }
+      .satellite.two { transform: translate3d(-165px, 92px, -15px); }
+      .satellite.three { transform: translate3d(82px, 150px, 25px); }
+
+      .timeline {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 18px;
+        padding: 12px 18px 18px;
+        border-top: 1px solid var(--line);
+        background: rgba(15, 23, 42, 0.72);
+      }
+
+      .timeline-track {
+        position: relative;
+        flex: 1;
+        height: 34px;
+        border-radius: 999px;
+        background: rgba(148, 163, 184, 0.08);
+        border: 1px solid var(--line);
+        overflow: hidden;
+      }
+
+      .timeline-fill {
+        position: absolute;
+        inset: 0 auto 0 0;
+        width: 34%;
+        background: linear-gradient(90deg, rgba(103, 232, 249, 0.8), rgba(139, 92, 246, 0.7));
+        box-shadow: 0 0 18px rgba(103, 232, 249, 0.38);
+      }
+
+      .timeline-markers {
+        position: absolute;
+        inset: 0;
+        background-image: linear-gradient(to right, rgba(255,255,255,0.08) 1px, transparent 1px);
+        background-size: 60px 100%;
+      }
+
+      .time-readout {
+        min-width: 128px;
+        text-align: right;
+        color: var(--muted);
+        font-weight: 800;
+        letter-spacing: 0.08em;
+      }
+
+      @media (max-width: 1050px) {
+        .workspace {
           grid-template-columns: 1fr;
         }
 
-        .header {
-          flex-direction: column;
-          align-items: flex-start;
+        .panel {
+          border-right: none;
+          border-bottom: 1px solid var(--line);
+        }
+
+        .app {
+          height: auto;
+        }
+
+        .viewport-shell {
+          min-height: 500px;
         }
       }
     </style>
   </head>
   <body>
     <div class="app">
-      <header class="header">
+      <header class="topbar">
         <div class="brand">
-          <div class="logo"></div>
-          <span>Sketch Quest</span>
+          <div class="brand-mark"></div>
+          <span>Blender Lite</span>
         </div>
-        <div class="stats">
-          <div class="chip">50 prompts</div>
-          <div class="chip">Easy / medium / hard</div>
+
+        <div class="toolbar">
+          <button type="button">File</button>
+          <button type="button">Edit</button>
+          <button type="button">View</button>
+          <button type="button">Render</button>
+          <button type="button">Animation</button>
+        </div>
+
+        <div class="action-row">
+          <button type="button" class="mini-btn">Orbit</button>
+          <button type="button" class="primary">Pause</button>
         </div>
       </header>
 
-      <div class="layout">
-        <section class="panel prompt-card">
-          <div>
-            <div class="label-row">
-              <div class="eyebrow" id="promptNumber">Prompt 1</div>
-              <div class="difficulty" id="difficultyBadge">Easy</div>
+      <div class="workspace">
+        <aside class="panel sidebar">
+          <div class="box">
+            <div class="box-header">
+              <span>Scene</span>
+              <span>+</span>
             </div>
-            <h1 class="prompt" id="promptText">A sleepy cat curled up on a chair</h1>
-            <p class="details" id="promptHint">Quick, expressive, and easy to sketch in under 5 minutes.</p>
+            <div class="box-body">
+              <ul class="object-list">
+                <li class="active"><span><span class="dot"></span> Cube</span><span>Mesh</span></li>
+                <li><span><span class="dot orange"></span> Planet</span><span>Object</span></li>
+                <li><span><span class="dot purple"></span> Ring</span><span>Modifier</span></li>
+                <li><span><span class="dot red"></span> Star</span><span>Light</span></li>
+              </ul>
+            </div>
           </div>
 
-          <div class="button-row">
-            <button type="button" id="nextBtn">Next prompt</button>
-            <button type="button" id="randomBtn" class="secondary">Random</button>
+          <div class="box">
+            <div class="box-header">
+              <span>Properties</span>
+            </div>
+            <div class="box-body metric">
+              <div class="stat">
+                <div class="label">Rotation</div>
+                <div class="value">42°</div>
+              </div>
+              <div class="stat">
+                <div class="label">Scale</div>
+                <div class="value">1.25x</div>
+              </div>
+              <div class="stat">
+                <div class="label">Orbit</div>
+                <div class="value">3.4s</div>
+              </div>
+              <div class="stat">
+                <div class="label">FOV</div>
+                <div class="value">37°</div>
+              </div>
+            </div>
           </div>
-        </section>
+        </aside>
 
-        <aside class="side-panel">
-          <section class="panel">
-            <div class="label-row">
-              <div class="eyebrow">Difficulty</div>
+        <main class="viewport-shell">
+          <div class="viewport-toolbar">
+            <div class="viewport-name">ViewPort</div>
+            <div class="viewport-controls">
+              <button class="mini-btn" type="button">Wireframe</button>
+              <button class="mini-btn" type="button">Shading</button>
+              <button class="mini-btn" type="button">Camera</button>
             </div>
-            <div class="filter-row">
-              <button class="filter active" data-filter="all" type="button">All</button>
-              <button class="filter" data-filter="easy" type="button">Easy</button>
-              <button class="filter" data-filter="medium" type="button">Medium</button>
-              <button class="filter" data-filter="hard" type="button">Hard</button>
-            </div>
-          </section>
+          </div>
 
-          <section class="panel">
-            <div class="label-row">
-              <div class="eyebrow">Prompt list</div>
+          <div class="viewport" id="viewport">
+            <div class="stars"></div>
+            <div class="grid"></div>
+
+            <div class="scene" id="scene">
+              <div class="orbit-ring"></div>
+              <div class="planet"></div>
+              <div class="ring"></div>
+
+              <div class="cube" id="cube">
+                <div class="face front"></div>
+                <div class="face back"></div>
+                <div class="face right"></div>
+                <div class="face left"></div>
+                <div class="face top"></div>
+                <div class="face bottom"></div>
+              </div>
+
+              <div class="satellite one"></div>
+              <div class="satellite two"></div>
+              <div class="satellite three"></div>
             </div>
-            <ul class="list" id="promptList"></ul>
-          </section>
+          </div>
+
+          <div class="timeline">
+            <div class="timeline-track">
+              <div class="timeline-markers"></div>
+              <div class="timeline-fill"></div>
+            </div>
+            <div class="time-readout">00:12:42</div>
+          </div>
+        </main>
+
+        <aside class="panel inspector">
+          <div class="box">
+            <div class="box-header">
+              <span>Transform</span>
+            </div>
+            <div class="box-body metric">
+              <div class="stat">
+                <div class="label">X</div>
+                <div class="value">0.00</div>
+              </div>
+              <div class="stat">
+                <div class="label">Y</div>
+                <div class="value">1.25</div>
+              </div>
+              <div class="stat">
+                <div class="label">Z</div>
+                <div class="value">2.50</div>
+              </div>
+              <div class="stat">
+                <div class="label">R</div>
+                <div class="value">24°</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="box">
+            <div class="box-header">
+              <span>Animation</span>
+            </div>
+            <div class="box-body">
+              <div class="metric">
+                <div class="stat">
+                  <div class="label">Frames</div>
+                  <div class="value">240</div>
+                </div>
+                <div class="stat">
+                  <div class="label">FPS</div>
+                  <div class="value">24</div>
+                </div>
+              </div>
+            </div>
+          </div>
         </aside>
       </div>
     </div>
 
     <script>
-      const prompts = [
-        { prompt: 'A sleepy cat curled up on a chair', difficulty: 'easy', hint: 'Quick, expressive, and easy to sketch in under 5 minutes.' },
-        { prompt: 'A coffee cup on a rainy windowsill', difficulty: 'easy', hint: 'Simple shapes with nice mood and details.' },
-        { prompt: 'A pile of colorful books', difficulty: 'easy', hint: 'Focus on stacked shapes and perspective.' },
-        { prompt: 'A tiny flower growing in a cracked pot', difficulty: 'easy', hint: 'A small scene with a strong center of interest.' },
-        { prompt: 'A bird sitting on a fence post', difficulty: 'easy', hint: 'Perfect for practicing silhouette and basic feather shapes.' },
-        { prompt: 'A pair of sneakers on the floor', difficulty: 'easy', hint: 'Try simple outlines and light shading.' },
-        { prompt: 'A backpack full of school supplies', difficulty: 'easy', hint: 'Practice volume and layered textures.' },
-        { prompt: 'A stack of pancakes with syrup', difficulty: 'easy', hint: 'Great for round forms and highlights.' },
-        { prompt: 'A smiling sun peeking behind clouds', difficulty: 'easy', hint: 'Clean shapes and a warm color mood.' },
-        { prompt: 'A lantern hanging outside a cabin', difficulty: 'easy', hint: 'Good for light, shadow, and form.' },
+      const scene = document.getElementById('scene');
+      const cube = document.getElementById('cube');
+      const viewport = document.getElementById('viewport');
+      const playButton = document.querySelector('.primary');
 
-        { prompt: 'A fox in a field at sunset', difficulty: 'medium', hint: 'Build the pose and use soft gradients to show depth.' },
-        { prompt: 'An old bicycle leaning against a wall', difficulty: 'medium', hint: 'Work on wheels, spokes, and perspective.' },
-        { prompt: 'A person walking with an umbrella', difficulty: 'medium', hint: 'Try movement and strong silhouette.' },
-        { prompt: 'A cactus in a ceramic pot', difficulty: 'medium', hint: 'Focus on clean repeated shapes and textures.' },
-        { prompt: 'A dragonfly resting on a leaf', difficulty: 'medium', hint: 'Tiny details and delicate line work make it interesting.' },
-        { prompt: 'A bakery counter full of pastries', difficulty: 'medium', hint: 'A busy composition with lots of simple repeated forms.' },
-        { prompt: 'A winter cabin in the snow', difficulty: 'medium', hint: 'Mix geometry with atmospheric light.' },
-        { prompt: 'A skateboard and helmet on a bench', difficulty: 'medium', hint: 'Practice overlapping objects and proportions.' },
-        { prompt: 'A hand holding a tea mug', difficulty: 'medium', hint: 'Try realistic finger shapes and contour lines.' },
-        { prompt: 'A stormy beach with crashing waves', difficulty: 'medium', hint: 'Layer the forms and add motion lines.' },
+      let isPlaying = true;
+      let pointerX = 0;
+      let pointerY = 0;
 
-        { prompt: 'A full-body portrait of a warrior in armor', difficulty: 'hard', hint: 'Use strong anatomy and detailed costume shapes.' },
-        { prompt: 'A fantasy castle on a cliff at night', difficulty: 'hard', hint: 'Challenge your composition and depth.' },
-        { prompt: 'A detailed city street with multiple buildings', difficulty: 'hard', hint: 'Layer perspective, windows, and lighting.' },
-        { prompt: 'A horse rearing up against a dramatic sky', difficulty: 'hard', hint: 'Focus on anatomy and action lines.' },
-        { prompt: 'A detailed underwater scene with fish and coral', difficulty: 'hard', hint: 'Lots of varied shapes and underwater lighting.' },
-        { prompt: 'An old violin and bow on a wooden table', difficulty: 'hard', hint: 'Practice curves, wood grain, and refined forms.' },
-        { prompt: 'A bustling market street with signs and people', difficulty: 'hard', hint: 'A full scene with lots of small details.' },
-        { prompt: 'A dramatic portrait of a person in profile', difficulty: 'hard', hint: 'Focus on skull structure, eyes, and shadow.' },
-        { prompt: 'A spaceship flying through asteroid fields', difficulty: 'hard', hint: 'Create energy, motion, and complex space forms.' },
-        { prompt: 'A group of musicians in a jazz club', difficulty: 'hard', hint: 'Add multiple figures, instruments, and atmosphere.' },
+      function animate() {
+        const time = performance.now() * 0.001;
 
-        { prompt: 'A robot watering a garden', difficulty: 'easy', hint: 'Simple mechanical shapes with some personality.' },
-        { prompt: 'A bowl of fruit on a kitchen table', difficulty: 'easy', hint: 'Try a variety of round forms and highlights.' },
-        { prompt: 'A toy train beside a small station', difficulty: 'easy', hint: 'Study clean shapes and repeating wheels.' },
-        { prompt: 'A campfire with marshmallows and logs', difficulty: 'easy', hint: 'Good practice for warm tones and circular forms.' },
-        { prompt: 'A penguin standing on an iceberg', difficulty: 'easy', hint: 'Focus on silhouette and body volume.' },
-        { prompt: 'A birdhouse hanging from a branch', difficulty: 'easy', hint: 'Simple object study with a little environment.' },
-        { prompt: 'A stack of colorful donuts', difficulty: 'easy', hint: 'Rounded forms and frosting texture are fun and easy.' },
-        { prompt: 'A little garden shed with a window', difficulty: 'medium', hint: 'Use perspective and simple architectural shapes.' },
-        { prompt: 'A wolf howling at the moon', difficulty: 'medium', hint: 'Use line and form to give the creature energy.' },
-        { prompt: 'A row of potted plants on a balcony', difficulty: 'medium', hint: 'Multiple objects and layered spacing.' },
-        { prompt: 'A vintage camera on a desk', difficulty: 'medium', hint: 'Try strong shapes plus tiny mechanical detail.' },
-        { prompt: 'Two hands drawing together on paper', difficulty: 'medium', hint: 'A challenge in proportions and gesture.' },
-        { prompt: 'A mountain lake with reflections', difficulty: 'hard', hint: 'Push your values and terrain shapes.' },
-        { prompt: 'A detailed portrait of an elderly person', difficulty: 'hard', hint: 'Focus on wrinkles, expression, and lighting.' },
-        { prompt: 'A giant tree with roots and branches', difficulty: 'hard', hint: 'More complex structure and texture.' },
-        { prompt: 'A dragon flying over a castle', difficulty: 'hard', hint: 'A full fantasy scene with many moving parts.' },
-        { prompt: 'A close-up of a face with dramatic light', difficulty: 'hard', hint: 'Very challenging for form and shadow study.' }
-      ];
+        if (isPlaying) {
+          const orbitX = pointerY * 30 + 18;
+          const orbitY = pointerX * 55 + time * 48;
 
-      const state = {
-        filter: 'all',
-        index: 0
-      };
+          scene.style.transform = `rotateX(${orbitX}deg) rotateY(${orbitY}deg) rotateZ(${Math.sin(time * 1.8) * 10}deg)`;
+          cube.style.transform = `rotateX(${time * 90}deg) rotateY(${time * 120}deg) rotateZ(${time * 70}deg)`;
+        } else {
+          scene.style.transform = `rotateX(${pointerY * 30 + 18}deg) rotateY(${pointerX * 55}deg)`;
+          cube.style.transform = `rotateX(${pointerY * 80}deg) rotateY(${pointerX * 100}deg)`;
+        }
 
-      const promptText = document.getElementById('promptText');
-      const promptHint = document.getElementById('promptHint');
-      const promptNumber = document.getElementById('promptNumber');
-      const difficultyBadge = document.getElementById('difficultyBadge');
-      const promptList = document.getElementById('promptList');
-      const filters = document.querySelectorAll('.filter');
-
-      function getFilteredPrompts() {
-        if (state.filter === 'all') return prompts;
-        return prompts.filter(item => item.difficulty === state.filter);
+        requestAnimationFrame(animate);
       }
 
-      function getCurrentPrompt() {
-        const filtered = getFilteredPrompts();
-        if (!filtered.length) return prompts[0];
-        return filtered[Math.min(state.index, filtered.length - 1)];
-      }
-
-      function getDotClass(level) {
-        if (level === 'easy') return 'easy-dot';
-        if (level === 'medium') return 'medium-dot';
-        return 'hard-dot';
-      }
-
-      function renderList() {
-        const filtered = getFilteredPrompts();
-        promptList.innerHTML = '';
-
-        filtered.forEach((item, index) => {
-          const li = document.createElement('li');
-          const dot = document.createElement('span');
-          dot.className = `dot ${getDotClass(item.difficulty)}`;
-
-          const button = document.createElement('button');
-          button.type = 'button';
-          button.textContent = `${index + 1}. ${item.prompt}`;
-          button.addEventListener('click', () => {
-            state.index = index;
-            renderCurrent();
-          });
-
-          const label = document.createElement('span');
-          label.textContent = item.difficulty;
-          label.style.fontSize = '0.68rem';
-          label.style.fontWeight = '900';
-          label.style.letterSpacing = '0.08em';
-          label.style.textTransform = 'uppercase';
-          label.style.color = item.difficulty === 'easy' ? 'var(--easy)' : item.difficulty === 'medium' ? '#ad7f00' : 'var(--hard)';
-
-          li.appendChild(dot);
-          li.appendChild(button);
-          li.appendChild(label);
-          promptList.appendChild(li);
-        });
-      }
-
-      function renderCurrent() {
-        const filtered = getFilteredPrompts();
-        const prompt = filtered.length ? filtered[Math.min(state.index, filtered.length - 1)] : prompts[0];
-        const originalIndex = prompts.indexOf(prompt) + 1;
-
-        promptText.textContent = prompt.prompt;
-        promptHint.textContent = prompt.hint;
-        promptNumber.textContent = `Prompt ${originalIndex}`;
-        difficultyBadge.textContent = prompt.difficulty;
-        difficultyBadge.className = `difficulty ${prompt.difficulty}`;
-
-        renderList();
-      }
-
-      document.getElementById('nextBtn').addEventListener('click', () => {
-        const filtered = getFilteredPrompts();
-        if (!filtered.length) return;
-        state.index = (state.index + 1) % filtered.length;
-        renderCurrent();
+      viewport.addEventListener('pointermove', (event) => {
+        const rect = viewport.getBoundingClientRect();
+        const x = (event.clientX - rect.left) / rect.width;
+        const y = (event.clientY - rect.top) / rect.height;
+        pointerX = (x - 0.5) * 2;
+        pointerY = (y - 0.5) * 2;
       });
 
-      document.getElementById('randomBtn').addEventListener('click', () => {
-        const filtered = getFilteredPrompts();
-        if (!filtered.length) return;
-        state.index = Math.floor(Math.random() * filtered.length);
-        renderCurrent();
+      playButton.addEventListener('click', () => {
+        isPlaying = !isPlaying;
+        playButton.textContent = isPlaying ? 'Pause' : 'Play';
       });
 
-      filters.forEach(filter => {
-        filter.addEventListener('click', () => {
-          state.filter = filter.dataset.filter;
-          state.index = 0;
-          filters.forEach(btn => btn.classList.toggle('active', btn === filter));
-          renderCurrent();
-        });
-      });
-
-      renderCurrent();
+      requestAnimationFrame(animate);
     </script>
   </body>
 </html>
