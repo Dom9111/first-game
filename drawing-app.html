@@ -7,7 +7,7 @@
     <style>
       :root {
         --bg: #f5efe6;
-        --panel: rgba(255,255,255,0.75);
+        --panel: rgba(255, 255, 255, 0.75);
         --ink: #1d2432;
         --muted: #677286;
         --line: rgba(29, 35, 51, 0.08);
@@ -219,49 +219,73 @@
       let drawing = false;
       let currentColor = '#1d2432';
       let brushSize = 6;
+      let lastX = 0;
+      let lastY = 0;
 
       function resizeCanvas() {
-        const ratio = window.devicePixelRatio || 1;
         const rect = canvas.getBoundingClientRect();
-        const displayWidth = rect.width;
-        const displayHeight = rect.height;
+        const snapshot = canvas.toDataURL();
+        const previousWidth = canvas.width;
+        const previousHeight = canvas.height;
 
-        canvas.width = displayWidth * ratio;
-        canvas.height = displayHeight * ratio;
+        canvas.width = Math.max(300, Math.round(rect.width));
+        canvas.height = Math.max(260, Math.round(rect.height));
 
-        const image = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
-        ctx.putImageData(image, 0, 0);
+        if (previousWidth && previousHeight) {
+          const image = new Image();
+          image.onload = () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+          };
+          image.src = snapshot;
+        } else {
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
       }
 
       function getPointerPosition(event) {
         const rect = canvas.getBoundingClientRect();
-        const x = event.clientX - rect.left;
-        const y = event.clientY - rect.top;
-        return { x, y };
+        return {
+          x: event.clientX - rect.left,
+          y: event.clientY - rect.top,
+        };
       }
 
       function startDrawing(event) {
         drawing = true;
         const pos = getPointerPosition(event);
+        lastX = pos.x;
+        lastY = pos.y;
         ctx.beginPath();
-        ctx.moveTo(pos.x, pos.y);
+        ctx.moveTo(lastX, lastY);
+        canvas.setPointerCapture?.(event.pointerId);
       }
 
       function draw(event) {
         if (!drawing) return;
+
         const pos = getPointerPosition(event);
         ctx.lineWidth = brushSize;
         ctx.lineCap = 'round';
         ctx.lineJoin = 'round';
         ctx.strokeStyle = currentColor;
+        ctx.beginPath();
+        ctx.moveTo(lastX, lastY);
         ctx.lineTo(pos.x, pos.y);
         ctx.stroke();
+
+        lastX = pos.x;
+        lastY = pos.y;
       }
 
-      function stopDrawing() {
+      function stopDrawing(event) {
+        if (!drawing) return;
         drawing = false;
         ctx.beginPath();
+        canvas.releasePointerCapture?.(event.pointerId);
       }
 
       function setBrushSize(value) {
@@ -289,6 +313,7 @@
       canvas.addEventListener('pointermove', draw);
       canvas.addEventListener('pointerup', stopDrawing);
       canvas.addEventListener('pointerleave', stopDrawing);
+      canvas.addEventListener('pointercancel', stopDrawing);
       clearBtn.addEventListener('click', clearCanvas);
       saveBtn.addEventListener('click', saveCanvas);
 
@@ -300,8 +325,6 @@
       });
 
       setBrushSize(brushSizeInput.value);
-      ctx.fillStyle = '#ffffff';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
       resizeCanvas();
       window.addEventListener('resize', resizeCanvas);
     </script>
