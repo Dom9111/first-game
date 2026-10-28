@@ -841,60 +841,35 @@
         window.speechSynthesis.speak(utterance);
       }
 
-      function getAssistantReply(input) {
-        const text = input.toLowerCase();
+      async function fetchAssistantReply(inputText) {
+        setStatus('Thinking...');
 
-        if (/hello|hi|hey/.test(text)) {
-          return 'Hello! I’m your AI voice assistant. Ask me to pause the scene, describe the space, or chat about anything.';
-        }
+        try {
+          const response = await fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: inputText })
+          });
 
-        if (/pause|stop/.test(text)) {
-          if (isPlaying) {
-            isPlaying = false;
-            playButton.textContent = 'Play';
+          const data = await response.json();
+
+          if (!response.ok) {
+            throw new Error(data.error || 'The AI request failed.');
           }
-          return 'The animation is now paused.';
-        }
 
-        if (/play|resume|start/.test(text)) {
-          if (!isPlaying) {
-            isPlaying = true;
-            playButton.textContent = 'Pause';
-          }
-          return 'The animation is running again.';
+          return data.reply;
+        } catch (error) {
+          console.error(error);
+          return 'I couldn’t reach the AI backend. Check your server and API key, then try again.';
         }
-
-        if (/scene|space|planet|cube|orbit|star/.test(text)) {
-          return 'This scene is a futuristic 3D space view with a rotating cube, orbiting rings, a glowing planet, and floating satellites.';
-        }
-
-        if (/how are you|feeling/.test(text)) {
-          return 'I am doing great and ready to help. You can ask me to control the scene or talk about the project.';
-        }
-
-        if (/theme|color|light/.test(text)) {
-          document.body.style.filter = 'hue-rotate(25deg) saturate(1.15)';
-          return 'I warmed up the visual palette for a more cinematic space look.';
-        }
-
-        if (/reset|normal/.test(text)) {
-          document.body.style.filter = 'none';
-          return 'The visual style has been reset to the default scene.';
-        }
-
-        if (/thanks|thank you/.test(text)) {
-          return 'You are very welcome. I am ready whenever you want to talk again.';
-        }
-
-        return 'I heard you. Ask me about the scene, tell me to pause or play, or just say hello.';
       }
 
-      function handleUserInput(rawText) {
+      async function handleUserInput(rawText) {
         const text = rawText.trim();
         if (!text) return;
 
         addMessage('user', text);
-        const reply = getAssistantReply(text);
+        const reply = await fetchAssistantReply(text);
         addMessage('assistant', reply);
         speakText(reply);
         setStatus('Response ready');
@@ -965,9 +940,9 @@
           setStatus('Listening...');
         };
 
-        recognition.onresult = (event) => {
+        recognition.onresult = async (event) => {
           const transcript = event.results[0][0].transcript;
-          handleUserInput(transcript);
+          await handleUserInput(transcript);
         };
 
         recognition.onend = () => {
