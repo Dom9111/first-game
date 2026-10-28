@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mom Hits Counter</title>
+    <style>
+      :root {
+        --bg1: #fff0f3;
+        --bg2: #ffd6df;
+        --card: rgba(255,255,255,0.78);
+        --ink: #2a1c2a;
+        --accent: #d94f7c;
+        --accent2: #8a4de0;
+        --line: rgba(42,28,42,0.08);
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(180deg, var(--bg1), var(--bg2));
+        font-family: Arial, Helvetica, sans-serif;
+        color: var(--ink);
+      }
+
+      .app {
+        width: min(420px, 90vw);
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 28px;
+        box-shadow: 0 30px 70px rgba(80, 35, 59, 0.15);
+        padding: 28px 24px;
+        text-align: center;
+      }
+
+      h1 {
+        margin: 0 0 14px;
+        font-size: clamp(1.8rem, 5vw, 2.5rem);
+        letter-spacing: -0.04em;
+      }
+
+      .count {
+        font-size: clamp(3rem, 10vw, 5rem);
+        font-weight: 900;
+        margin: 18px 0 22px;
+      }
+
+      button {
+        border: none;
+        cursor: pointer;
+        border-radius: 999px;
+        background: linear-gradient(135deg, var(--accent), var(--accent2));
+        color: white;
+        font-size: 1rem;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        padding: 16px 28px;
+        box-shadow: 0 14px 28px rgba(134, 83, 170, 0.25);
+      }
+
+      .sub {
+        margin-top: 18px;
+        font-size: 0.95rem;
+        color: rgba(42,28,42,0.8);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <h1>Every time mom hits you</h1>
+      <div class="count" id="count">0</div>
+      <button id="hitBtn" type="button">Hit</button>
+      <div class="sub">Tap the button to count the hits.</div>
+    </div>
+
+    <script>
+      const countEl = document.getElementById('count');
+      const hitBtn = document.getElementById('hitBtn');
+      let count = 0;
+
+      hitBtn.addEventListener('click', () => {
+        count += 1;
+        countEl.textContent = count;
+      });
+    </script>
+  </body>
+</html>
