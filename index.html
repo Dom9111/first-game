@@ -3,22 +3,21 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Brick Guide</title>
+    <title>Sketch Quest</title>
     <style>
       :root {
-        --bg: #f5f0e6;
-        --panel: #ffffff;
-        --panel-alt: #f9f3ea;
-        --ink: #1d2333;
-        --muted: #5b6477;
-        --gold: #f5b942;
-        --red: #d94f3d;
-        --blue: #3c7ef4;
-        --green: #4aa36a;
+        --bg1: #f7f2ea;
+        --bg2: #e9d6bc;
+        --ink: #1d2432;
+        --muted: #5b6475;
+        --card: rgba(255,255,255,0.8);
+        --line: rgba(29,35,51,0.08);
+        --easy: #4aa36a;
+        --medium: #f5b942;
+        --hard: #d94f3d;
         --purple: #7458d6;
-        --orange: #f29b38;
+        --blue: #3c7ef4;
         --shadow: rgba(25, 30, 40, 0.12);
-        --line: rgba(29, 35, 51, 0.08);
       }
 
       * { box-sizing: border-box; }
@@ -27,51 +26,52 @@
         margin: 0;
         min-height: 100%;
         font-family: Arial, Helvetica, sans-serif;
-        background: linear-gradient(180deg, #f8f4eb 0%, #efe6d3 100%);
+        background: linear-gradient(180deg, var(--bg1) 0%, var(--bg2) 100%);
         color: var(--ink);
       }
 
       body {
-        display: flex;
-        justify-content: center;
+        display: grid;
+        place-items: center;
+        min-height: 100vh;
         padding: 28px;
       }
 
       .app {
-        width: min(1200px, 100%);
-        display: grid;
-        grid-template-columns: 340px minmax(0, 1fr);
-        background: rgba(255,255,255,0.65);
+        width: min(1100px, 100%);
+        border-radius: 28px;
+        background: rgba(255,255,255,0.72);
         border: 1px solid var(--line);
-        border-radius: 24px;
-        box-shadow: 0 24px 80px var(--shadow);
+        box-shadow: 0 30px 90px var(--shadow);
         overflow: hidden;
       }
 
-      .sidebar {
-        background: linear-gradient(180deg, #fffaf2 0%, #f7efe6 100%);
-        padding: 24px 18px;
-        border-right: 1px solid var(--line);
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        padding: 22px 28px 16px;
+        border-bottom: 1px solid var(--line);
+        background: linear-gradient(180deg, rgba(255,255,255,0.35), rgba(255,255,255,0.15));
       }
 
       .brand {
         display: flex;
         align-items: center;
-        gap: 10px;
-        margin-bottom: 20px;
+        gap: 12px;
         font-weight: 900;
-        letter-spacing: 0.08em;
+        letter-spacing: 0.11em;
         text-transform: uppercase;
-        font-size: 0.78rem;
+        font-size: 0.8rem;
       }
 
       .logo {
-        width: 36px;
-        height: 36px;
-        border-radius: 10px;
-        background: linear-gradient(135deg, var(--red), var(--gold));
+        width: 34px;
+        height: 34px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, var(--purple), var(--blue));
         position: relative;
-        box-shadow: inset 0 -6px 0 rgba(0,0,0,0.15);
       }
 
       .logo::before,
@@ -80,209 +80,105 @@
         position: absolute;
         inset: 8px;
         border-radius: 6px;
-        border: 3px solid rgba(255,255,255,0.85);
+        border: 3px solid rgba(255,255,255,0.9);
       }
 
       .logo::after {
-        inset: 14px 8px 8px 14px;
+        inset: 13px 8px 8px 13px;
       }
 
-      .build-list {
+      .stats {
         display: flex;
-        flex-direction: column;
-        gap: 12px;
+        gap: 10px;
+        flex-wrap: wrap;
       }
 
-      .build-item {
-        width: 100%;
-        text-align: left;
+      .chip {
+        background: rgba(255,255,255,0.7);
         border: 1px solid var(--line);
-        background: var(--panel);
-        border-radius: 16px;
-        padding: 12px 14px;
-        cursor: pointer;
-        transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
-      }
-
-      .build-item:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 10px 24px rgba(0,0,0,0.06);
-      }
-
-      .build-item.active {
-        border-color: rgba(116, 88, 214, 0.45);
-        background: linear-gradient(180deg, #f4f0ff 0%, #ffffff 100%);
-      }
-
-      .build-item h3 {
-        margin: 0 0 4px;
-        font-size: 1rem;
-      }
-
-      .meta {
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
-        font-size: 0.72rem;
-        color: var(--muted);
-      }
-
-      .content {
-        padding: 28px;
-      }
-
-      .hero {
-        background: linear-gradient(135deg, #ffefbf 0%, #f3d7a3 100%);
-        border: 1px solid rgba(0,0,0,0.05);
-        border-radius: 22px;
-        padding: 22px 24px;
-        display: grid;
-        grid-template-columns: minmax(0, 1.4fr) minmax(220px, 0.8fr);
-        gap: 18px;
-        align-items: center;
-      }
-
-      .hero h1 {
-        margin: 0 0 8px;
-        font-size: clamp(2rem, 3vw, 3rem);
-        line-height: 1.05;
-      }
-
-      .subtitle {
-        margin: 0;
-        color: var(--muted);
-        font-size: 1rem;
-        line-height: 1.5;
-      }
-
-      .badge-row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        margin-top: 18px;
-      }
-
-      .badge {
-        background: rgba(255,255,255,0.65);
-        border: 1px solid rgba(0,0,0,0.06);
         border-radius: 999px;
+        padding: 8px 12px;
         font-size: 0.72rem;
-        letter-spacing: 0.06em;
+        letter-spacing: 0.08em;
         text-transform: uppercase;
-        padding: 7px 10px;
         font-weight: 800;
       }
 
-      .mini-visual {
-        height: 180px;
-        border-radius: 18px;
-        position: relative;
-        background: linear-gradient(180deg, #e7ecff 0%, #dbe7ff 100%);
-        border: 1px solid rgba(0,0,0,0.06);
-        overflow: hidden;
-      }
-
-      .mini-visual svg {
-        display: block;
-        width: 100%;
-        height: 100%;
-      }
-
-      .details-grid {
-        margin-top: 24px;
+      .layout {
         display: grid;
         grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.8fr);
-        gap: 20px;
+        gap: 24px;
+        padding: 24px 28px 28px;
       }
 
-      .card {
-        background: var(--panel);
+      .panel {
+        background: var(--card);
         border: 1px solid var(--line);
-        border-radius: 20px;
-        padding: 20px;
+        border-radius: 24px;
+        padding: 22px;
       }
 
-      .card h2 {
-        margin: 0 0 16px;
-        font-size: 1.1rem;
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
-      }
-
-      .steps {
-        list-style: none;
-        padding: 0;
-        margin: 0;
+      .prompt-card {
+        min-height: 380px;
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        justify-content: space-between;
+        background: linear-gradient(180deg, #fffaf1 0%, #fff 100%);
       }
 
-      .steps li {
-        display: grid;
-        grid-template-columns: 38px minmax(0, 1fr);
-        gap: 10px;
-        align-items: start;
-        background: var(--panel-alt);
-        border: 1px solid rgba(29,35,51,0.04);
-        border-radius: 14px;
-        padding: 10px 12px;
-      }
-
-      .step-number {
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        display: grid;
-        place-items: center;
-        font-weight: 900;
-        color: white;
-        background: linear-gradient(135deg, var(--purple), var(--blue));
-      }
-
-      .steps p {
-        margin: 0;
-        line-height: 1.5;
-        color: var(--ink);
-      }
-
-      .toolbox {
+      .label-row {
         display: flex;
-        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
         gap: 12px;
+        margin-bottom: 18px;
       }
 
-      .stat-box {
-        background: var(--panel-alt);
-        border-radius: 14px;
-        border: 1px solid rgba(0,0,0,0.04);
-        padding: 14px 16px;
-      }
-
-      .stat-box strong {
-        display: block;
+      .eyebrow {
         font-size: 0.72rem;
+        letter-spacing: 0.12em;
         text-transform: uppercase;
-        letter-spacing: 0.08em;
         color: var(--muted);
-        margin-bottom: 6px;
+        font-weight: 900;
       }
 
-      .stat-box span {
-        font-size: 1.1rem;
-        font-weight: 800;
+      .difficulty {
+        border-radius: 999px;
+        padding: 7px 12px;
+        font-size: 0.72rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-weight: 900;
+      }
+
+      .difficulty.easy { background: rgba(74,163,106,0.12); color: var(--easy); }
+      .difficulty.medium { background: rgba(245,185,66,0.14); color: #ad7f00; }
+      .difficulty.hard { background: rgba(217,79,61,0.12); color: var(--hard); }
+
+      .prompt {
+        font-size: clamp(2rem, 4vw, 3.2rem);
+        line-height: 1.05;
+        margin: 0 0 14px;
+        letter-spacing: -0.05em;
+      }
+
+      .details {
+        color: var(--muted);
+        line-height: 1.6;
+        margin: 0;
+        font-size: 1rem;
       }
 
       .button-row {
         display: flex;
         flex-wrap: wrap;
         gap: 10px;
-        margin-top: 20px;
+        margin-top: 22px;
       }
 
       button {
         border: none;
-        background: linear-gradient(135deg, var(--red), var(--orange));
+        background: linear-gradient(135deg, var(--purple), var(--blue));
         color: white;
         font-weight: 900;
         letter-spacing: 0.08em;
@@ -293,341 +189,299 @@
       }
 
       .secondary {
-        background: linear-gradient(135deg, var(--blue), var(--purple));
+        background: linear-gradient(135deg, var(--red), var(--orange));
       }
 
+      .side-panel {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .filter-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .filter {
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        background: white;
+        font-size: 0.75rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-weight: 800;
+        padding: 8px 12px;
+        color: var(--ink);
+      }
+
+      .filter.active {
+        background: linear-gradient(135deg, #f4efe9, #f0f3ff);
+        border-color: rgba(116,88,214,0.3);
+      }
+
+      .list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        max-height: 500px;
+        overflow: auto;
+      }
+
+      .list li {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        background: rgba(255,255,255,0.8);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 10px 12px;
+      }
+
+      .list li button {
+        background: transparent;
+        color: var(--ink);
+        padding: 0;
+        text-transform: none;
+        letter-spacing: 0;
+        font-weight: 700;
+        border-radius: 0;
+      }
+
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+
+      .easy-dot { background: var(--easy); }
+      .medium-dot { background: var(--medium); }
+      .hard-dot { background: var(--hard); }
+
       @media (max-width: 900px) {
-        .app {
+        .layout {
           grid-template-columns: 1fr;
         }
 
-        .sidebar {
-          border-right: 0;
-          border-bottom: 1px solid var(--line);
-        }
-
-        .hero,
-        .details-grid {
-          grid-template-columns: 1fr;
+        .header {
+          flex-direction: column;
+          align-items: flex-start;
         }
       }
     </style>
   </head>
   <body>
     <div class="app">
-      <aside class="sidebar">
+      <header class="header">
         <div class="brand">
           <div class="logo"></div>
-          <span>Brick Guide</span>
+          <span>Sketch Quest</span>
         </div>
-        <div class="build-list" id="buildList"></div>
-      </aside>
+        <div class="stats">
+          <div class="chip">50 prompts</div>
+          <div class="chip">Easy / medium / hard</div>
+        </div>
+      </header>
 
-      <main class="content">
-        <section class="hero">
+      <div class="layout">
+        <section class="panel prompt-card">
           <div>
-            <h1 id="buildTitle">Mini Race Car</h1>
-            <p class="subtitle" id="buildDescription"></p>
-            <div class="badge-row" id="buildBadges"></div>
+            <div class="label-row">
+              <div class="eyebrow" id="promptNumber">Prompt 1</div>
+              <div class="difficulty" id="difficultyBadge">Easy</div>
+            </div>
+            <h1 class="prompt" id="promptText">A sleepy cat curled up on a chair</h1>
+            <p class="details" id="promptHint">Quick, expressive, and easy to sketch in under 5 minutes.</p>
           </div>
-          <div class="mini-visual" id="miniVisual"></div>
+
+          <div class="button-row">
+            <button type="button" id="nextBtn">Next prompt</button>
+            <button type="button" id="randomBtn" class="secondary">Random</button>
+          </div>
         </section>
 
-        <div class="details-grid">
-          <section class="card">
-            <h2>Build Steps</h2>
-            <ol class="steps" id="stepsList"></ol>
+        <aside class="side-panel">
+          <section class="panel">
+            <div class="label-row">
+              <div class="eyebrow">Difficulty</div>
+            </div>
+            <div class="filter-row">
+              <button class="filter active" data-filter="all" type="button">All</button>
+              <button class="filter" data-filter="easy" type="button">Easy</button>
+              <button class="filter" data-filter="medium" type="button">Medium</button>
+              <button class="filter" data-filter="hard" type="button">Hard</button>
+            </div>
           </section>
 
-          <aside class="card toolbox">
-            <div class="stat-box">
-              <strong>Pieces</strong>
-              <span id="pieceCount"></span>
+          <section class="panel">
+            <div class="label-row">
+              <div class="eyebrow">Prompt list</div>
             </div>
-            <div class="stat-box">
-              <strong>Difficulty</strong>
-              <span id="difficulty"></span>
-            </div>
-            <div class="stat-box">
-              <strong>Best for</strong>
-              <span id="ageGroup"></span>
-            </div>
-            <div class="stat-box">
-              <strong>Key bricks</strong>
-              <span id="keyBricks"></span>
-            </div>
-
-            <div class="button-row">
-              <button type="button" id="randomBuildBtn">Random build</button>
-              <button type="button" id="nextBuildBtn" class="secondary">Next build</button>
-            </div>
-          </aside>
-        </div>
-      </main>
+            <ul class="list" id="promptList"></ul>
+          </section>
+        </aside>
+      </div>
     </div>
 
     <script>
-      const builds = [
-        {
-          id: 1,
-          name: 'Mini Race Car',
-          category: 'Vehicle',
-          difficulty: 'Easy',
-          age: '6+',
-          pieces: 42,
-          description: 'A fast little racer with a streamlined body, spoiler, and bold colors for a quick weekend build.',
-          bricks: '2x4 plates, 2x2 tiles, wheels, spoiler',
-          steps: [
-            'Start with a wide baseplate and add two axles evenly spaced under the chassis.',
-            'Attach the four wheels and lock them tightly so the car rolls straight.',
-            'Build the cabin using stacked tiles and a small front bumper for the sporty look.',
-            'Add the spoiler and a tiny windshield to finish the racer profile.',
-            'Test the wheels and adjust the axle alignment for a smoother roll.'
-          ],
-          colors: ['red', 'yellow', 'blue'],
-          type: 'car',
-          art: `
-            <svg viewBox="0 0 260 180" xmlns="http://www.w3.org/2000/svg" aria-label="Mini race car illustration">
-              <rect width="260" height="180" fill="#dfeaff"/>
-              <rect y="126" width="260" height="54" fill="#bfe3a7"/>
-              <circle cx="82" cy="135" r="22" fill="#212b3b"/>
-              <circle cx="182" cy="135" r="22" fill="#212b3b"/>
-              <circle cx="82" cy="135" r="10" fill="#eceff7"/>
-              <circle cx="182" cy="135" r="10" fill="#eceff7"/>
-              <path d="M44 114 L72 82 L170 82 L206 114 L214 114 L214 120 L44 120 Z" fill="#d94f3d"/>
-              <path d="M100 82 L108 60 L154 60 L162 82 Z" fill="#f5b942"/>
-              <rect x="74" y="90" width="104" height="18" rx="4" fill="#3c7ef4"/>
-              <rect x="126" y="70" width="18" height="24" rx="3" fill="#f6f8ff"/>
-              <path d="M166 76 L196 58 L208 76 Z" fill="#f5b942"/>
-            </svg>
-          `
-        },
-        {
-          id: 2,
-          name: 'Cozy Tree House',
-          category: 'Town',
-          difficulty: 'Medium',
-          age: '7+',
-          pieces: 88,
-          description: 'A simple family tree house with a balcony, ladder, and warm roof details.',
-          bricks: '1x2 bricks, 2x3 tiles, roof slopes, round plates',
-          steps: [
-            'Build the trunk as a tall central column with a few branches on each side.',
-            'Add a sturdy floor platform above the trunk and widen it into a small deck.',
-            'Construct the walls using stacked bricks and leave one side open for the doorway.',
-            'Place the roof slopes at an angle and add a chimney for character.',
-            'Finish with a tiny ladder and a balcony railing to make it feel lived in.'
-          ],
-          colors: ['green', 'yellow', 'brown'],
-          type: 'treehouse',
-          art: `
-            <svg viewBox="0 0 260 180" xmlns="http://www.w3.org/2000/svg" aria-label="Tree house illustration">
-              <rect width="260" height="180" fill="#dbeafe"/>
-              <rect y="126" width="260" height="54" fill="#9ad783"/>
-              <rect x="118" y="36" width="18" height="78" fill="#8f5a3c"/>
-              <circle cx="94" cy="40" r="28" fill="#5eb75a"/>
-              <circle cx="130" cy="28" r="20" fill="#5eb75a"/>
-              <circle cx="164" cy="42" r="24" fill="#5eb75a"/>
-              <rect x="82" y="52" width="92" height="50" rx="4" fill="#4aa36a"/>
-              <polygon points="77,54 174,54 128,24" fill="#f5b942"/>
-              <rect x="100" y="73" width="18" height="18" fill="#d94f3d"/>
-              <rect x="128" y="73" width="18" height="18" fill="#d94f3d"/>
-              <rect x="115" y="92" width="24" height="12" fill="#e9f7ff"/>
-              <rect x="60" y="98" width="18" height="32" fill="#8f5a3c"/>
-              <rect x="162" y="98" width="18" height="32" fill="#8f5a3c"/>
-            </svg>
-          `
-        },
-        {
-          id: 3,
-          name: 'Space Rover',
-          category: 'Adventure',
-          difficulty: 'Medium',
-          age: '8+',
-          pieces: 96,
-          description: 'A moon rover with a big front light, storage pod, and durable wheel design.',
-          bricks: 'round tiles, dark bricks, axle pieces, angled panels',
-          steps: [
-            'Create the chassis with a wide rectangular base and add the wheel mounts at all corners.',
-            'Attach the front telescope arm and add a bright light panel to the front section.',
-            'Build a cargo box on the back and connect it to the main body using small plates.',
-            'Add side handles and antenna detail to make the rover look mission-ready.',
-            'Check that both sides are balanced before displaying it proudly.'
-          ],
-          colors: ['blue', 'gray', 'white'],
-          type: 'rover',
-          art: `
-            <svg viewBox="0 0 260 180" xmlns="http://www.w3.org/2000/svg" aria-label="Space rover illustration">
-              <rect width="260" height="180" fill="#dfe8ff"/>
-              <circle cx="62" cy="130" r="20" fill="#212b3b"/>
-              <circle cx="170" cy="130" r="20" fill="#212b3b"/>
-              <circle cx="62" cy="130" r="9" fill="#eef6ff"/>
-              <circle cx="170" cy="130" r="9" fill="#eef6ff"/>
-              <rect x="54" y="80" width="120" height="36" rx="6" fill="#3c7ef4"/>
-              <rect x="168" y="82" width="46" height="24" rx="4" fill="#f5b942"/>
-              <rect x="78" y="66" width="56" height="16" rx="4" fill="#d94f3d"/>
-              <rect x="90" y="88" width="12" height="18" fill="#f5f8ff"/>
-              <rect x="138" y="88" width="12" height="18" fill="#f5f8ff"/>
-              <path d="M54 88 L42 96 L54 104" fill="none" stroke="#7cc2ff" stroke-width="5" stroke-linecap="round"/>
-              <circle cx="187" cy="64" r="8" fill="#a6d6ff"/>
-              <rect x="180" y="52" width="4" height="12" fill="#92a4d6"/>
-            </svg>
-          `
-        },
-        {
-          id: 4,
-          name: 'Pirate Ship',
-          category: 'Fantasy',
-          difficulty: 'Hard',
-          age: '9+',
-          pieces: 121,
-          description: 'A compact pirate ship with sails, a deck, and a hidden chest of treasure.',
-          bricks: 'slope bricks, sails, mast pieces, anchor',
-          steps: [
-            'Lay down the hull with a pointed front and wider back so the ship has a classic shape.',
-            'Build the deck and add a tiny captain cabin close to the rear.',
-            'Place the mast and secure two sail pieces using thin bars and clips.',
-            'Add the anchor, flag, and a small treasure chest to the deck.',
-            'Make sure the ship can stand level before displaying it on a shelf.'
-          ],
-          colors: ['red', 'gold', 'blue'],
-          type: 'ship',
-          art: `
-            <svg viewBox="0 0 260 180" xmlns="http://www.w3.org/2000/svg" aria-label="Pirate ship illustration">
-              <rect width="260" height="180" fill="#d1e8ff"/>
-              <path d="M40 126 L198 126 L172 98 L76 98 Z" fill="#d94f3d"/>
-              <path d="M76 98 L130 52 L184 98 Z" fill="#f5b942"/>
-              <rect x="128" y="48" width="5" height="60" fill="#6e4c3a"/>
-              <path d="M128 48 L176 70 L128 82 Z" fill="#f5f1ff"/>
-              <path d="M128 48 L88 70 L128 82 Z" fill="#f5f1ff"/>
-              <rect x="86" y="116" width="18" height="18" fill="#3c7ef4"/>
-              <circle cx="200" cy="126" r="12" fill="#d7b66c"/>
-              <path d="M200 110 L212 126 L200 142 L188 126 Z" fill="#d7b66c"/>
-              <rect y="136" width="260" height="44" fill="#7ecf9b"/>
-            </svg>
-          `
-        },
-        {
-          id: 5,
-          name: 'Robot Helper',
-          category: 'Tech',
-          difficulty: 'Easy',
-          age: '6+',
-          pieces: 58,
-          description: 'A cheerful little robot with moving arms, bright eyes, and a helpful pose.',
-          bricks: 'round plates, tiles, hinge pieces, technic bars',
-          steps: [
-            'Build the body as a compact box with a large front panel for the face.',
-            'Add the eyes and a cheerful display panel using bright tiles.',
-            'Attach two arm pieces with simple hinges so they swing naturally.',
-            'Create the legs using stacked plates for a sturdy stance.',
-            'Finish with a tiny accessory tray or side panel for the helper look.'
-          ],
-          colors: ['blue', 'yellow', 'white'],
-          type: 'robot',
-          art: `
-            <svg viewBox="0 0 260 180" xmlns="http://www.w3.org/2000/svg" aria-label="Robot illustration">
-              <rect width="260" height="180" fill="#dfe8ff"/>
-              <rect y="134" width="260" height="46" fill="#b9e4a7"/>
-              <rect x="86" y="44" width="88" height="68" rx="10" fill="#3c7ef4"/>
-              <rect x="98" y="58" width="26" height="18" rx="4" fill="#f4f7fb"/>
-              <rect x="136" y="58" width="26" height="18" rx="4" fill="#f4f7fb"/>
-              <circle cx="110" cy="67" r="5" fill="#1d2333"/>
-              <circle cx="146" cy="67" r="5" fill="#1d2333"/>
-              <rect x="122" y="80" width="18" height="8" rx="3" fill="#f5b942"/>
-              <rect x="72" y="72" width="18" height="44" rx="8" fill="#d94f3d"/>
-              <rect x="170" y="72" width="18" height="44" rx="8" fill="#d94f3d"/>
-              <rect x="104" y="106" width="22" height="42" rx="8" fill="#3c7ef4"/>
-              <rect x="134" y="106" width="22" height="42" rx="8" fill="#3c7ef4"/>
-            </svg>
-          `
-        }
+      const prompts = [
+        { prompt: 'A sleepy cat curled up on a chair', difficulty: 'easy', hint: 'Quick, expressive, and easy to sketch in under 5 minutes.' },
+        { prompt: 'A coffee cup on a rainy windowsill', difficulty: 'easy', hint: 'Simple shapes with nice mood and details.' },
+        { prompt: 'A pile of colorful books', difficulty: 'easy', hint: 'Focus on stacked shapes and perspective.' },
+        { prompt: 'A tiny flower growing in a cracked pot', difficulty: 'easy', hint: 'A small scene with a strong center of interest.' },
+        { prompt: 'A bird sitting on a fence post', difficulty: 'easy', hint: 'Perfect for practicing silhouette and basic feather shapes.' },
+        { prompt: 'A pair of sneakers on the floor', difficulty: 'easy', hint: 'Try simple outlines and light shading.' },
+        { prompt: 'A backpack full of school supplies', difficulty: 'easy', hint: 'Practice volume and layered textures.' },
+        { prompt: 'A stack of pancakes with syrup', difficulty: 'easy', hint: 'Great for round forms and highlights.' },
+        { prompt: 'A smiling sun peeking behind clouds', difficulty: 'easy', hint: 'Clean shapes and a warm color mood.' },
+        { prompt: 'A lantern hanging outside a cabin', difficulty: 'easy', hint: 'Good for light, shadow, and form.' },
+
+        { prompt: 'A fox in a field at sunset', difficulty: 'medium', hint: 'Build the pose and use soft gradients to show depth.' },
+        { prompt: 'An old bicycle leaning against a wall', difficulty: 'medium', hint: 'Work on wheels, spokes, and perspective.' },
+        { prompt: 'A person walking with an umbrella', difficulty: 'medium', hint: 'Try movement and strong silhouette.' },
+        { prompt: 'A cactus in a ceramic pot', difficulty: 'medium', hint: 'Focus on clean repeated shapes and textures.' },
+        { prompt: 'A dragonfly resting on a leaf', difficulty: 'medium', hint: 'Tiny details and delicate line work make it interesting.' },
+        { prompt: 'A bakery counter full of pastries', difficulty: 'medium', hint: 'A busy composition with lots of simple repeated forms.' },
+        { prompt: 'A winter cabin in the snow', difficulty: 'medium', hint: 'Mix geometry with atmospheric light.' },
+        { prompt: 'A skateboard and helmet on a bench', difficulty: 'medium', hint: 'Practice overlapping objects and proportions.' },
+        { prompt: 'A hand holding a tea mug', difficulty: 'medium', hint: 'Try realistic finger shapes and contour lines.' },
+        { prompt: 'A stormy beach with crashing waves', difficulty: 'medium', hint: 'Layer the forms and add motion lines.' },
+
+        { prompt: 'A full-body portrait of a warrior in armor', difficulty: 'hard', hint: 'Use strong anatomy and detailed costume shapes.' },
+        { prompt: 'A fantasy castle on a cliff at night', difficulty: 'hard', hint: 'Challenge your composition and depth.' },
+        { prompt: 'A detailed city street with multiple buildings', difficulty: 'hard', hint: 'Layer perspective, windows, and lighting.' },
+        { prompt: 'A horse rearing up against a dramatic sky', difficulty: 'hard', hint: 'Focus on anatomy and action lines.' },
+        { prompt: 'A detailed underwater scene with fish and coral', difficulty: 'hard', hint: 'Lots of varied shapes and underwater lighting.' },
+        { prompt: 'An old violin and bow on a wooden table', difficulty: 'hard', hint: 'Practice curves, wood grain, and refined forms.' },
+        { prompt: 'A bustling market street with signs and people', difficulty: 'hard', hint: 'A full scene with lots of small details.' },
+        { prompt: 'A dramatic portrait of a person in profile', difficulty: 'hard', hint: 'Focus on skull structure, eyes, and shadow.' },
+        { prompt: 'A spaceship flying through asteroid fields', difficulty: 'hard', hint: 'Create energy, motion, and complex space forms.' },
+        { prompt: 'A group of musicians in a jazz club', difficulty: 'hard', hint: 'Add multiple figures, instruments, and atmosphere.' },
+
+        { prompt: 'A robot watering a garden', difficulty: 'easy', hint: 'Simple mechanical shapes with some personality.' },
+        { prompt: 'A bowl of fruit on a kitchen table', difficulty: 'easy', hint: 'Try a variety of round forms and highlights.' },
+        { prompt: 'A toy train beside a small station', difficulty: 'easy', hint: 'Study clean shapes and repeating wheels.' },
+        { prompt: 'A campfire with marshmallows and logs', difficulty: 'easy', hint: 'Good practice for warm tones and circular forms.' },
+        { prompt: 'A penguin standing on an iceberg', difficulty: 'easy', hint: 'Focus on silhouette and body volume.' },
+        { prompt: 'A birdhouse hanging from a branch', difficulty: 'easy', hint: 'Simple object study with a little environment.' },
+        { prompt: 'A stack of colorful donuts', difficulty: 'easy', hint: 'Rounded forms and frosting texture are fun and easy.' },
+        { prompt: 'A little garden shed with a window', difficulty: 'medium', hint: 'Use perspective and simple architectural shapes.' },
+        { prompt: 'A wolf howling at the moon', difficulty: 'medium', hint: 'Use line and form to give the creature energy.' },
+        { prompt: 'A row of potted plants on a balcony', difficulty: 'medium', hint: 'Multiple objects and layered spacing.' },
+        { prompt: 'A vintage camera on a desk', difficulty: 'medium', hint: 'Try strong shapes plus tiny mechanical detail.' },
+        { prompt: 'Two hands drawing together on paper', difficulty: 'medium', hint: 'A challenge in proportions and gesture.' },
+        { prompt: 'A mountain lake with reflections', difficulty: 'hard', hint: 'Push your values and terrain shapes.' },
+        { prompt: 'A detailed portrait of an elderly person', difficulty: 'hard', hint: 'Focus on wrinkles, expression, and lighting.' },
+        { prompt: 'A giant tree with roots and branches', difficulty: 'hard', hint: 'More complex structure and texture.' },
+        { prompt: 'A dragon flying over a castle', difficulty: 'hard', hint: 'A full fantasy scene with many moving parts.' },
+        { prompt: 'A close-up of a face with dramatic light', difficulty: 'hard', hint: 'Very challenging for form and shadow study.' }
       ];
 
-      const buildList = document.getElementById('buildList');
-      const buildTitle = document.getElementById('buildTitle');
-      const buildDescription = document.getElementById('buildDescription');
-      const buildBadges = document.getElementById('buildBadges');
-      const stepsList = document.getElementById('stepsList');
-      const pieceCount = document.getElementById('pieceCount');
-      const difficulty = document.getElementById('difficulty');
-      const ageGroup = document.getElementById('ageGroup');
-      const keyBricks = document.getElementById('keyBricks');
-      const miniVisual = document.getElementById('miniVisual');
-      const randomBuildBtn = document.getElementById('randomBuildBtn');
-      const nextBuildBtn = document.getElementById('nextBuildBtn');
+      const state = {
+        filter: 'all',
+        index: 0
+      };
 
-      let selectedIndex = 0;
+      const promptText = document.getElementById('promptText');
+      const promptHint = document.getElementById('promptHint');
+      const promptNumber = document.getElementById('promptNumber');
+      const difficultyBadge = document.getElementById('difficultyBadge');
+      const promptList = document.getElementById('promptList');
+      const filters = document.querySelectorAll('.filter');
 
-      function renderBuilds() {
-        buildList.innerHTML = '';
+      function getFilteredPrompts() {
+        if (state.filter === 'all') return prompts;
+        return prompts.filter(item => item.difficulty === state.filter);
+      }
 
-        builds.forEach((build, index) => {
+      function getCurrentPrompt() {
+        const filtered = getFilteredPrompts();
+        if (!filtered.length) return prompts[0];
+        return filtered[Math.min(state.index, filtered.length - 1)];
+      }
+
+      function getDotClass(level) {
+        if (level === 'easy') return 'easy-dot';
+        if (level === 'medium') return 'medium-dot';
+        return 'hard-dot';
+      }
+
+      function renderList() {
+        const filtered = getFilteredPrompts();
+        promptList.innerHTML = '';
+
+        filtered.forEach((item, index) => {
+          const li = document.createElement('li');
+          const dot = document.createElement('span');
+          dot.className = `dot ${getDotClass(item.difficulty)}`;
+
           const button = document.createElement('button');
           button.type = 'button';
-          button.className = 'build-item' + (index === selectedIndex ? ' active' : '');
-          button.innerHTML = `
-            <h3>${build.name}</h3>
-            <div class="meta">
-              <span>${build.category}</span>
-              <span>•</span>
-              <span>${build.pieces} pieces</span>
-            </div>
-          `;
+          button.textContent = `${index + 1}. ${item.prompt}`;
           button.addEventListener('click', () => {
-            selectedIndex = index;
-            renderSelectedBuild();
+            state.index = index;
+            renderCurrent();
           });
-          buildList.appendChild(button);
+
+          const label = document.createElement('span');
+          label.textContent = item.difficulty;
+          label.style.fontSize = '0.68rem';
+          label.style.fontWeight = '900';
+          label.style.letterSpacing = '0.08em';
+          label.style.textTransform = 'uppercase';
+          label.style.color = item.difficulty === 'easy' ? 'var(--easy)' : item.difficulty === 'medium' ? '#ad7f00' : 'var(--hard)';
+
+          li.appendChild(dot);
+          li.appendChild(button);
+          li.appendChild(label);
+          promptList.appendChild(li);
         });
       }
 
-      function renderSelectedBuild() {
-        const build = builds[selectedIndex];
-        buildTitle.textContent = build.name;
-        buildDescription.textContent = build.description;
+      function renderCurrent() {
+        const filtered = getFilteredPrompts();
+        const prompt = filtered.length ? filtered[Math.min(state.index, filtered.length - 1)] : prompts[0];
+        const originalIndex = prompts.indexOf(prompt) + 1;
 
-        buildBadges.innerHTML = '';
-        const badges = [build.category, build.difficulty, `${build.age}`];
-        badges.forEach(text => {
-          const badge = document.createElement('span');
-          badge.className = 'badge';
-          badge.textContent = text;
-          buildBadges.appendChild(badge);
-        });
+        promptText.textContent = prompt.prompt;
+        promptHint.textContent = prompt.hint;
+        promptNumber.textContent = `Prompt ${originalIndex}`;
+        difficultyBadge.textContent = prompt.difficulty;
+        difficultyBadge.className = `difficulty ${prompt.difficulty}`;
 
-        stepsList.innerHTML = '';
-        build.steps.forEach((step, index) => {
-          const li = document.createElement('li');
-          li.innerHTML = `
-            <div class="step-number">${index + 1}</div>
-            <p>${step}</p>
-          `;
-          stepsList.appendChild(li);
-        });
-
-        pieceCount.textContent = `${build.pieces} pieces`;
-        difficulty.textContent = build.difficulty;
-        ageGroup.textContent = build.age;
-        keyBricks.textContent = build.bricks;
-
-        // Edit each build's SVG art here.
-        miniVisual.innerHTML = build.art;
-        renderBuilds();
+        renderList();
       }
 
-      randomBuildBtn.addEventListener('click', () => {
-        const random = Math.floor(Math.random() * builds.length);
-        selectedIndex = random;
-        renderSelectedBuild();
+      document.getElementById('nextBtn').addEventListener('click', () => {
+        const filtered = getFilteredPrompts();
+        if (!filtered.length) return;
+        state.index = (state.index + 1) % filtered.length;
+        renderCurrent();
       });
 
-      nextBuildBtn.addEventListener('click', () => {
-        selectedIndex = (selectedIndex + 1) % builds.length;
-        renderSelectedBuild();
+      document.getElementById('randomBtn').addEventListener('click', () => {
+        const filtered = getFilteredPrompts();
+        if (!filtered.length) return;
+        state.index = Math.floor(Math.random() * filtered.length);
+        renderCurrent();
       });
 
-      renderSelectedBuild();
+      filters.forEach(filter => {
+        filter.addEventListener('click', () => {
+          state.filter = filter.dataset.filter;
+          state.index = 0;
+          filters.forEach(btn => btn.classList.toggle('active', btn === filter));
+          renderCurrent();
+        });
+      });
+
+      renderCurrent();
     </script>
   </body>
 </html>
