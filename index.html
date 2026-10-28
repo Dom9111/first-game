@@ -225,6 +225,7 @@
       }
 
       .viewport-shell {
+        position: relative;
         flex: 1;
         min-width: 0;
         display: flex;
@@ -456,6 +457,149 @@
         letter-spacing: 0.08em;
       }
 
+      .voice-panel {
+        position: absolute;
+        right: 18px;
+        bottom: 18px;
+        width: min(350px, calc(100% - 24px));
+        background: rgba(15, 23, 42, 0.86);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        backdrop-filter: blur(14px);
+        box-shadow: 0 20px 40px rgba(2, 6, 23, 0.6);
+        z-index: 2;
+        overflow: hidden;
+      }
+
+      .voice-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 10px 12px;
+        border-bottom: 1px solid var(--line);
+        background: rgba(17, 24, 39, 0.9);
+      }
+
+      .voice-title {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.73rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--muted);
+        font-weight: 800;
+      }
+
+      .voice-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--green);
+        box-shadow: 0 0 12px rgba(52, 211, 153, 0.9);
+      }
+
+      .voice-close {
+        border: 1px solid var(--line);
+        background: rgba(148, 163, 184, 0.04);
+        color: var(--text);
+        border-radius: 8px;
+        width: 28px;
+        height: 28px;
+        font-size: 1rem;
+      }
+
+      .voice-messages {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        max-height: 220px;
+        overflow-y: auto;
+        padding: 12px;
+        background: rgba(11,16,32,0.4);
+      }
+
+      .voice-bubble {
+        max-width: 85%;
+        padding: 8px 10px;
+        border-radius: 12px;
+        line-height: 1.45;
+        font-size: 0.82rem;
+        border: 1px solid var(--line);
+      }
+
+      .voice-bubble.user {
+        margin-left: auto;
+        background: linear-gradient(135deg, rgba(103, 232, 249, 0.22), rgba(139, 92, 246, 0.24));
+      }
+
+      .voice-bubble.assistant {
+        margin-right: auto;
+        background: rgba(148, 163, 184, 0.06);
+      }
+
+      .voice-controls {
+        display: flex;
+        gap: 8px;
+        padding: 10px 12px 6px;
+      }
+
+      .voice-btn {
+        flex: 1;
+        border: 1px solid var(--line);
+        background: rgba(148, 163, 184, 0.06);
+        color: var(--text);
+        border-radius: 10px;
+        padding: 8px 12px;
+        font-size: 0.72rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-weight: 800;
+      }
+
+      .voice-btn.primary,
+      .voice-btn.mic.active {
+        background: linear-gradient(135deg, rgba(103, 232, 249, 0.25), rgba(139, 92, 246, 0.35));
+        border-color: rgba(103, 232, 249, 0.35);
+      }
+
+      .voice-input-row {
+        display: flex;
+        gap: 8px;
+        padding: 8px 12px 12px;
+      }
+
+      .voice-input-row input {
+        flex: 1;
+        background: rgba(148, 163, 184, 0.04);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        color: var(--text);
+        padding: 10px 12px;
+        font-size: 0.82rem;
+      }
+
+      .voice-input-row button {
+        border: 1px solid var(--line);
+        background: rgba(148, 163, 184, 0.08);
+        color: var(--text);
+        border-radius: 10px;
+        padding: 10px 12px;
+        font-size: 0.7rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-weight: 800;
+      }
+
+      .voice-status {
+        padding: 0 12px 12px;
+        font-size: 0.7rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
       @media (max-width: 1050px) {
         .workspace {
           grid-template-columns: 1fr;
@@ -574,6 +718,29 @@
             </div>
           </div>
 
+          <div class="voice-panel">
+            <div class="voice-header">
+              <div class="voice-title"><span class="voice-dot"></span> AI Voice Chat</div>
+              <button class="voice-close" type="button" id="voiceCloseBtn">×</button>
+            </div>
+
+            <div class="voice-messages" id="voiceMessages">
+              <div class="voice-bubble assistant">Hi! Tap the mic and talk to me. I can control the scene, answer questions, and speak back.</div>
+            </div>
+
+            <div class="voice-controls">
+              <button class="voice-btn mic" id="micBtn" type="button">🎙️ Listen</button>
+              <button class="voice-btn" id="speakBtn" type="button">🔊 Speak</button>
+            </div>
+
+            <div class="voice-input-row">
+              <input id="voiceInput" type="text" placeholder="Type a message..." />
+              <button id="sendBtn" type="button">Send</button>
+            </div>
+
+            <div class="voice-status" id="voiceStatus">Ready</div>
+          </div>
+
           <div class="timeline">
             <div class="timeline-track">
               <div class="timeline-markers"></div>
@@ -634,10 +801,104 @@
       const cube = document.getElementById('cube');
       const viewport = document.getElementById('viewport');
       const playButton = document.querySelector('.primary');
+      const voiceMessages = document.getElementById('voiceMessages');
+      const voiceInput = document.getElementById('voiceInput');
+      const sendBtn = document.getElementById('sendBtn');
+      const micBtn = document.getElementById('micBtn');
+      const speakBtn = document.getElementById('speakBtn');
+      const voiceStatus = document.getElementById('voiceStatus');
+      const voiceCloseBtn = document.getElementById('voiceCloseBtn');
+      const voicePanel = document.querySelector('.voice-panel');
 
       let isPlaying = true;
       let pointerX = 0;
       let pointerY = 0;
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const recognition = SpeechRecognition ? new SpeechRecognition() : null;
+
+      function addMessage(role, text) {
+        const bubble = document.createElement('div');
+        bubble.className = `voice-bubble ${role}`;
+        bubble.textContent = text;
+        voiceMessages.appendChild(bubble);
+        voiceMessages.scrollTop = voiceMessages.scrollHeight;
+      }
+
+      function setStatus(text) {
+        voiceStatus.textContent = text;
+      }
+
+      function speakText(text) {
+        if (!('speechSynthesis' in window)) {
+          return;
+        }
+
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.rate = 1;
+        utterance.pitch = 1.1;
+        utterance.volume = 1;
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.speak(utterance);
+      }
+
+      function getAssistantReply(input) {
+        const text = input.toLowerCase();
+
+        if (/hello|hi|hey/.test(text)) {
+          return 'Hello! I’m your AI voice assistant. Ask me to pause the scene, describe the space, or chat about anything.';
+        }
+
+        if (/pause|stop/.test(text)) {
+          if (isPlaying) {
+            isPlaying = false;
+            playButton.textContent = 'Play';
+          }
+          return 'The animation is now paused.';
+        }
+
+        if (/play|resume|start/.test(text)) {
+          if (!isPlaying) {
+            isPlaying = true;
+            playButton.textContent = 'Pause';
+          }
+          return 'The animation is running again.';
+        }
+
+        if (/scene|space|planet|cube|orbit|star/.test(text)) {
+          return 'This scene is a futuristic 3D space view with a rotating cube, orbiting rings, a glowing planet, and floating satellites.';
+        }
+
+        if (/how are you|feeling/.test(text)) {
+          return 'I am doing great and ready to help. You can ask me to control the scene or talk about the project.';
+        }
+
+        if (/theme|color|light/.test(text)) {
+          document.body.style.filter = 'hue-rotate(25deg) saturate(1.15)';
+          return 'I warmed up the visual palette for a more cinematic space look.';
+        }
+
+        if (/reset|normal/.test(text)) {
+          document.body.style.filter = 'none';
+          return 'The visual style has been reset to the default scene.';
+        }
+
+        if (/thanks|thank you/.test(text)) {
+          return 'You are very welcome. I am ready whenever you want to talk again.';
+        }
+
+        return 'I heard you. Ask me about the scene, tell me to pause or play, or just say hello.';
+      }
+
+      function handleUserInput(rawText) {
+        const text = rawText.trim();
+        if (!text) return;
+
+        addMessage('user', text);
+        const reply = getAssistantReply(text);
+        addMessage('assistant', reply);
+        speakText(reply);
+        setStatus('Response ready');
+      }
 
       function animate() {
         const time = performance.now() * 0.001;
@@ -668,6 +929,71 @@
         isPlaying = !isPlaying;
         playButton.textContent = isPlaying ? 'Pause' : 'Play';
       });
+
+      sendBtn.addEventListener('click', () => {
+        handleUserInput(voiceInput.value);
+        voiceInput.value = '';
+      });
+
+      voiceInput.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+          handleUserInput(voiceInput.value);
+          voiceInput.value = '';
+        }
+      });
+
+      speakBtn.addEventListener('click', () => {
+        const lastBubble = voiceMessages.querySelector('.voice-bubble.assistant:last-child');
+        if (lastBubble) {
+          speakText(lastBubble.textContent);
+          setStatus('Speaking');
+        }
+      });
+
+      voiceCloseBtn.addEventListener('click', () => {
+        voicePanel.style.display = 'none';
+      });
+
+      if (recognition) {
+        recognition.lang = 'en-US';
+        recognition.continuous = false;
+        recognition.interimResults = false;
+
+        recognition.onstart = () => {
+          micBtn.classList.add('active');
+          micBtn.textContent = '🎙️ Listening';
+          setStatus('Listening...');
+        };
+
+        recognition.onresult = (event) => {
+          const transcript = event.results[0][0].transcript;
+          handleUserInput(transcript);
+        };
+
+        recognition.onend = () => {
+          micBtn.classList.remove('active');
+          micBtn.textContent = '🎙️ Listen';
+          setStatus('Ready');
+        };
+
+        recognition.onerror = () => {
+          setStatus('Mic error');
+        };
+
+        micBtn.addEventListener('click', () => {
+          if (micBtn.classList.contains('active')) {
+            recognition.stop();
+            return;
+          }
+
+          recognition.start();
+        });
+      } else {
+        micBtn.addEventListener('click', () => {
+          addMessage('assistant', 'Voice recognition is not available in this browser. You can type a message instead.');
+          setStatus('Browser unsupported');
+        });
+      }
 
       requestAnimationFrame(animate);
     </script>
