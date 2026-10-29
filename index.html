@@ -6,20 +6,24 @@
     <title>Pixel Lab | Photo Editor</title>
     <style>
       :root {
-        --bg: #070b14;
-        --bg-2: #0f172a;
-        --panel: rgba(15, 23, 42, 0.9);
-        --panel-2: rgba(17, 24, 39, 0.9);
-        --panel-3: rgba(30, 41, 59, 0.75);
-        --line: rgba(148, 163, 184, 0.18);
-        --text: #edf3ff;
-        --muted: #9aa8bf;
-        --accent: #67e8f9;
+        --bg: #0d1117;
+        --bg-2: #111827;
+        --bg-3: #1a2333;
+        --panel: #191f2d;
+        --panel-2: #1f2937;
+        --panel-3: #242f3f;
+        --tool-panel: #171d2a;
+        --line: rgba(148, 163, 184, 0.16);
+        --line-2: rgba(148, 163, 184, 0.28);
+        --text: #edf4ff;
+        --muted: #9ca9bd;
+        --muted-2: #70819f;
+        --accent: #57d7ff;
         --accent-2: #8b5cf6;
-        --orange: #f59e0b;
-        --green: #34d399;
-        --red: #fb7185;
-        --shadow: rgba(2, 6, 23, 0.65);
+        --orange: #f6b74d;
+        --green: #37d39a;
+        --red: #ff667d;
+        --shadow: rgba(2, 6, 23, 0.7);
       }
 
       * { box-sizing: border-box; }
@@ -29,9 +33,9 @@
         width: 100%;
         min-height: 100%;
         background:
-          radial-gradient(circle at 15% 20%, rgba(103, 232, 249, 0.12), transparent 18%),
-          radial-gradient(circle at 85% 0%, rgba(139, 92, 246, 0.16), transparent 20%),
-          linear-gradient(180deg, #070b14 0%, #0a1020 100%);
+          radial-gradient(circle at top left, rgba(87, 215, 255, 0.08), transparent 18%),
+          radial-gradient(circle at top right, rgba(139, 92, 246, 0.08), transparent 24%),
+          linear-gradient(180deg, #0a0f17 0%, #0d1117 100%);
         color: var(--text);
         font-family: Inter, "Segoe UI", sans-serif;
       }
@@ -39,162 +43,114 @@
       body {
         min-height: 100vh;
         display: grid;
-        place-items: center;
-        padding: 24px;
+        place-items: stretch;
+      }
+
+      button, input {
+        font: inherit;
       }
 
       .app {
-        width: min(1500px, 100%);
-        height: min(1000px, 94vh);
+        width: 100%;
+        min-height: 100vh;
         display: grid;
-        grid-template-columns: 280px minmax(0, 1fr) 300px;
-        background: rgba(5, 9, 18, 0.82);
+        grid-template-rows: 38px 58px minmax(0, 1fr);
+        background: linear-gradient(180deg, #101721 0%, #0d1117 100%);
         border: 1px solid var(--line);
-        border-radius: 26px;
-        overflow: hidden;
-        box-shadow: 0 40px 90px rgba(0, 0, 0, 0.52);
       }
 
-      .panel {
-        background: rgba(15, 23, 42, 0.7);
-        border-right: 1px solid var(--line);
-      }
-
-      .panel.right {
-        border-right: none;
-        border-left: 1px solid var(--line);
-      }
-
-      .left-panel, .right-panel {
-        display: flex;
-        flex-direction: column;
-        padding: 18px 16px;
-        gap: 18px;
-      }
-
-      .brand-row {
+      .menu-bar {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 12px;
-        padding-bottom: 10px;
-      }
-
-      .brand {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        font-weight: 900;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
-      }
-
-      .brand-mark {
-        width: 28px;
-        height: 28px;
-        border-radius: 10px;
-        background: linear-gradient(135deg, var(--accent), var(--accent-2));
-        box-shadow: 0 0 18px rgba(103, 232, 249, 0.4);
-      }
-
-      .status-pill {
-        padding: 6px 8px;
-        border-radius: 999px;
-        font-size: 0.62rem;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        font-weight: 800;
-        color: var(--green);
-        background: rgba(52, 211, 153, 0.08);
-        border: 1px solid rgba(52, 211, 153, 0.25);
-      }
-
-      .card {
-        background: rgba(15, 23, 42, 0.8);
-        border: 1px solid var(--line);
-        border-radius: 18px;
-        overflow: hidden;
-      }
-
-      .card-header {
-        padding: 12px 14px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+        gap: 16px;
+        padding: 0 18px;
+        background: rgba(18, 24, 35, 0.96);
         border-bottom: 1px solid var(--line);
-        color: var(--muted);
-        font-size: 0.68rem;
+      }
+
+      .app-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 900;
         letter-spacing: 0.12em;
         text-transform: uppercase;
-        font-weight: 800;
+        font-size: 0.72rem;
+        color: var(--text);
       }
 
-      .card-body {
-        padding: 14px;
+      .app-mark {
+        width: 16px;
+        height: 16px;
+        border-radius: 4px;
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        box-shadow: 0 0 14px rgba(87, 215, 255, 0.35);
       }
 
-      .dropzone {
-        position: relative;
+      .menu-items {
         display: flex;
-        flex-direction: column;
         align-items: center;
-        justify-content: center;
-        gap: 12px;
-        min-height: 160px;
-        border: 1.5px dashed rgba(103, 232, 249, 0.4);
-        border-radius: 16px;
-        background: linear-gradient(180deg, rgba(103, 232, 249, 0.08), rgba(139, 92, 246, 0.08));
-        cursor: pointer;
-        padding: 18px 12px;
-        text-align: center;
-        transition: 0.2s ease;
-      }
-
-      .dropzone:hover,
-      .dropzone.dragging {
-        border-color: rgba(103, 232, 249, 0.8);
-        background: linear-gradient(180deg, rgba(103, 232, 249, 0.12), rgba(139, 92, 246, 0.12));
-        transform: translateY(-1px);
-      }
-
-      .dropzone .icon {
-        width: 44px;
-        height: 44px;
-        border-radius: 14px;
-        background: linear-gradient(135deg, rgba(103,232,249,0.2), rgba(139,92,246,0.22));
-        display: grid;
-        place-items: center;
-        font-size: 1.4rem;
-      }
-
-      .dropzone strong {
-        font-size: 0.82rem;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-      }
-
-      .dropzone span {
+        gap: 18px;
         color: var(--muted);
-        font-size: 0.75rem;
-        line-height: 1.6;
+        font-size: 0.7rem;
+        letter-spacing: 0.04em;
       }
 
-      .quick-actions {
+      .menu-items span {
+        cursor: default;
+        opacity: 0.9;
+      }
+
+      .menu-actions {
         display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
+        align-items: center;
+        gap: 10px;
       }
 
-      button,
-      .preset-btn,
-      .tool-btn {
-        appearance: none;
+      .mini-chip {
         border: 1px solid var(--line);
         background: rgba(148, 163, 184, 0.05);
         color: var(--text);
-        border-radius: 10px;
-        padding: 8px 10px;
-        font-size: 0.72rem;
+        border-radius: 8px;
+        padding: 6px 10px;
+        font-size: 0.66rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-weight: 800;
+      }
+
+      .options-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 8px 12px 7px;
+        border-bottom: 1px solid var(--line);
+        background: rgba(17, 24, 35, 0.94);
+      }
+
+      .tool-strip,
+      .utility-strip {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .tool-btn,
+      .utility-btn,
+      .preset-btn,
+      .action-btn,
+      .menu-button,
+      .panel-button {
+        appearance: none;
+        border: 1px solid var(--line);
+        background: rgba(148, 163, 184, 0.04);
+        color: var(--text);
+        border-radius: 8px;
+        padding: 7px 10px;
+        font-size: 0.66rem;
         letter-spacing: 0.08em;
         text-transform: uppercase;
         font-weight: 800;
@@ -202,105 +158,94 @@
         transition: 0.2s ease;
       }
 
-      button:hover,
+      .tool-btn:hover,
+      .utility-btn:hover,
       .preset-btn:hover,
-      .tool-btn:hover {
-        border-color: rgba(103, 232, 249, 0.4);
-        background: rgba(103, 232, 249, 0.08);
+      .action-btn:hover,
+      .menu-button:hover,
+      .panel-button:hover {
+        border-color: rgba(87, 215, 255, 0.4);
+        background: rgba(87, 215, 255, 0.08);
       }
 
-      .tool-btn.primary,
-      .preset-btn.primary,
-      button.primary {
-        background: linear-gradient(135deg, rgba(103, 232, 249, 0.26), rgba(139, 92, 246, 0.3));
-        border-color: rgba(103, 232, 249, 0.35);
+      .tool-btn.active,
+      .utility-btn.active,
+      .panel-button.primary,
+      .action-btn.primary,
+      .preset-btn.primary {
+        background: linear-gradient(135deg, rgba(87, 215, 255, 0.2), rgba(139, 92, 246, 0.22));
+        border-color: rgba(87, 215, 255, 0.4);
       }
 
-      .controls {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-      }
-
-      .control {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-      }
-
-      .control label {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 10px;
-        color: var(--muted);
-        font-size: 0.7rem;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        font-weight: 800;
-      }
-
-      .control output {
-        color: var(--text);
-        font-weight: 800;
-        min-width: 38px;
-        text-align: right;
-      }
-
-      input[type="range"] {
-        width: 100%;
-        accent-color: #67e8f9;
-      }
-
-      .presets {
+      .workspace {
         display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 8px;
+        grid-template-columns: 78px minmax(0, 1fr) 340px;
+        min-height: 0;
       }
 
-      .preset-btn {
-        padding: 8px 10px;
+      .tool-panel {
+        background: linear-gradient(180deg, #141b27 0%, #101820 100%);
+        border-right: 1px solid var(--line);
+        padding: 14px 10px;
+      }
+
+      .tool-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .tool-icon {
+        width: 42px;
+        height: 42px;
+        display: grid;
+        place-items: center;
         border-radius: 10px;
+        border: 1px solid transparent;
+        background: rgba(148, 163, 184, 0.02);
+        color: var(--text);
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: 0.2s ease;
       }
 
-      .studio {
+      .tool-icon:hover,
+      .tool-icon.active {
+        border-color: rgba(87, 215, 255, 0.4);
+        background: linear-gradient(135deg, rgba(87, 215, 255, 0.12), rgba(139, 92, 246, 0.15));
+        box-shadow: inset 0 0 0 1px rgba(87, 215, 255, 0.08);
+      }
+
+      .tool-separator {
+        width: 56px;
+        height: 1px;
+        background: var(--line);
+        margin: 4px 0;
+      }
+
+      .studio-panel {
         display: flex;
         flex-direction: column;
         min-width: 0;
+        background: rgba(12, 17, 26, 0.9);
       }
 
-      .topbar {
+      .canvas-header {
         display: flex;
+        align-items: center;
         justify-content: space-between;
-        align-items: center;
         gap: 12px;
-        padding: 18px 20px;
+        padding: 16px 20px 10px;
         border-bottom: 1px solid var(--line);
-        background: rgba(15, 23, 42, 0.62);
       }
 
-      .tabbar {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
-
-      .tab {
-        padding: 8px 12px;
-        border: 1px solid var(--line);
-        border-radius: 10px;
-        background: rgba(148, 163, 184, 0.04);
+      .doc-name {
         color: var(--muted);
-        font-size: 0.7rem;
+        font-size: 0.74rem;
         letter-spacing: 0.08em;
         text-transform: uppercase;
         font-weight: 800;
-      }
-
-      .tab.active {
-        color: var(--text);
-        background: rgba(103, 232, 249, 0.08);
-        border-color: rgba(103, 232, 249, 0.38);
       }
 
       .canvas-shell {
@@ -309,25 +254,24 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background:
-          linear-gradient(180deg, rgba(15, 23, 42, 0.7), rgba(2, 6, 23, 0.95));
         padding: 18px;
+        background: linear-gradient(180deg, rgba(12, 17, 26, 0.9), rgba(9, 14, 21, 0.95));
       }
 
       .canvas-wrap {
         position: relative;
         width: 100%;
         height: 100%;
-        min-height: 380px;
+        min-height: 420px;
         background:
-          linear-gradient(45deg, rgba(15, 23, 42, 0.75) 25%, transparent 25%),
-          linear-gradient(-45deg, rgba(15, 23, 42, 0.75) 25%, transparent 25%),
-          linear-gradient(45deg, transparent 75%, rgba(15, 23, 42, 0.75) 75%),
-          linear-gradient(-45deg, transparent 75%, rgba(15, 23, 42, 0.75) 75%);
+          linear-gradient(45deg, rgba(17, 24, 39, 0.8) 25%, transparent 25%),
+          linear-gradient(-45deg, rgba(17, 24, 39, 0.8) 25%, transparent 25%),
+          linear-gradient(45deg, transparent 75%, rgba(17, 24, 39, 0.8) 75%),
+          linear-gradient(-45deg, transparent 75%, rgba(17, 24, 39, 0.8) 75%);
         background-size: 26px 26px;
         background-position: 0 0, 0 13px, 13px -13px, -13px 0;
-        border: 1px solid var(--line);
-        border-radius: 24px;
+        border: 1px solid var(--line-2);
+        border-radius: 18px;
         overflow: hidden;
       }
 
@@ -335,7 +279,8 @@
         display: block;
         width: 100%;
         height: 100%;
-        border-radius: 24px;
+        border-radius: 18px;
+        background: rgba(10, 15, 21, 0.85);
       }
 
       .empty-state {
@@ -345,8 +290,9 @@
         place-items: center;
         pointer-events: none;
         color: var(--muted);
-        letter-spacing: 0.08em;
+        letter-spacing: 0.14em;
         text-transform: uppercase;
+        font-size: 0.8rem;
         font-weight: 800;
         text-align: center;
         opacity: 1;
@@ -357,13 +303,127 @@
         opacity: 0;
       }
 
-      .right-panel .stack {
+      .properties-panel {
+        background: rgba(17, 24, 35, 0.95);
+        border-left: 1px solid var(--line);
+        padding: 14px 12px;
         display: flex;
         flex-direction: column;
         gap: 14px;
       }
 
-      .list {
+      .card {
+        background: rgba(22, 29, 41, 0.95);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        overflow: hidden;
+      }
+
+      .card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 12px 14px;
+        border-bottom: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 0.66rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        font-weight: 800;
+      }
+
+      .card-body {
+        padding: 12px;
+      }
+
+      .dropzone {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        min-height: 130px;
+        border: 1.2px dashed rgba(87, 215, 255, 0.45);
+        border-radius: 12px;
+        background: linear-gradient(180deg, rgba(87, 215, 255, 0.06), rgba(139, 92, 246, 0.08));
+        cursor: pointer;
+        padding: 16px 12px;
+        text-align: center;
+        transition: 0.2s ease;
+      }
+
+      .dropzone:hover,
+      .dropzone.dragging {
+        border-color: rgba(87, 215, 255, 0.8);
+        background: linear-gradient(180deg, rgba(87, 215, 255, 0.09), rgba(139, 92, 246, 0.1));
+      }
+
+      .dropzone .icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(135deg, rgba(87, 215, 255, 0.2), rgba(139, 92, 246, 0.2));
+        font-size: 1.15rem;
+      }
+
+      .dropzone strong {
+        font-size: 0.74rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .dropzone span {
+        color: var(--muted);
+        font-size: 0.7rem;
+        line-height: 1.5;
+      }
+
+      .quick-actions,
+      .presets {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .control {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 12px;
+      }
+
+      .control:last-child {
+        margin-bottom: 0;
+      }
+
+      .control label {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        color: var(--muted);
+        font-size: 0.66rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-weight: 800;
+      }
+
+      .control output {
+        color: var(--text);
+        min-width: 36px;
+        text-align: right;
+      }
+
+      input[type="range"] {
+        width: 100%;
+        accent-color: #57d7ff;
+      }
+
+      .layers {
         list-style: none;
         margin: 0;
         padding: 0;
@@ -372,20 +432,26 @@
         gap: 8px;
       }
 
-      .list li {
+      .layers li {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 10px;
+        gap: 12px;
         padding: 10px 12px;
-        border-radius: 12px;
-        background: rgba(148,163,184,0.04);
+        border-radius: 10px;
         border: 1px solid transparent;
+        background: rgba(148, 163, 184, 0.03);
       }
 
-      .list li.active {
-        border-color: rgba(103, 232, 249, 0.35);
-        background: rgba(103, 232, 249, 0.06);
+      .layers li.active {
+        border-color: rgba(87, 215, 255, 0.35);
+        background: rgba(87, 215, 255, 0.06);
+      }
+
+      .layer-label {
+        display: flex;
+        align-items: center;
+        gap: 10px;
       }
 
       .mini-dot {
@@ -393,29 +459,29 @@
         height: 8px;
         border-radius: 50%;
         background: var(--green);
-        box-shadow: 0 0 12px rgba(52, 211, 153, 0.8);
+        box-shadow: 0 0 12px rgba(55, 211, 154, 0.8);
       }
 
-      .mini-dot.orange { background: var(--orange); box-shadow: 0 0 12px rgba(245, 158, 11, 0.8); }
+      .mini-dot.orange { background: var(--orange); box-shadow: 0 0 12px rgba(246, 183, 77, 0.8); }
       .mini-dot.purple { background: var(--accent-2); box-shadow: 0 0 12px rgba(139, 92, 246, 0.8); }
-      .mini-dot.red { background: var(--red); box-shadow: 0 0 12px rgba(251, 113, 133, 0.8); }
+      .mini-dot.red { background: var(--red); box-shadow: 0 0 12px rgba(255, 102, 125, 0.8); }
 
-      .meta-block {
+      .meta-grid {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 10px;
       }
 
       .stat {
-        background: rgba(148,163,184,0.04);
+        background: rgba(148, 163, 184, 0.03);
         border: 1px solid var(--line);
-        border-radius: 12px;
+        border-radius: 10px;
         padding: 10px;
       }
 
       .stat .label {
         color: var(--muted);
-        font-size: 0.6rem;
+        font-size: 0.56rem;
         letter-spacing: 0.08em;
         text-transform: uppercase;
         margin-bottom: 6px;
@@ -423,38 +489,110 @@
 
       .stat .value {
         font-weight: 800;
+        font-size: 0.84rem;
       }
 
       @media (max-width: 1100px) {
-        .app {
+        .workspace {
           grid-template-columns: 1fr;
-          height: auto;
         }
 
-        .panel.right,
-        .panel.left {
-          border: none;
+        .tool-panel {
+          border-right: none;
           border-bottom: 1px solid var(--line);
         }
 
-        .canvas-shell {
-          min-height: 500px;
+        .tool-stack {
+          flex-direction: row;
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+
+        .properties-panel {
+          border-left: none;
+          border-top: 1px solid var(--line);
         }
       }
     </style>
   </head>
   <body>
     <div class="app">
-      <aside class="panel left">
-        <div class="left-panel">
-          <div class="brand-row">
-            <div class="brand">
-              <div class="brand-mark"></div>
-              <span>Pixel Lab</span>
+      <header class="menu-bar">
+        <div class="app-title">
+          <div class="app-mark"></div>
+          <span>Pixel Lab</span>
+        </div>
+
+        <div class="menu-items">
+          <span>File</span>
+          <span>Edit</span>
+          <span>Image</span>
+          <span>Layer</span>
+          <span>Type</span>
+          <span>Filter</span>
+          <span>View</span>
+          <span>Window</span>
+          <span>Help</span>
+        </div>
+
+        <div class="menu-actions">
+          <button class="mini-chip" type="button">PSD</button>
+          <button class="mini-chip" type="button">Saved</button>
+        </div>
+      </header>
+
+      <div class="options-bar">
+        <div class="tool-strip">
+          <button type="button" class="tool-btn active">Move</button>
+          <button type="button" class="tool-btn">Marquee</button>
+          <button type="button" class="tool-btn">Lasso</button>
+          <button type="button" class="tool-btn">Magic Wand</button>
+          <button type="button" class="tool-btn">Crop</button>
+          <button type="button" class="tool-btn">Brush</button>
+          <button type="button" class="tool-btn">Clone</button>
+        </div>
+
+        <div class="utility-strip">
+          <button type="button" class="utility-btn" id="zoomOutBtn">− Zoom</button>
+          <button type="button" class="utility-btn" id="zoomInBtn">+ Zoom</button>
+          <button type="button" class="utility-btn active" id="resetBtn">Reset</button>
+        </div>
+      </div>
+
+      <div class="workspace">
+        <aside class="tool-panel">
+          <div class="tool-stack">
+            <div class="tool-icon active" title="Move Tool">✥</div>
+            <div class="tool-icon" title="Select">◼</div>
+            <div class="tool-icon" title="Crop">⌖</div>
+            <div class="tool-icon" title="Brush">✎</div>
+            <div class="tool-icon" title="Eraser">⌫</div>
+            <div class="tool-icon" title="Clone">⎇</div>
+            <div class="tool-separator"></div>
+            <div class="tool-icon" title="Gradient">◫</div>
+            <div class="tool-icon" title="Text">T</div>
+            <div class="tool-icon" title="Eye Dropper">◉</div>
+          </div>
+        </aside>
+
+        <main class="studio-panel">
+          <div class="canvas-header">
+            <div class="doc-name">Untitled-1.psd</div>
+            <div class="utility-strip">
+              <button type="button" class="panel-button">View</button>
+              <button type="button" class="panel-button primary">Export</button>
             </div>
-            <div class="status-pill">Live</div>
           </div>
 
+          <div class="canvas-shell">
+            <div class="canvas-wrap">
+              <canvas id="editorCanvas" width="1200" height="760"></canvas>
+              <div class="empty-state" id="emptyState">Drop a photo to begin editing</div>
+            </div>
+          </div>
+        </main>
+
+        <aside class="properties-panel">
           <div class="card">
             <div class="card-header">
               <span>Import</span>
@@ -464,23 +602,9 @@
               <label class="dropzone" id="dropZone" for="imageLoader">
                 <input id="imageLoader" type="file" accept="image/*" hidden />
                 <div class="icon">⬆</div>
-                <strong>Drop image here</strong>
-                <span>or click to browse from your device</span>
+                <strong>Drop image</strong>
+                <span>or click to browse</span>
               </label>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-header">
-              <span>Actions</span>
-            </div>
-            <div class="card-body quick-actions">
-              <button type="button" id="resetBtn">Reset</button>
-              <button type="button" id="rotateLeftBtn">Rotate -90°</button>
-              <button type="button" id="rotateRightBtn">Rotate +90°</button>
-              <button type="button" id="flipHBtn">Flip H</button>
-              <button type="button" id="flipVBtn">Flip V</button>
-              <button type="button" class="primary" id="downloadBtn">Export</button>
             </div>
           </div>
 
@@ -488,7 +612,7 @@
             <div class="card-header">
               <span>Adjustments</span>
             </div>
-            <div class="card-body controls">
+            <div class="card-body">
               <div class="control">
                 <label for="brightness"><span>Brightness</span><output id="brightnessValue">100%</output></label>
                 <input id="brightness" type="range" min="0" max="200" value="100" />
@@ -523,32 +647,7 @@
               </div>
             </div>
           </div>
-        </div>
-      </aside>
 
-      <main class="studio">
-        <div class="topbar">
-          <div class="tabbar">
-            <div class="tab active">Edit</div>
-            <div class="tab">Layers</div>
-            <div class="tab">History</div>
-          </div>
-          <div class="quick-actions">
-            <button type="button" id="zoomOutBtn">− Zoom</button>
-            <button type="button" id="zoomInBtn">+ Zoom</button>
-          </div>
-        </div>
-
-        <div class="canvas-shell">
-          <div class="canvas-wrap">
-            <canvas id="editorCanvas" width="1200" height="760"></canvas>
-            <div class="empty-state" id="emptyState">Drop a photo to begin editing</div>
-          </div>
-        </div>
-      </main>
-
-      <aside class="panel right">
-        <div class="right-panel">
           <div class="card">
             <div class="card-header">
               <span>Presets</span>
@@ -568,26 +667,26 @@
               <span>Layers</span>
             </div>
             <div class="card-body">
-              <ul class="list">
-                <li class="active"><span><span class="mini-dot"></span> Background</span><span>Locked</span></li>
-                <li><span><span class="mini-dot orange"></span> Highlights</span><span>5%</span></li>
-                <li><span><span class="mini-dot purple"></span> Glow</span><span>12%</span></li>
-                <li><span><span class="mini-dot red"></span> Mask</span><span>Off</span></li>
+              <ul class="layers">
+                <li class="active"><span class="layer-label"><span class="mini-dot"></span> Background</span><span>Locked</span></li>
+                <li><span class="layer-label"><span class="mini-dot orange"></span> Highlights</span><span>5%</span></li>
+                <li><span class="layer-label"><span class="mini-dot purple"></span> Glow</span><span>12%</span></li>
+                <li><span class="layer-label"><span class="mini-dot red"></span> Mask</span><span>Off</span></li>
               </ul>
             </div>
           </div>
 
           <div class="card">
             <div class="card-header">
-              <span>Photo info</span>
+              <span>Info</span>
             </div>
-            <div class="card-body meta-block">
+            <div class="card-body meta-grid">
               <div class="stat">
                 <div class="label">Zoom</div>
                 <div class="value" id="zoomValue">100%</div>
               </div>
               <div class="stat">
-                <div class="label">Rotation</div>
+                <div class="label">Rotate</div>
                 <div class="value" id="rotationValue">0°</div>
               </div>
               <div class="stat">
@@ -600,8 +699,8 @@
               </div>
             </div>
           </div>
-        </div>
-      </aside>
+        </aside>
+      </div>
     </div>
 
     <script>
@@ -656,11 +755,11 @@
         const hue = Number(controls.hue.value);
         const warmth = Number(controls.warmth.value);
 
-        let warmthFilter = '0';
+        let warmthFilter = 'saturate(1)';
         if (warmth > 0) warmthFilter = `saturate(${1 + warmth / 200})`;
         if (warmth < 0) warmthFilter = `saturate(${1 + warmth / 300})`;
 
-        const filterString = [
+        return [
           `brightness(${brightness}%)`,
           `contrast(${contrast}%)`,
           `saturate(${saturation}%)`,
@@ -669,8 +768,6 @@
           `blur(${blur}px)`,
           warmthFilter
         ].join(' ');
-
-        return filterString;
       }
 
       function updateOutputs() {
@@ -696,8 +793,8 @@
         }
 
         const img = state.image;
-        const maxWidth = width * 0.85;
-        const maxHeight = height * 0.8;
+        const maxWidth = width * 0.82;
+        const maxHeight = height * 0.76;
         const aspectRatio = img.width / img.height;
 
         let drawWidth = maxWidth;
@@ -728,14 +825,14 @@
           const gradient = ctx.createRadialGradient(
             width / 2,
             height / 2,
-            Math.min(width, height) * 0.18,
+            Math.min(width, height) * 0.16,
             width / 2,
             height / 2,
-            Math.max(width, height) * 0.75
+            Math.max(width, height) * 0.72
           );
 
           gradient.addColorStop(0, 'rgba(0, 0, 0, 0)');
-          gradient.addColorStop(1, `rgba(0, 0, 0, ${0.45 + vignetteAmount * 0.55})`);
+          gradient.addColorStop(1, `rgba(0, 0, 0, ${0.42 + vignetteAmount * 0.65})`);
           ctx.fillStyle = gradient;
           ctx.fillRect(0, 0, width, height);
         }
@@ -794,22 +891,22 @@
         renderCanvas();
       });
 
-      document.getElementById('rotateLeftBtn').addEventListener('click', () => {
+      document.getElementById('rotateLeftBtn')?.addEventListener('click', () => {
         state.rotation = (state.rotation - 90 + 360) % 360;
         renderCanvas();
       });
 
-      document.getElementById('rotateRightBtn').addEventListener('click', () => {
+      document.getElementById('rotateRightBtn')?.addEventListener('click', () => {
         state.rotation = (state.rotation + 90) % 360;
         renderCanvas();
       });
 
-      document.getElementById('flipHBtn').addEventListener('click', () => {
+      document.getElementById('flipHBtn')?.addEventListener('click', () => {
         state.flipX = !state.flipX;
         renderCanvas();
       });
 
-      document.getElementById('flipVBtn').addEventListener('click', () => {
+      document.getElementById('flipVBtn')?.addEventListener('click', () => {
         state.flipY = !state.flipY;
         renderCanvas();
       });
@@ -824,7 +921,7 @@
         renderCanvas();
       });
 
-      document.getElementById('downloadBtn').addEventListener('click', () => {
+      document.querySelector('.panel-button.primary')?.addEventListener('click', () => {
         if (!state.image) return;
 
         const exportCanvas = document.createElement('canvas');
@@ -910,6 +1007,13 @@
 
       imageLoader.addEventListener('change', (event) => {
         handleFiles(event.target.files);
+      });
+
+      document.querySelectorAll('.tool-icon').forEach((tool) => {
+        tool.addEventListener('click', () => {
+          document.querySelectorAll('.tool-icon').forEach((item) => item.classList.remove('active'));
+          tool.classList.add('active');
+        });
       });
 
       renderCanvas();
