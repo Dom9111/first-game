@@ -3,13 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Blender Style 3D Space</title>
+    <title>Pixel Lab | Photo Editor</title>
     <style>
       :root {
-        --bg: #0b1020;
-        --bg-2: #111b2f;
-        --panel: rgba(17, 24, 39, 0.9);
-        --panel-2: rgba(23, 32, 47, 0.96);
+        --bg: #070b14;
+        --bg-2: #0f172a;
+        --panel: rgba(15, 23, 42, 0.9);
+        --panel-2: rgba(17, 24, 39, 0.9);
+        --panel-3: rgba(30, 41, 59, 0.75);
         --line: rgba(148, 163, 184, 0.18);
         --text: #edf3ff;
         --muted: #9aa8bf;
@@ -18,7 +19,7 @@
         --orange: #f59e0b;
         --green: #34d399;
         --red: #fb7185;
-        --shadow: rgba(16, 20, 32, 0.55);
+        --shadow: rgba(2, 6, 23, 0.65);
       }
 
       * { box-sizing: border-box; }
@@ -26,143 +27,343 @@
       html, body {
         margin: 0;
         width: 100%;
-        height: 100%;
-        font-family: Inter, "Segoe UI", sans-serif;
+        min-height: 100%;
         background:
-          radial-gradient(circle at 20% 20%, rgba(103, 232, 249, 0.18), transparent 25%),
-          radial-gradient(circle at 80% 0%, rgba(139, 92, 246, 0.2), transparent 22%),
-          linear-gradient(180deg, var(--bg) 0%, #070d1b 100%);
+          radial-gradient(circle at 15% 20%, rgba(103, 232, 249, 0.12), transparent 18%),
+          radial-gradient(circle at 85% 0%, rgba(139, 92, 246, 0.16), transparent 20%),
+          linear-gradient(180deg, #070b14 0%, #0a1020 100%);
         color: var(--text);
+        font-family: Inter, "Segoe UI", sans-serif;
       }
 
       body {
+        min-height: 100vh;
         display: grid;
         place-items: center;
-        min-height: 100vh;
         padding: 24px;
       }
 
       .app {
-        width: min(1400px, 100%);
-        height: min(880px, 92vh);
-        display: flex;
-        flex-direction: column;
-        border-radius: 22px;
-        overflow: hidden;
-        background: rgba(8, 12, 20, 0.82);
+        width: min(1500px, 100%);
+        height: min(1000px, 94vh);
+        display: grid;
+        grid-template-columns: 280px minmax(0, 1fr) 300px;
+        background: rgba(5, 9, 18, 0.82);
         border: 1px solid var(--line);
-        box-shadow: 0 30px 100px rgba(0, 0, 0, 0.45);
+        border-radius: 26px;
+        overflow: hidden;
+        box-shadow: 0 40px 90px rgba(0, 0, 0, 0.52);
       }
 
-      .topbar {
+      .panel {
+        background: rgba(15, 23, 42, 0.7);
+        border-right: 1px solid var(--line);
+      }
+
+      .panel.right {
+        border-right: none;
+        border-left: 1px solid var(--line);
+      }
+
+      .left-panel, .right-panel {
         display: flex;
-        justify-content: space-between;
-        align-items: center;
+        flex-direction: column;
+        padding: 18px 16px;
         gap: 18px;
-        padding: 15px 18px;
-        background: rgba(15, 23, 42, 0.8);
-        border-bottom: 1px solid var(--line);
+      }
+
+      .brand-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding-bottom: 10px;
       }
 
       .brand {
         display: flex;
         align-items: center;
         gap: 12px;
-        font-weight: 800;
-        letter-spacing: 0.12em;
+        font-weight: 900;
+        letter-spacing: 0.14em;
         text-transform: uppercase;
-        color: var(--text);
       }
 
       .brand-mark {
         width: 28px;
         height: 28px;
-        border-radius: 8px;
-        background: linear-gradient(135deg, var(--accent), var(--accent-2));
-        box-shadow: 0 0 18px rgba(103, 232, 249, 0.5);
-      }
-
-      .toolbar {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        flex-wrap: wrap;
-      }
-
-      .toolbar button,
-      .action-row button,
-      .chip {
-        border: 1px solid var(--line);
-        background: rgba(148, 163, 184, 0.06);
-        color: var(--text);
         border-radius: 10px;
-        padding: 8px 12px;
-        font-size: 0.74rem;
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        box-shadow: 0 0 18px rgba(103, 232, 249, 0.4);
+      }
+
+      .status-pill {
+        padding: 6px 8px;
+        border-radius: 999px;
+        font-size: 0.62rem;
         letter-spacing: 0.08em;
         text-transform: uppercase;
         font-weight: 800;
+        color: var(--green);
+        background: rgba(52, 211, 153, 0.08);
+        border: 1px solid rgba(52, 211, 153, 0.25);
       }
 
-      .toolbar button:hover,
-      .action-row button:hover {
-        border-color: rgba(103, 232, 249, 0.45);
-      }
-
-      .action-row {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
-
-      .primary {
-        background: linear-gradient(135deg, rgba(103, 232, 249, 0.25), rgba(139, 92, 246, 0.35)) !important;
-        border-color: rgba(103, 232, 249, 0.35) !important;
-      }
-
-      .workspace {
-        display: grid;
-        grid-template-columns: 260px minmax(0, 1fr) 260px;
-        flex: 1;
-        min-height: 0;
-      }
-
-      .panel {
-        background: rgba(15, 23, 42, 0.58);
-        border-right: 1px solid var(--line);
-      }
-
-      .sidebar,
-      .inspector {
-        display: flex;
-        flex-direction: column;
-        gap: 14px;
-        padding: 16px;
-      }
-
-      .box {
-        border: 1px solid var(--line);
-        border-radius: 16px;
+      .card {
         background: rgba(15, 23, 42, 0.8);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        overflow: hidden;
       }
 
-      .box-header {
+      .card-header {
+        padding: 12px 14px;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 12px 14px;
         border-bottom: 1px solid var(--line);
         color: var(--muted);
-        font-size: 0.7rem;
+        font-size: 0.68rem;
         letter-spacing: 0.12em;
         text-transform: uppercase;
         font-weight: 800;
       }
 
-      .box-body {
-        padding: 12px;
+      .card-body {
+        padding: 14px;
       }
 
-      .object-list {
+      .dropzone {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        min-height: 160px;
+        border: 1.5px dashed rgba(103, 232, 249, 0.4);
+        border-radius: 16px;
+        background: linear-gradient(180deg, rgba(103, 232, 249, 0.08), rgba(139, 92, 246, 0.08));
+        cursor: pointer;
+        padding: 18px 12px;
+        text-align: center;
+        transition: 0.2s ease;
+      }
+
+      .dropzone:hover,
+      .dropzone.dragging {
+        border-color: rgba(103, 232, 249, 0.8);
+        background: linear-gradient(180deg, rgba(103, 232, 249, 0.12), rgba(139, 92, 246, 0.12));
+        transform: translateY(-1px);
+      }
+
+      .dropzone .icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 14px;
+        background: linear-gradient(135deg, rgba(103,232,249,0.2), rgba(139,92,246,0.22));
+        display: grid;
+        place-items: center;
+        font-size: 1.4rem;
+      }
+
+      .dropzone strong {
+        font-size: 0.82rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .dropzone span {
+        color: var(--muted);
+        font-size: 0.75rem;
+        line-height: 1.6;
+      }
+
+      .quick-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      button,
+      .preset-btn,
+      .tool-btn {
+        appearance: none;
+        border: 1px solid var(--line);
+        background: rgba(148, 163, 184, 0.05);
+        color: var(--text);
+        border-radius: 10px;
+        padding: 8px 10px;
+        font-size: 0.72rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-weight: 800;
+        cursor: pointer;
+        transition: 0.2s ease;
+      }
+
+      button:hover,
+      .preset-btn:hover,
+      .tool-btn:hover {
+        border-color: rgba(103, 232, 249, 0.4);
+        background: rgba(103, 232, 249, 0.08);
+      }
+
+      .tool-btn.primary,
+      .preset-btn.primary,
+      button.primary {
+        background: linear-gradient(135deg, rgba(103, 232, 249, 0.26), rgba(139, 92, 246, 0.3));
+        border-color: rgba(103, 232, 249, 0.35);
+      }
+
+      .controls {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .control {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .control label {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        color: var(--muted);
+        font-size: 0.7rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-weight: 800;
+      }
+
+      .control output {
+        color: var(--text);
+        font-weight: 800;
+        min-width: 38px;
+        text-align: right;
+      }
+
+      input[type="range"] {
+        width: 100%;
+        accent-color: #67e8f9;
+      }
+
+      .presets {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .preset-btn {
+        padding: 8px 10px;
+        border-radius: 10px;
+      }
+
+      .studio {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+      }
+
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        padding: 18px 20px;
+        border-bottom: 1px solid var(--line);
+        background: rgba(15, 23, 42, 0.62);
+      }
+
+      .tabbar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .tab {
+        padding: 8px 12px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: rgba(148, 163, 184, 0.04);
+        color: var(--muted);
+        font-size: 0.7rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-weight: 800;
+      }
+
+      .tab.active {
+        color: var(--text);
+        background: rgba(103, 232, 249, 0.08);
+        border-color: rgba(103, 232, 249, 0.38);
+      }
+
+      .canvas-shell {
+        flex: 1;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background:
+          linear-gradient(180deg, rgba(15, 23, 42, 0.7), rgba(2, 6, 23, 0.95));
+        padding: 18px;
+      }
+
+      .canvas-wrap {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        min-height: 380px;
+        background:
+          linear-gradient(45deg, rgba(15, 23, 42, 0.75) 25%, transparent 25%),
+          linear-gradient(-45deg, rgba(15, 23, 42, 0.75) 25%, transparent 25%),
+          linear-gradient(45deg, transparent 75%, rgba(15, 23, 42, 0.75) 75%),
+          linear-gradient(-45deg, transparent 75%, rgba(15, 23, 42, 0.75) 75%);
+        background-size: 26px 26px;
+        background-position: 0 0, 0 13px, 13px -13px, -13px 0;
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        overflow: hidden;
+      }
+
+      canvas {
+        display: block;
+        width: 100%;
+        height: 100%;
+        border-radius: 24px;
+      }
+
+      .empty-state {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        pointer-events: none;
+        color: var(--muted);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-weight: 800;
+        text-align: center;
+        opacity: 1;
+        transition: 0.2s ease;
+      }
+
+      .empty-state.hidden {
+        opacity: 0;
+      }
+
+      .right-panel .stack {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      .list {
         list-style: none;
         margin: 0;
         padding: 0;
@@ -171,23 +372,23 @@
         gap: 8px;
       }
 
-      .object-list li {
-        padding: 10px 12px;
-        border-radius: 10px;
+      .list li {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 8px;
-        background: rgba(148, 163, 184, 0.04);
+        gap: 10px;
+        padding: 10px 12px;
+        border-radius: 12px;
+        background: rgba(148,163,184,0.04);
         border: 1px solid transparent;
       }
 
-      .object-list li.active {
+      .list li.active {
         border-color: rgba(103, 232, 249, 0.35);
         background: rgba(103, 232, 249, 0.06);
       }
 
-      .dot {
+      .mini-dot {
         width: 8px;
         height: 8px;
         border-radius: 50%;
@@ -195,426 +396,48 @@
         box-shadow: 0 0 12px rgba(52, 211, 153, 0.8);
       }
 
-      .dot.orange { background: var(--orange); box-shadow: 0 0 12px rgba(245, 158, 11, 0.8); }
-      .dot.purple { background: var(--accent-2); box-shadow: 0 0 12px rgba(139, 92, 246, 0.8); }
-      .dot.red { background: var(--red); box-shadow: 0 0 12px rgba(251, 113, 133, 0.8); }
+      .mini-dot.orange { background: var(--orange); box-shadow: 0 0 12px rgba(245, 158, 11, 0.8); }
+      .mini-dot.purple { background: var(--accent-2); box-shadow: 0 0 12px rgba(139, 92, 246, 0.8); }
+      .mini-dot.red { background: var(--red); box-shadow: 0 0 12px rgba(251, 113, 133, 0.8); }
 
-      .metric {
+      .meta-block {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 10px;
       }
 
-      .metric .stat {
-        background: rgba(148, 163, 184, 0.04);
+      .stat {
+        background: rgba(148,163,184,0.04);
         border: 1px solid var(--line);
-        border-radius: 10px;
+        border-radius: 12px;
         padding: 10px;
       }
 
-      .label {
+      .stat .label {
         color: var(--muted);
-        font-size: 0.62rem;
+        font-size: 0.6rem;
         letter-spacing: 0.08em;
         text-transform: uppercase;
         margin-bottom: 6px;
       }
 
-      .value {
+      .stat .value {
         font-weight: 800;
       }
 
-      .viewport-shell {
-        position: relative;
-        flex: 1;
-        min-width: 0;
-        display: flex;
-        flex-direction: column;
-        background: linear-gradient(180deg, rgba(11,16,32,0.8), rgba(10,14,24,0.9));
-      }
-
-      .viewport-toolbar {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 12px;
-        padding: 10px 16px;
-        border-bottom: 1px solid var(--line);
-      }
-
-      .viewport-name {
-        font-size: 0.72rem;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        color: var(--muted);
-        font-weight: 800;
-      }
-
-      .viewport-controls {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        flex-wrap: wrap;
-      }
-
-      .mini-btn {
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        background: rgba(148, 163, 184, 0.04);
-        color: var(--text);
-        font-size: 0.7rem;
-        padding: 6px 9px;
-      }
-
-      .viewport {
-        position: relative;
-        flex: 1;
-        overflow: hidden;
-        background:
-          radial-gradient(circle at center, rgba(15, 23, 42, 0.45) 0%, rgba(8, 12, 20, 0.9) 40%, rgba(2, 6, 13, 1) 100%),
-          linear-gradient(180deg, rgba(17, 24, 39, 0.7), rgba(3, 7, 18, 0.9));
-      }
-
-      .stars,
-      .stars::before,
-      .stars::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background-repeat: repeat;
-        background-image:
-          radial-gradient(2px 2px at 10% 20%, rgba(255,255,255,0.7), transparent 90%),
-          radial-gradient(1.5px 1.5px at 35% 28%, rgba(103, 232, 249, 0.85), transparent 90%),
-          radial-gradient(2px 2px at 60% 15%, rgba(255,255,255,0.8), transparent 90%),
-          radial-gradient(1.5px 1.5px at 80% 35%, rgba(139, 92, 246, 0.8), transparent 90%),
-          radial-gradient(1.5px 1.5px at 28% 74%, rgba(255,255,255,0.8), transparent 90%),
-          radial-gradient(2px 2px at 75% 72%, rgba(255,255,255,0.8), transparent 90%),
-          radial-gradient(2px 2px at 52% 58%, rgba(103, 232, 249, 0.7), transparent 90%);
-        opacity: 0.9;
-      }
-
-      .stars::before {
-        transform: scale(1.2) translateY(12px);
-        opacity: 0.7;
-      }
-
-      .stars::after {
-        transform: scale(1.4) translateY(-8px);
-        opacity: 0.5;
-      }
-
-      .grid {
-        position: absolute;
-        inset: 0;
-        background-image:
-          linear-gradient(rgba(103, 232, 249, 0.08) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(103, 232, 249, 0.08) 1px, transparent 1px);
-        background-size: 28px 28px;
-        transform: perspective(900px) rotateX(70deg) scale(1.7);
-        transform-origin: center center;
-        opacity: 0.65;
-      }
-
-      .scene {
-        position: absolute;
-        left: 50%;
-        top: 55%;
-        width: 360px;
-        height: 360px;
-        margin-left: -180px;
-        margin-top: -180px;
-        transform-style: preserve-3d;
-        perspective: 1000px;
-        filter: drop-shadow(0 50px 70px rgba(0,0,0,0.45));
-      }
-
-      .orbit-ring {
-        position: absolute;
-        inset: 50% auto auto 50%;
-        width: 300px;
-        height: 300px;
-        margin-left: -150px;
-        margin-top: -150px;
-        border: 1px solid rgba(103, 232, 249, 0.4);
-        border-radius: 50%;
-        transform: rotateX(75deg) rotateZ(18deg);
-        box-shadow: 0 0 25px rgba(103, 232, 249, 0.18);
-      }
-
-      .planet {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        width: 130px;
-        height: 130px;
-        margin-left: -65px;
-        margin-top: -65px;
-        border-radius: 50%;
-        background: radial-gradient(circle at 35% 30%, #bae6fd 0%, #60a5fa 25%, #4f46e5 58%, #1e1b4b 100%);
-        box-shadow:
-          inset -22px -12px 35px rgba(0, 0, 0, 0.35),
-          0 0 40px rgba(96, 165, 250, 0.4);
-        transform: translateZ(20px);
-      }
-
-      .ring {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        width: 180px;
-        height: 180px;
-        margin-left: -90px;
-        margin-top: -90px;
-        border: 14px solid rgba(244, 114, 182, 0.7);
-        border-left-color: transparent;
-        border-right-color: transparent;
-        border-radius: 50%;
-        transform: rotateX(70deg) rotateY(20deg) rotateZ(30deg);
-        box-shadow: 0 0 16px rgba(244, 114, 182, 0.35);
-      }
-
-      .cube {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        width: 140px;
-        height: 140px;
-        margin-left: -70px;
-        margin-top: -70px;
-        transform-style: preserve-3d;
-      }
-
-      .face {
-        position: absolute;
-        inset: 0;
-        border: 1px solid rgba(103, 232, 249, 0.45);
-        background: rgba(96, 165, 250, 0.08);
-        box-shadow: inset 0 0 18px rgba(103, 232, 249, 0.12);
-      }
-
-      .front { transform: translateZ(70px); }
-      .back { transform: rotateY(180deg) translateZ(70px); }
-      .right { transform: rotateY(90deg) translateZ(70px); }
-      .left { transform: rotateY(-90deg) translateZ(70px); }
-      .top { transform: rotateX(90deg) translateZ(70px); }
-      .bottom { transform: rotateX(-90deg) translateZ(70px); }
-
-      .satellite {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        width: 18px;
-        height: 18px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, #fca5a5, #f9a8d4);
-        box-shadow: 0 0 20px rgba(251, 113, 133, 0.72);
-      }
-
-      .satellite.one { transform: translate3d(150px, -80px, 30px); }
-      .satellite.two { transform: translate3d(-165px, 92px, -15px); }
-      .satellite.three { transform: translate3d(82px, 150px, 25px); }
-
-      .timeline {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 18px;
-        padding: 12px 18px 18px;
-        border-top: 1px solid var(--line);
-        background: rgba(15, 23, 42, 0.72);
-      }
-
-      .timeline-track {
-        position: relative;
-        flex: 1;
-        height: 34px;
-        border-radius: 999px;
-        background: rgba(148, 163, 184, 0.08);
-        border: 1px solid var(--line);
-        overflow: hidden;
-      }
-
-      .timeline-fill {
-        position: absolute;
-        inset: 0 auto 0 0;
-        width: 34%;
-        background: linear-gradient(90deg, rgba(103, 232, 249, 0.8), rgba(139, 92, 246, 0.7));
-        box-shadow: 0 0 18px rgba(103, 232, 249, 0.38);
-      }
-
-      .timeline-markers {
-        position: absolute;
-        inset: 0;
-        background-image: linear-gradient(to right, rgba(255,255,255,0.08) 1px, transparent 1px);
-        background-size: 60px 100%;
-      }
-
-      .time-readout {
-        min-width: 128px;
-        text-align: right;
-        color: var(--muted);
-        font-weight: 800;
-        letter-spacing: 0.08em;
-      }
-
-      .voice-panel {
-        position: absolute;
-        right: 18px;
-        bottom: 18px;
-        width: min(350px, calc(100% - 24px));
-        background: rgba(15, 23, 42, 0.86);
-        border: 1px solid var(--line);
-        border-radius: 18px;
-        backdrop-filter: blur(14px);
-        box-shadow: 0 20px 40px rgba(2, 6, 23, 0.6);
-        z-index: 2;
-        overflow: hidden;
-      }
-
-      .voice-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-        padding: 10px 12px;
-        border-bottom: 1px solid var(--line);
-        background: rgba(17, 24, 39, 0.9);
-      }
-
-      .voice-title {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 0.73rem;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        color: var(--muted);
-        font-weight: 800;
-      }
-
-      .voice-dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background: var(--green);
-        box-shadow: 0 0 12px rgba(52, 211, 153, 0.9);
-      }
-
-      .voice-close {
-        border: 1px solid var(--line);
-        background: rgba(148, 163, 184, 0.04);
-        color: var(--text);
-        border-radius: 8px;
-        width: 28px;
-        height: 28px;
-        font-size: 1rem;
-      }
-
-      .voice-messages {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        max-height: 220px;
-        overflow-y: auto;
-        padding: 12px;
-        background: rgba(11,16,32,0.4);
-      }
-
-      .voice-bubble {
-        max-width: 85%;
-        padding: 8px 10px;
-        border-radius: 12px;
-        line-height: 1.45;
-        font-size: 0.82rem;
-        border: 1px solid var(--line);
-      }
-
-      .voice-bubble.user {
-        margin-left: auto;
-        background: linear-gradient(135deg, rgba(103, 232, 249, 0.22), rgba(139, 92, 246, 0.24));
-      }
-
-      .voice-bubble.assistant {
-        margin-right: auto;
-        background: rgba(148, 163, 184, 0.06);
-      }
-
-      .voice-controls {
-        display: flex;
-        gap: 8px;
-        padding: 10px 12px 6px;
-      }
-
-      .voice-btn {
-        flex: 1;
-        border: 1px solid var(--line);
-        background: rgba(148, 163, 184, 0.06);
-        color: var(--text);
-        border-radius: 10px;
-        padding: 8px 12px;
-        font-size: 0.72rem;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        font-weight: 800;
-      }
-
-      .voice-btn.primary,
-      .voice-btn.mic.active {
-        background: linear-gradient(135deg, rgba(103, 232, 249, 0.25), rgba(139, 92, 246, 0.35));
-        border-color: rgba(103, 232, 249, 0.35);
-      }
-
-      .voice-input-row {
-        display: flex;
-        gap: 8px;
-        padding: 8px 12px 12px;
-      }
-
-      .voice-input-row input {
-        flex: 1;
-        background: rgba(148, 163, 184, 0.04);
-        border: 1px solid var(--line);
-        border-radius: 10px;
-        color: var(--text);
-        padding: 10px 12px;
-        font-size: 0.82rem;
-      }
-
-      .voice-input-row button {
-        border: 1px solid var(--line);
-        background: rgba(148, 163, 184, 0.08);
-        color: var(--text);
-        border-radius: 10px;
-        padding: 10px 12px;
-        font-size: 0.7rem;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        font-weight: 800;
-      }
-
-      .voice-status {
-        padding: 0 12px 12px;
-        font-size: 0.7rem;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        color: var(--muted);
-      }
-
-      @media (max-width: 1050px) {
-        .workspace {
-          grid-template-columns: 1fr;
-        }
-
-        .panel {
-          border-right: none;
-          border-bottom: 1px solid var(--line);
-        }
-
+      @media (max-width: 1100px) {
         .app {
+          grid-template-columns: 1fr;
           height: auto;
         }
 
-        .viewport-shell {
+        .panel.right,
+        .panel.left {
+          border: none;
+          border-bottom: 1px solid var(--line);
+        }
+
+        .canvas-shell {
           min-height: 500px;
         }
       }
@@ -622,355 +445,474 @@
   </head>
   <body>
     <div class="app">
-      <header class="topbar">
-        <div class="brand">
-          <div class="brand-mark"></div>
-          <span>Blender Lite</span>
-        </div>
-
-        <div class="toolbar">
-          <button type="button">File</button>
-          <button type="button">Edit</button>
-          <button type="button">View</button>
-          <button type="button">Render</button>
-          <button type="button">Animation</button>
-        </div>
-
-        <div class="action-row">
-          <button type="button" class="mini-btn">Orbit</button>
-          <button type="button" class="primary">Pause</button>
-        </div>
-      </header>
-
-      <div class="workspace">
-        <aside class="panel sidebar">
-          <div class="box">
-            <div class="box-header">
-              <span>Scene</span>
-              <span>+</span>
+      <aside class="panel left">
+        <div class="left-panel">
+          <div class="brand-row">
+            <div class="brand">
+              <div class="brand-mark"></div>
+              <span>Pixel Lab</span>
             </div>
-            <div class="box-body">
-              <ul class="object-list">
-                <li class="active"><span><span class="dot"></span> Cube</span><span>Mesh</span></li>
-                <li><span><span class="dot orange"></span> Planet</span><span>Object</span></li>
-                <li><span><span class="dot purple"></span> Ring</span><span>Modifier</span></li>
-                <li><span><span class="dot red"></span> Star</span><span>Light</span></li>
+            <div class="status-pill">Live</div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <span>Import</span>
+              <span>Drop</span>
+            </div>
+            <div class="card-body">
+              <label class="dropzone" id="dropZone" for="imageLoader">
+                <input id="imageLoader" type="file" accept="image/*" hidden />
+                <div class="icon">⬆</div>
+                <strong>Drop image here</strong>
+                <span>or click to browse from your device</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <span>Actions</span>
+            </div>
+            <div class="card-body quick-actions">
+              <button type="button" id="resetBtn">Reset</button>
+              <button type="button" id="rotateLeftBtn">Rotate -90°</button>
+              <button type="button" id="rotateRightBtn">Rotate +90°</button>
+              <button type="button" id="flipHBtn">Flip H</button>
+              <button type="button" id="flipVBtn">Flip V</button>
+              <button type="button" class="primary" id="downloadBtn">Export</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <span>Adjustments</span>
+            </div>
+            <div class="card-body controls">
+              <div class="control">
+                <label for="brightness"><span>Brightness</span><output id="brightnessValue">100%</output></label>
+                <input id="brightness" type="range" min="0" max="200" value="100" />
+              </div>
+              <div class="control">
+                <label for="contrast"><span>Contrast</span><output id="contrastValue">100%</output></label>
+                <input id="contrast" type="range" min="0" max="200" value="100" />
+              </div>
+              <div class="control">
+                <label for="saturation"><span>Saturation</span><output id="saturationValue">100%</output></label>
+                <input id="saturation" type="range" min="0" max="200" value="100" />
+              </div>
+              <div class="control">
+                <label for="warmth"><span>Warmth</span><output id="warmthValue">0%</output></label>
+                <input id="warmth" type="range" min="-100" max="100" value="0" />
+              </div>
+              <div class="control">
+                <label for="blur"><span>Blur</span><output id="blurValue">0px</output></label>
+                <input id="blur" type="range" min="0" max="10" value="0" step="0.5" />
+              </div>
+              <div class="control">
+                <label for="grayscale"><span>Mono</span><output id="grayscaleValue">0%</output></label>
+                <input id="grayscale" type="range" min="0" max="100" value="0" />
+              </div>
+              <div class="control">
+                <label for="hue"><span>Hue</span><output id="hueValue">0°</output></label>
+                <input id="hue" type="range" min="0" max="360" value="0" />
+              </div>
+              <div class="control">
+                <label for="vignette"><span>Vignette</span><output id="vignetteValue">0%</output></label>
+                <input id="vignette" type="range" min="0" max="100" value="0" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <main class="studio">
+        <div class="topbar">
+          <div class="tabbar">
+            <div class="tab active">Edit</div>
+            <div class="tab">Layers</div>
+            <div class="tab">History</div>
+          </div>
+          <div class="quick-actions">
+            <button type="button" id="zoomOutBtn">− Zoom</button>
+            <button type="button" id="zoomInBtn">+ Zoom</button>
+          </div>
+        </div>
+
+        <div class="canvas-shell">
+          <div class="canvas-wrap">
+            <canvas id="editorCanvas" width="1200" height="760"></canvas>
+            <div class="empty-state" id="emptyState">Drop a photo to begin editing</div>
+          </div>
+        </div>
+      </main>
+
+      <aside class="panel right">
+        <div class="right-panel">
+          <div class="card">
+            <div class="card-header">
+              <span>Presets</span>
+            </div>
+            <div class="card-body presets">
+              <button type="button" class="preset-btn primary" data-preset="original">Original</button>
+              <button type="button" class="preset-btn" data-preset="vivid">Vivid</button>
+              <button type="button" class="preset-btn" data-preset="cinematic">Cinematic</button>
+              <button type="button" class="preset-btn" data-preset="mono">Mono</button>
+              <button type="button" class="preset-btn" data-preset="warm">Warm</button>
+              <button type="button" class="preset-btn" data-preset="cool">Cool</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <span>Layers</span>
+            </div>
+            <div class="card-body">
+              <ul class="list">
+                <li class="active"><span><span class="mini-dot"></span> Background</span><span>Locked</span></li>
+                <li><span><span class="mini-dot orange"></span> Highlights</span><span>5%</span></li>
+                <li><span><span class="mini-dot purple"></span> Glow</span><span>12%</span></li>
+                <li><span><span class="mini-dot red"></span> Mask</span><span>Off</span></li>
               </ul>
             </div>
           </div>
 
-          <div class="box">
-            <div class="box-header">
-              <span>Properties</span>
+          <div class="card">
+            <div class="card-header">
+              <span>Photo info</span>
             </div>
-            <div class="box-body metric">
+            <div class="card-body meta-block">
+              <div class="stat">
+                <div class="label">Zoom</div>
+                <div class="value" id="zoomValue">100%</div>
+              </div>
               <div class="stat">
                 <div class="label">Rotation</div>
-                <div class="value">42°</div>
+                <div class="value" id="rotationValue">0°</div>
               </div>
               <div class="stat">
-                <div class="label">Scale</div>
-                <div class="value">1.25x</div>
+                <div class="label">Format</div>
+                <div class="value" id="formatValue">None</div>
               </div>
               <div class="stat">
-                <div class="label">Orbit</div>
-                <div class="value">3.4s</div>
-              </div>
-              <div class="stat">
-                <div class="label">FOV</div>
-                <div class="value">37°</div>
+                <div class="label">Quality</div>
+                <div class="value">8/10</div>
               </div>
             </div>
           </div>
-        </aside>
-
-        <main class="viewport-shell">
-          <div class="viewport-toolbar">
-            <div class="viewport-name">ViewPort</div>
-            <div class="viewport-controls">
-              <button class="mini-btn" type="button">Wireframe</button>
-              <button class="mini-btn" type="button">Shading</button>
-              <button class="mini-btn" type="button">Camera</button>
-            </div>
-          </div>
-
-          <div class="viewport" id="viewport">
-            <div class="stars"></div>
-            <div class="grid"></div>
-
-            <div class="scene" id="scene">
-              <div class="orbit-ring"></div>
-              <div class="planet"></div>
-              <div class="ring"></div>
-
-              <div class="cube" id="cube">
-                <div class="face front"></div>
-                <div class="face back"></div>
-                <div class="face right"></div>
-                <div class="face left"></div>
-                <div class="face top"></div>
-                <div class="face bottom"></div>
-              </div>
-
-              <div class="satellite one"></div>
-              <div class="satellite two"></div>
-              <div class="satellite three"></div>
-            </div>
-          </div>
-
-          <div class="voice-panel">
-            <div class="voice-header">
-              <div class="voice-title"><span class="voice-dot"></span> AI Voice Chat</div>
-              <button class="voice-close" type="button" id="voiceCloseBtn">×</button>
-            </div>
-
-            <div class="voice-messages" id="voiceMessages">
-              <div class="voice-bubble assistant">Hi! Tap the mic and talk to me. I can control the scene, answer questions, and speak back.</div>
-            </div>
-
-            <div class="voice-controls">
-              <button class="voice-btn mic" id="micBtn" type="button">🎙️ Listen</button>
-              <button class="voice-btn" id="speakBtn" type="button">🔊 Speak</button>
-            </div>
-
-            <div class="voice-input-row">
-              <input id="voiceInput" type="text" placeholder="Type a message..." />
-              <button id="sendBtn" type="button">Send</button>
-            </div>
-
-            <div class="voice-status" id="voiceStatus">Ready</div>
-          </div>
-
-          <div class="timeline">
-            <div class="timeline-track">
-              <div class="timeline-markers"></div>
-              <div class="timeline-fill"></div>
-            </div>
-            <div class="time-readout">00:12:42</div>
-          </div>
-        </main>
-
-        <aside class="panel inspector">
-          <div class="box">
-            <div class="box-header">
-              <span>Transform</span>
-            </div>
-            <div class="box-body metric">
-              <div class="stat">
-                <div class="label">X</div>
-                <div class="value">0.00</div>
-              </div>
-              <div class="stat">
-                <div class="label">Y</div>
-                <div class="value">1.25</div>
-              </div>
-              <div class="stat">
-                <div class="label">Z</div>
-                <div class="value">2.50</div>
-              </div>
-              <div class="stat">
-                <div class="label">R</div>
-                <div class="value">24°</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="box">
-            <div class="box-header">
-              <span>Animation</span>
-            </div>
-            <div class="box-body">
-              <div class="metric">
-                <div class="stat">
-                  <div class="label">Frames</div>
-                  <div class="value">240</div>
-                </div>
-                <div class="stat">
-                  <div class="label">FPS</div>
-                  <div class="value">24</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </aside>
-      </div>
+        </div>
+      </aside>
     </div>
 
     <script>
-      const scene = document.getElementById('scene');
-      const cube = document.getElementById('cube');
-      const viewport = document.getElementById('viewport');
-      const playButton = document.querySelector('.primary');
-      const voiceMessages = document.getElementById('voiceMessages');
-      const voiceInput = document.getElementById('voiceInput');
-      const sendBtn = document.getElementById('sendBtn');
-      const micBtn = document.getElementById('micBtn');
-      const speakBtn = document.getElementById('speakBtn');
-      const voiceStatus = document.getElementById('voiceStatus');
-      const voiceCloseBtn = document.getElementById('voiceCloseBtn');
-      const voicePanel = document.querySelector('.voice-panel');
+      const canvas = document.getElementById('editorCanvas');
+      const ctx = canvas.getContext('2d');
+      const emptyState = document.getElementById('emptyState');
+      const dropZone = document.getElementById('dropZone');
+      const imageLoader = document.getElementById('imageLoader');
 
-      let isPlaying = true;
-      let pointerX = 0;
-      let pointerY = 0;
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      const recognition = SpeechRecognition ? new SpeechRecognition() : null;
+      const controls = {
+        brightness: document.getElementById('brightness'),
+        contrast: document.getElementById('contrast'),
+        saturation: document.getElementById('saturation'),
+        warmth: document.getElementById('warmth'),
+        blur: document.getElementById('blur'),
+        grayscale: document.getElementById('grayscale'),
+        hue: document.getElementById('hue'),
+        vignette: document.getElementById('vignette')
+      };
 
-      function addMessage(role, text) {
-        const bubble = document.createElement('div');
-        bubble.className = `voice-bubble ${role}`;
-        bubble.textContent = text;
-        voiceMessages.appendChild(bubble);
-        voiceMessages.scrollTop = voiceMessages.scrollHeight;
+      const outputs = {
+        brightness: document.getElementById('brightnessValue'),
+        contrast: document.getElementById('contrastValue'),
+        saturation: document.getElementById('saturationValue'),
+        warmth: document.getElementById('warmthValue'),
+        blur: document.getElementById('blurValue'),
+        grayscale: document.getElementById('grayscaleValue'),
+        hue: document.getElementById('hueValue'),
+        vignette: document.getElementById('vignetteValue')
+      };
+
+      const state = {
+        image: null,
+        zoom: 1,
+        rotation: 0,
+        flipX: false,
+        flipY: false,
+        panX: 0,
+        panY: 0,
+      };
+
+      function clamp(value, min, max) {
+        return Math.min(Math.max(value, min), max);
       }
 
-      function setStatus(text) {
-        voiceStatus.textContent = text;
+      function buildFilterString() {
+        const brightness = Number(controls.brightness.value);
+        const contrast = Number(controls.contrast.value);
+        const saturation = Number(controls.saturation.value);
+        const grayscale = Number(controls.grayscale.value);
+        const blur = Number(controls.blur.value);
+        const hue = Number(controls.hue.value);
+        const warmth = Number(controls.warmth.value);
+
+        let warmthFilter = '0';
+        if (warmth > 0) warmthFilter = `saturate(${1 + warmth / 200})`;
+        if (warmth < 0) warmthFilter = `saturate(${1 + warmth / 300})`;
+
+        const filterString = [
+          `brightness(${brightness}%)`,
+          `contrast(${contrast}%)`,
+          `saturate(${saturation}%)`,
+          `grayscale(${grayscale}%)`,
+          `hue-rotate(${hue}deg)`,
+          `blur(${blur}px)`,
+          warmthFilter
+        ].join(' ');
+
+        return filterString;
       }
 
-      function speakText(text) {
-        if (!('speechSynthesis' in window)) {
+      function updateOutputs() {
+        outputs.brightness.textContent = `${controls.brightness.value}%`;
+        outputs.contrast.textContent = `${controls.contrast.value}%`;
+        outputs.saturation.textContent = `${controls.saturation.value}%`;
+        outputs.warmth.textContent = `${controls.warmth.value}%`;
+        outputs.blur.textContent = `${Number(controls.blur.value).toFixed(1)}px`;
+        outputs.grayscale.textContent = `${controls.grayscale.value}%`;
+        outputs.hue.textContent = `${controls.hue.value}°`;
+        outputs.vignette.textContent = `${controls.vignette.value}%`;
+        document.getElementById('zoomValue').textContent = `${Math.round(state.zoom * 100)}%`;
+        document.getElementById('rotationValue').textContent = `${state.rotation}°`;
+      }
+
+      function renderCanvas() {
+        updateOutputs();
+        const { width, height } = canvas;
+        ctx.clearRect(0, 0, width, height);
+
+        if (!state.image) {
           return;
         }
 
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.rate = 1;
-        utterance.pitch = 1.1;
-        utterance.volume = 1;
-        window.speechSynthesis.cancel();
-        window.speechSynthesis.speak(utterance);
+        const img = state.image;
+        const maxWidth = width * 0.85;
+        const maxHeight = height * 0.8;
+        const aspectRatio = img.width / img.height;
+
+        let drawWidth = maxWidth;
+        let drawHeight = drawWidth / aspectRatio;
+
+        if (drawHeight > maxHeight) {
+          drawHeight = maxHeight;
+          drawWidth = drawHeight * aspectRatio;
+        }
+
+        drawWidth *= state.zoom;
+        drawHeight *= state.zoom;
+
+        const offsetX = width / 2 + state.panX;
+        const offsetY = height / 2 + state.panY;
+
+        ctx.save();
+        ctx.translate(offsetX, offsetY);
+        ctx.rotate((state.rotation * Math.PI) / 180);
+        ctx.scale(state.flipX ? -1 : 1, state.flipY ? -1 : 1);
+        ctx.translate(-drawWidth / 2, -drawHeight / 2);
+        ctx.filter = buildFilterString();
+        ctx.drawImage(img, 0, 0, drawWidth, drawHeight);
+        ctx.restore();
+
+        const vignetteAmount = Number(controls.vignette.value) / 100;
+        if (vignetteAmount > 0) {
+          const gradient = ctx.createRadialGradient(
+            width / 2,
+            height / 2,
+            Math.min(width, height) * 0.18,
+            width / 2,
+            height / 2,
+            Math.max(width, height) * 0.75
+          );
+
+          gradient.addColorStop(0, 'rgba(0, 0, 0, 0)');
+          gradient.addColorStop(1, `rgba(0, 0, 0, ${0.45 + vignetteAmount * 0.55})`);
+          ctx.fillStyle = gradient;
+          ctx.fillRect(0, 0, width, height);
+        }
       }
 
-      async function fetchAssistantReply(inputText) {
-        setStatus('Thinking...');
+      function updateImageMetadata(fileName) {
+        document.getElementById('formatValue').textContent = fileName ? fileName.split('.').pop().toUpperCase() : 'None';
+      }
 
-        try {
-          const response = await fetch('/api/chat', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message: inputText })
+      function handleImageFile(file) {
+        if (!file || !file.type.startsWith('image/')) {
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const img = new Image();
+          img.onload = () => {
+            state.image = img;
+            emptyState.classList.add('hidden');
+            updateImageMetadata(file.name);
+            renderCanvas();
+          };
+          img.src = event.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+
+      function handleFiles(files) {
+        const file = files && files[0];
+        handleImageFile(file);
+      }
+
+      Object.values(controls).forEach((input) => {
+        input.addEventListener('input', renderCanvas);
+      });
+
+      document.getElementById('resetBtn').addEventListener('click', () => {
+        Object.entries(controls).forEach(([key, input]) => {
+          if (key === 'brightness') input.value = 100;
+          if (key === 'contrast') input.value = 100;
+          if (key === 'saturation') input.value = 100;
+          if (key === 'warmth') input.value = 0;
+          if (key === 'blur') input.value = 0;
+          if (key === 'grayscale') input.value = 0;
+          if (key === 'hue') input.value = 0;
+          if (key === 'vignette') input.value = 0;
+        });
+
+        state.zoom = 1;
+        state.rotation = 0;
+        state.flipX = false;
+        state.flipY = false;
+        state.panX = 0;
+        state.panY = 0;
+        renderCanvas();
+      });
+
+      document.getElementById('rotateLeftBtn').addEventListener('click', () => {
+        state.rotation = (state.rotation - 90 + 360) % 360;
+        renderCanvas();
+      });
+
+      document.getElementById('rotateRightBtn').addEventListener('click', () => {
+        state.rotation = (state.rotation + 90) % 360;
+        renderCanvas();
+      });
+
+      document.getElementById('flipHBtn').addEventListener('click', () => {
+        state.flipX = !state.flipX;
+        renderCanvas();
+      });
+
+      document.getElementById('flipVBtn').addEventListener('click', () => {
+        state.flipY = !state.flipY;
+        renderCanvas();
+      });
+
+      document.getElementById('zoomInBtn').addEventListener('click', () => {
+        state.zoom = clamp(state.zoom + 0.1, 0.5, 2.5);
+        renderCanvas();
+      });
+
+      document.getElementById('zoomOutBtn').addEventListener('click', () => {
+        state.zoom = clamp(state.zoom - 0.1, 0.5, 2.5);
+        renderCanvas();
+      });
+
+      document.getElementById('downloadBtn').addEventListener('click', () => {
+        if (!state.image) return;
+
+        const exportCanvas = document.createElement('canvas');
+        const img = state.image;
+        const exportCtx = exportCanvas.getContext('2d');
+
+        const ratio = img.width / img.height;
+        const width = 2000;
+        const height = Math.round(width / ratio);
+
+        exportCanvas.width = width;
+        exportCanvas.height = height;
+
+        exportCtx.clearRect(0, 0, width, height);
+        exportCtx.save();
+        exportCtx.translate(width / 2, height / 2);
+        exportCtx.rotate((state.rotation * Math.PI) / 180);
+        exportCtx.scale(state.flipX ? -1 : 1, state.flipY ? -1 : 1);
+        exportCtx.filter = buildFilterString();
+        exportCtx.drawImage(img, -width / 2, -height / 2, width, height);
+        exportCtx.restore();
+
+        const vignetteAmount = Number(controls.vignette.value) / 100;
+        if (vignetteAmount > 0) {
+          const gradient = exportCtx.createRadialGradient(
+            width / 2,
+            height / 2,
+            Math.min(width, height) * 0.18,
+            width / 2,
+            height / 2,
+            Math.max(width, height) * 0.75
+          );
+          gradient.addColorStop(0, 'rgba(0, 0, 0, 0)');
+          gradient.addColorStop(1, `rgba(0, 0, 0, ${0.45 + vignetteAmount * 0.55})`);
+          exportCtx.fillStyle = gradient;
+          exportCtx.fillRect(0, 0, width, height);
+        }
+
+        const link = document.createElement('a');
+        link.download = 'edited-photo.png';
+        link.href = exportCanvas.toDataURL('image/png');
+        link.click();
+      });
+
+      document.querySelectorAll('[data-preset]').forEach((button) => {
+        button.addEventListener('click', () => {
+          const preset = button.dataset.preset;
+          const presets = {
+            original: { brightness: 100, contrast: 100, saturation: 100, warmth: 0, blur: 0, grayscale: 0, hue: 0, vignette: 0 },
+            vivid: { brightness: 110, contrast: 125, saturation: 150, warmth: 12, blur: 0, grayscale: 0, hue: 0, vignette: 4 },
+            cinematic: { brightness: 95, contrast: 135, saturation: 105, warmth: 18, blur: 0.5, grayscale: 0, hue: 8, vignette: 18 },
+            mono: { brightness: 108, contrast: 120, saturation: 20, warmth: 0, blur: 0, grayscale: 78, hue: 0, vignette: 8 },
+            warm: { brightness: 112, contrast: 120, saturation: 130, warmth: 30, blur: 0, grayscale: 0, hue: 12, vignette: 6 },
+            cool: { brightness: 96, contrast: 110, saturation: 90, warmth: -20, blur: 0, grayscale: 0, hue: 190, vignette: 10 }
+          };
+
+          const values = presets[preset];
+          Object.entries(values).forEach(([key, value]) => {
+            controls[key].value = value;
           });
 
-          const data = await response.json();
-
-          if (!response.ok) {
-            throw new Error(data.error || 'The AI request failed.');
-          }
-
-          return data.reply;
-        } catch (error) {
-          console.error(error);
-          return 'I couldn’t reach the AI backend. Check your server and API key, then try again.';
-        }
-      }
-
-      async function handleUserInput(rawText) {
-        const text = rawText.trim();
-        if (!text) return;
-
-        addMessage('user', text);
-        const reply = await fetchAssistantReply(text);
-        addMessage('assistant', reply);
-        speakText(reply);
-        setStatus('Response ready');
-      }
-
-      function animate() {
-        const time = performance.now() * 0.001;
-
-        if (isPlaying) {
-          const orbitX = pointerY * 30 + 18;
-          const orbitY = pointerX * 55 + time * 48;
-
-          scene.style.transform = `rotateX(${orbitX}deg) rotateY(${orbitY}deg) rotateZ(${Math.sin(time * 1.8) * 10}deg)`;
-          cube.style.transform = `rotateX(${time * 90}deg) rotateY(${time * 120}deg) rotateZ(${time * 70}deg)`;
-        } else {
-          scene.style.transform = `rotateX(${pointerY * 30 + 18}deg) rotateY(${pointerX * 55}deg)`;
-          cube.style.transform = `rotateX(${pointerY * 80}deg) rotateY(${pointerX * 100}deg)`;
-        }
-
-        requestAnimationFrame(animate);
-      }
-
-      viewport.addEventListener('pointermove', (event) => {
-        const rect = viewport.getBoundingClientRect();
-        const x = (event.clientX - rect.left) / rect.width;
-        const y = (event.clientY - rect.top) / rect.height;
-        pointerX = (x - 0.5) * 2;
-        pointerY = (y - 0.5) * 2;
-      });
-
-      playButton.addEventListener('click', () => {
-        isPlaying = !isPlaying;
-        playButton.textContent = isPlaying ? 'Pause' : 'Play';
-      });
-
-      sendBtn.addEventListener('click', () => {
-        handleUserInput(voiceInput.value);
-        voiceInput.value = '';
-      });
-
-      voiceInput.addEventListener('keydown', (event) => {
-        if (event.key === 'Enter') {
-          handleUserInput(voiceInput.value);
-          voiceInput.value = '';
-        }
-      });
-
-      speakBtn.addEventListener('click', () => {
-        const lastBubble = voiceMessages.querySelector('.voice-bubble.assistant:last-child');
-        if (lastBubble) {
-          speakText(lastBubble.textContent);
-          setStatus('Speaking');
-        }
-      });
-
-      voiceCloseBtn.addEventListener('click', () => {
-        voicePanel.style.display = 'none';
-      });
-
-      if (recognition) {
-        recognition.lang = 'en-US';
-        recognition.continuous = false;
-        recognition.interimResults = false;
-
-        recognition.onstart = () => {
-          micBtn.classList.add('active');
-          micBtn.textContent = '🎙️ Listening';
-          setStatus('Listening...');
-        };
-
-        recognition.onresult = async (event) => {
-          const transcript = event.results[0][0].transcript;
-          await handleUserInput(transcript);
-        };
-
-        recognition.onend = () => {
-          micBtn.classList.remove('active');
-          micBtn.textContent = '🎙️ Listen';
-          setStatus('Ready');
-        };
-
-        recognition.onerror = () => {
-          setStatus('Mic error');
-        };
-
-        micBtn.addEventListener('click', () => {
-          if (micBtn.classList.contains('active')) {
-            recognition.stop();
-            return;
-          }
-
-          recognition.start();
+          renderCanvas();
         });
-      } else {
-        micBtn.addEventListener('click', () => {
-          addMessage('assistant', 'Voice recognition is not available in this browser. You can type a message instead.');
-          setStatus('Browser unsupported');
-        });
-      }
+      });
 
-      requestAnimationFrame(animate);
+      ['dragenter', 'dragover'].forEach((eventName) => {
+        dropZone.addEventListener(eventName, (event) => {
+          event.preventDefault();
+          dropZone.classList.add('dragging');
+        });
+      });
+
+      ['dragleave', 'drop'].forEach((eventName) => {
+        dropZone.addEventListener(eventName, (event) => {
+          event.preventDefault();
+          dropZone.classList.remove('dragging');
+        });
+      });
+
+      dropZone.addEventListener('drop', (event) => {
+        handleFiles(event.dataTransfer.files);
+      });
+
+      imageLoader.addEventListener('change', (event) => {
+        handleFiles(event.target.files);
+      });
+
+      renderCanvas();
     </script>
   </body>
 </html>
