@@ -3,1020 +3,641 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Pixel Lab | Photo Editor</title>
+    <title>Super Pixel Plumber</title>
     <style>
       :root {
-        --bg: #0d1117;
-        --bg-2: #111827;
-        --bg-3: #1a2333;
-        --panel: #191f2d;
-        --panel-2: #1f2937;
-        --panel-3: #242f3f;
-        --tool-panel: #171d2a;
-        --line: rgba(148, 163, 184, 0.16);
-        --line-2: rgba(148, 163, 184, 0.28);
-        --text: #edf4ff;
-        --muted: #9ca9bd;
-        --muted-2: #70819f;
-        --accent: #57d7ff;
-        --accent-2: #8b5cf6;
-        --orange: #f6b74d;
-        --green: #37d39a;
-        --red: #ff667d;
-        --shadow: rgba(2, 6, 23, 0.7);
+        --sky-top: #6ad5ff;
+        --sky-mid: #bbf1ff;
+        --sky-bottom: #f4fbff;
+        --ground: #49b548;
+        --ground-dark: #2d8a32;
+        --grass: #7ce76d;
+        --brick: #d17a36;
+        --brick-dark: #9b4d1d;
+        --pipe: #1cc45f;
+        --pipe-dark: #0d8d47;
+        --coin: #ffd85a;
+        --block: #f8d36b;
+        --block-dark: #d39a32;
+        --enemy: #de4c4c;
+        --enemy-dark: #a52d2d;
+        --shadow: rgba(0, 0, 0, 0.18);
+        --panel: rgba(12, 18, 30, 0.82);
+        --text: #f7fbff;
+        --muted: #caebff;
       }
 
       * { box-sizing: border-box; }
 
       html, body {
         margin: 0;
-        width: 100%;
-        min-height: 100%;
-        background:
-          radial-gradient(circle at top left, rgba(87, 215, 255, 0.08), transparent 18%),
-          radial-gradient(circle at top right, rgba(139, 92, 246, 0.08), transparent 24%),
-          linear-gradient(180deg, #0a0f17 0%, #0d1117 100%);
+        height: 100%;
+        background: linear-gradient(180deg, #0b1221 0%, #101b2d 100%);
         color: var(--text);
-        font-family: Inter, "Segoe UI", sans-serif;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
       }
 
       body {
-        min-height: 100vh;
-        display: grid;
-        place-items: stretch;
-      }
-
-      button, input {
-        font: inherit;
-      }
-
-      .app {
-        width: 100%;
-        min-height: 100vh;
-        display: grid;
-        grid-template-rows: 38px 58px minmax(0, 1fr);
-        background: linear-gradient(180deg, #101721 0%, #0d1117 100%);
-        border: 1px solid var(--line);
-      }
-
-      .menu-bar {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 16px;
-        padding: 0 18px;
-        background: rgba(18, 24, 35, 0.96);
-        border-bottom: 1px solid var(--line);
-      }
-
-      .app-title {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        font-weight: 900;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        font-size: 0.72rem;
-        color: var(--text);
-      }
-
-      .app-mark {
-        width: 16px;
-        height: 16px;
-        border-radius: 4px;
-        background: linear-gradient(135deg, var(--accent), var(--accent-2));
-        box-shadow: 0 0 14px rgba(87, 215, 255, 0.35);
-      }
-
-      .menu-items {
-        display: flex;
-        align-items: center;
-        gap: 18px;
-        color: var(--muted);
-        font-size: 0.7rem;
-        letter-spacing: 0.04em;
-      }
-
-      .menu-items span {
-        cursor: default;
-        opacity: 0.9;
-      }
-
-      .menu-actions {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
-
-      .mini-chip {
-        border: 1px solid var(--line);
-        background: rgba(148, 163, 184, 0.05);
-        color: var(--text);
-        border-radius: 8px;
-        padding: 6px 10px;
-        font-size: 0.66rem;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        font-weight: 800;
-      }
-
-      .options-bar {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 16px;
-        padding: 8px 12px 7px;
-        border-bottom: 1px solid var(--line);
-        background: rgba(17, 24, 35, 0.94);
-      }
-
-      .tool-strip,
-      .utility-strip {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        flex-wrap: wrap;
-      }
-
-      .tool-btn,
-      .utility-btn,
-      .preset-btn,
-      .action-btn,
-      .menu-button,
-      .panel-button {
-        appearance: none;
-        border: 1px solid var(--line);
-        background: rgba(148, 163, 184, 0.04);
-        color: var(--text);
-        border-radius: 8px;
-        padding: 7px 10px;
-        font-size: 0.66rem;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        font-weight: 800;
-        cursor: pointer;
-        transition: 0.2s ease;
-      }
-
-      .tool-btn:hover,
-      .utility-btn:hover,
-      .preset-btn:hover,
-      .action-btn:hover,
-      .menu-button:hover,
-      .panel-button:hover {
-        border-color: rgba(87, 215, 255, 0.4);
-        background: rgba(87, 215, 255, 0.08);
-      }
-
-      .tool-btn.active,
-      .utility-btn.active,
-      .panel-button.primary,
-      .action-btn.primary,
-      .preset-btn.primary {
-        background: linear-gradient(135deg, rgba(87, 215, 255, 0.2), rgba(139, 92, 246, 0.22));
-        border-color: rgba(87, 215, 255, 0.4);
-      }
-
-      .workspace {
-        display: grid;
-        grid-template-columns: 78px minmax(0, 1fr) 340px;
-        min-height: 0;
-      }
-
-      .tool-panel {
-        background: linear-gradient(180deg, #141b27 0%, #101820 100%);
-        border-right: 1px solid var(--line);
-        padding: 14px 10px;
-      }
-
-      .tool-stack {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        align-items: center;
-      }
-
-      .tool-icon {
-        width: 42px;
-        height: 42px;
         display: grid;
         place-items: center;
-        border-radius: 10px;
-        border: 1px solid transparent;
-        background: rgba(148, 163, 184, 0.02);
-        color: var(--text);
-        font-size: 1.2rem;
-        cursor: pointer;
-        transition: 0.2s ease;
+        padding: 20px;
       }
 
-      .tool-icon:hover,
-      .tool-icon.active {
-        border-color: rgba(87, 215, 255, 0.4);
-        background: linear-gradient(135deg, rgba(87, 215, 255, 0.12), rgba(139, 92, 246, 0.15));
-        box-shadow: inset 0 0 0 1px rgba(87, 215, 255, 0.08);
+      .game-shell {
+        width: min(96vw, 1100px);
+        border: 3px solid rgba(255,255,255,0.12);
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 25px 60px rgba(0,0,0,0.42);
+        background: rgba(8, 13, 20, 0.7);
       }
 
-      .tool-separator {
-        width: 56px;
-        height: 1px;
-        background: var(--line);
-        margin: 4px 0;
-      }
-
-      .studio-panel {
-        display: flex;
-        flex-direction: column;
-        min-width: 0;
-        background: rgba(12, 17, 26, 0.9);
-      }
-
-      .canvas-header {
+      .hud {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 12px;
-        padding: 16px 20px 10px;
-        border-bottom: 1px solid var(--line);
+        gap: 18px;
+        padding: 14px 18px;
+        background: rgba(12,18,28,0.9);
+        border-bottom: 3px solid rgba(255,255,255,0.08);
       }
 
-      .doc-name {
-        color: var(--muted);
-        font-size: 0.74rem;
-        letter-spacing: 0.08em;
+      .brand {
+        font-size: 0.84rem;
+        font-weight: 900;
+        letter-spacing: 0.14em;
         text-transform: uppercase;
-        font-weight: 800;
       }
 
-      .canvas-shell {
-        flex: 1;
-        position: relative;
+      .stats {
         display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 18px;
-        background: linear-gradient(180deg, rgba(12, 17, 26, 0.9), rgba(9, 14, 21, 0.95));
+        flex-wrap: wrap;
+        gap: 12px;
       }
 
-      .canvas-wrap {
-        position: relative;
-        width: 100%;
-        height: 100%;
-        min-height: 420px;
-        background:
-          linear-gradient(45deg, rgba(17, 24, 39, 0.8) 25%, transparent 25%),
-          linear-gradient(-45deg, rgba(17, 24, 39, 0.8) 25%, transparent 25%),
-          linear-gradient(45deg, transparent 75%, rgba(17, 24, 39, 0.8) 75%),
-          linear-gradient(-45deg, transparent 75%, rgba(17, 24, 39, 0.8) 75%);
-        background-size: 26px 26px;
-        background-position: 0 0, 0 13px, 13px -13px, -13px 0;
-        border: 1px solid var(--line-2);
-        border-radius: 18px;
-        overflow: hidden;
+      .stat {
+        min-width: 94px;
+        text-align: center;
+        padding: 8px 10px;
+        border-radius: 12px;
+        border: 1px solid rgba(255,255,255,0.08);
+        background: rgba(255,255,255,0.04);
+      }
+
+      .stat .label {
+        display: block;
+        color: var(--muted);
+        font-size: 0.58rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .stat .value {
+        display: block;
+        margin-top: 5px;
+        font-size: 1.1rem;
+        font-weight: 900;
       }
 
       canvas {
         display: block;
         width: 100%;
-        height: 100%;
-        border-radius: 18px;
-        background: rgba(10, 15, 21, 0.85);
+        height: auto;
+        aspect-ratio: 16 / 9;
+        background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-mid) 65%, var(--sky-bottom) 100%);
       }
 
-      .empty-state {
-        position: absolute;
-        inset: 0;
-        display: grid;
-        place-items: center;
-        pointer-events: none;
+      .bottom-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 12px 18px 16px;
+        background: rgba(8, 13, 20, 0.9);
+        border-top: 3px solid rgba(255,255,255,0.08);
+      }
+
+      .controls {
         color: var(--muted);
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
         font-size: 0.8rem;
-        font-weight: 800;
-        text-align: center;
-        opacity: 1;
-        transition: 0.2s ease;
       }
 
-      .empty-state.hidden {
-        opacity: 0;
-      }
-
-      .properties-panel {
-        background: rgba(17, 24, 35, 0.95);
-        border-left: 1px solid var(--line);
-        padding: 14px 12px;
-        display: flex;
-        flex-direction: column;
-        gap: 14px;
-      }
-
-      .card {
-        background: rgba(22, 29, 41, 0.95);
-        border: 1px solid var(--line);
-        border-radius: 14px;
-        overflow: hidden;
-      }
-
-      .card-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-        padding: 12px 14px;
-        border-bottom: 1px solid var(--line);
-        color: var(--muted);
-        font-size: 0.66rem;
-        letter-spacing: 0.14em;
+      button {
+        appearance: none;
+        border: none;
+        background: linear-gradient(135deg, #ffe266, #ffbf56);
+        color: #1a160b;
+        font-weight: 900;
+        letter-spacing: 0.08em;
         text-transform: uppercase;
-        font-weight: 800;
-      }
-
-      .card-body {
-        padding: 12px;
-      }
-
-      .dropzone {
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-        min-height: 130px;
-        border: 1.2px dashed rgba(87, 215, 255, 0.45);
-        border-radius: 12px;
-        background: linear-gradient(180deg, rgba(87, 215, 255, 0.06), rgba(139, 92, 246, 0.08));
+        border-radius: 999px;
+        padding: 10px 16px;
         cursor: pointer;
-        padding: 16px 12px;
-        text-align: center;
-        transition: 0.2s ease;
+        box-shadow: 0 10px 18px rgba(255, 191, 86, 0.24);
       }
 
-      .dropzone:hover,
-      .dropzone.dragging {
-        border-color: rgba(87, 215, 255, 0.8);
-        background: linear-gradient(180deg, rgba(87, 215, 255, 0.09), rgba(139, 92, 246, 0.1));
+      button:hover {
+        filter: brightness(1.05);
       }
 
-      .dropzone .icon {
-        width: 42px;
-        height: 42px;
-        border-radius: 12px;
-        display: grid;
-        place-items: center;
-        background: linear-gradient(135deg, rgba(87, 215, 255, 0.2), rgba(139, 92, 246, 0.2));
-        font-size: 1.15rem;
-      }
-
-      .dropzone strong {
-        font-size: 0.74rem;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-      }
-
-      .dropzone span {
-        color: var(--muted);
-        font-size: 0.7rem;
-        line-height: 1.5;
-      }
-
-      .quick-actions,
-      .presets {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-      }
-
-      .control {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        margin-bottom: 12px;
-      }
-
-      .control:last-child {
-        margin-bottom: 0;
-      }
-
-      .control label {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 10px;
-        color: var(--muted);
-        font-size: 0.66rem;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        font-weight: 800;
-      }
-
-      .control output {
-        color: var(--text);
-        min-width: 36px;
-        text-align: right;
-      }
-
-      input[type="range"] {
-        width: 100%;
-        accent-color: #57d7ff;
-      }
-
-      .layers {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-      }
-
-      .layers li {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-        padding: 10px 12px;
-        border-radius: 10px;
-        border: 1px solid transparent;
-        background: rgba(148, 163, 184, 0.03);
-      }
-
-      .layers li.active {
-        border-color: rgba(87, 215, 255, 0.35);
-        background: rgba(87, 215, 255, 0.06);
-      }
-
-      .layer-label {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
-
-      .mini-dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background: var(--green);
-        box-shadow: 0 0 12px rgba(55, 211, 154, 0.8);
-      }
-
-      .mini-dot.orange { background: var(--orange); box-shadow: 0 0 12px rgba(246, 183, 77, 0.8); }
-      .mini-dot.purple { background: var(--accent-2); box-shadow: 0 0 12px rgba(139, 92, 246, 0.8); }
-      .mini-dot.red { background: var(--red); box-shadow: 0 0 12px rgba(255, 102, 125, 0.8); }
-
-      .meta-grid {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 10px;
-      }
-
-      .stat {
-        background: rgba(148, 163, 184, 0.03);
-        border: 1px solid var(--line);
-        border-radius: 10px;
-        padding: 10px;
-      }
-
-      .stat .label {
-        color: var(--muted);
-        font-size: 0.56rem;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        margin-bottom: 6px;
-      }
-
-      .stat .value {
-        font-weight: 800;
-        font-size: 0.84rem;
-      }
-
-      @media (max-width: 1100px) {
-        .workspace {
-          grid-template-columns: 1fr;
-        }
-
-        .tool-panel {
-          border-right: none;
-          border-bottom: 1px solid var(--line);
-        }
-
-        .tool-stack {
-          flex-direction: row;
-          flex-wrap: wrap;
-          justify-content: center;
-        }
-
-        .properties-panel {
-          border-left: none;
-          border-top: 1px solid var(--line);
+      @media (max-width: 700px) {
+        .hud,
+        .bottom-bar {
+          flex-direction: column;
+          align-items: stretch;
         }
       }
     </style>
   </head>
   <body>
-    <div class="app">
-      <header class="menu-bar">
-        <div class="app-title">
-          <div class="app-mark"></div>
-          <span>Pixel Lab</span>
-        </div>
-
-        <div class="menu-items">
-          <span>File</span>
-          <span>Edit</span>
-          <span>Image</span>
-          <span>Layer</span>
-          <span>Type</span>
-          <span>Filter</span>
-          <span>View</span>
-          <span>Window</span>
-          <span>Help</span>
-        </div>
-
-        <div class="menu-actions">
-          <button class="mini-chip" type="button">PSD</button>
-          <button class="mini-chip" type="button">Saved</button>
-        </div>
-      </header>
-
-      <div class="options-bar">
-        <div class="tool-strip">
-          <button type="button" class="tool-btn active">Move</button>
-          <button type="button" class="tool-btn">Marquee</button>
-          <button type="button" class="tool-btn">Lasso</button>
-          <button type="button" class="tool-btn">Magic Wand</button>
-          <button type="button" class="tool-btn">Crop</button>
-          <button type="button" class="tool-btn">Brush</button>
-          <button type="button" class="tool-btn">Clone</button>
-        </div>
-
-        <div class="utility-strip">
-          <button type="button" class="utility-btn" id="zoomOutBtn">− Zoom</button>
-          <button type="button" class="utility-btn" id="zoomInBtn">+ Zoom</button>
-          <button type="button" class="utility-btn active" id="resetBtn">Reset</button>
+    <div class="game-shell">
+      <div class="hud">
+        <div class="brand">Super Pixel Plumber</div>
+        <div class="stats">
+          <div class="stat"><span class="label">Score</span><span class="value" id="scoreValue">0</span></div>
+          <div class="stat"><span class="label">Coins</span><span class="value" id="coinValue">0</span></div>
+          <div class="stat"><span class="label">Lives</span><span class="value" id="livesValue">3</span></div>
         </div>
       </div>
 
-      <div class="workspace">
-        <aside class="tool-panel">
-          <div class="tool-stack">
-            <div class="tool-icon active" title="Move Tool">✥</div>
-            <div class="tool-icon" title="Select">◼</div>
-            <div class="tool-icon" title="Crop">⌖</div>
-            <div class="tool-icon" title="Brush">✎</div>
-            <div class="tool-icon" title="Eraser">⌫</div>
-            <div class="tool-icon" title="Clone">⎇</div>
-            <div class="tool-separator"></div>
-            <div class="tool-icon" title="Gradient">◫</div>
-            <div class="tool-icon" title="Text">T</div>
-            <div class="tool-icon" title="Eye Dropper">◉</div>
-          </div>
-        </aside>
+      <canvas id="gameCanvas" width="960" height="540"></canvas>
 
-        <main class="studio-panel">
-          <div class="canvas-header">
-            <div class="doc-name">Untitled-1.psd</div>
-            <div class="utility-strip">
-              <button type="button" class="panel-button">View</button>
-              <button type="button" class="panel-button primary">Export</button>
-            </div>
-          </div>
-
-          <div class="canvas-shell">
-            <div class="canvas-wrap">
-              <canvas id="editorCanvas" width="1200" height="760"></canvas>
-              <div class="empty-state" id="emptyState">Drop a photo to begin editing</div>
-            </div>
-          </div>
-        </main>
-
-        <aside class="properties-panel">
-          <div class="card">
-            <div class="card-header">
-              <span>Import</span>
-              <span>Drop</span>
-            </div>
-            <div class="card-body">
-              <label class="dropzone" id="dropZone" for="imageLoader">
-                <input id="imageLoader" type="file" accept="image/*" hidden />
-                <div class="icon">⬆</div>
-                <strong>Drop image</strong>
-                <span>or click to browse</span>
-              </label>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-header">
-              <span>Adjustments</span>
-            </div>
-            <div class="card-body">
-              <div class="control">
-                <label for="brightness"><span>Brightness</span><output id="brightnessValue">100%</output></label>
-                <input id="brightness" type="range" min="0" max="200" value="100" />
-              </div>
-              <div class="control">
-                <label for="contrast"><span>Contrast</span><output id="contrastValue">100%</output></label>
-                <input id="contrast" type="range" min="0" max="200" value="100" />
-              </div>
-              <div class="control">
-                <label for="saturation"><span>Saturation</span><output id="saturationValue">100%</output></label>
-                <input id="saturation" type="range" min="0" max="200" value="100" />
-              </div>
-              <div class="control">
-                <label for="warmth"><span>Warmth</span><output id="warmthValue">0%</output></label>
-                <input id="warmth" type="range" min="-100" max="100" value="0" />
-              </div>
-              <div class="control">
-                <label for="blur"><span>Blur</span><output id="blurValue">0px</output></label>
-                <input id="blur" type="range" min="0" max="10" value="0" step="0.5" />
-              </div>
-              <div class="control">
-                <label for="grayscale"><span>Mono</span><output id="grayscaleValue">0%</output></label>
-                <input id="grayscale" type="range" min="0" max="100" value="0" />
-              </div>
-              <div class="control">
-                <label for="hue"><span>Hue</span><output id="hueValue">0°</output></label>
-                <input id="hue" type="range" min="0" max="360" value="0" />
-              </div>
-              <div class="control">
-                <label for="vignette"><span>Vignette</span><output id="vignetteValue">0%</output></label>
-                <input id="vignette" type="range" min="0" max="100" value="0" />
-              </div>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-header">
-              <span>Presets</span>
-            </div>
-            <div class="card-body presets">
-              <button type="button" class="preset-btn primary" data-preset="original">Original</button>
-              <button type="button" class="preset-btn" data-preset="vivid">Vivid</button>
-              <button type="button" class="preset-btn" data-preset="cinematic">Cinematic</button>
-              <button type="button" class="preset-btn" data-preset="mono">Mono</button>
-              <button type="button" class="preset-btn" data-preset="warm">Warm</button>
-              <button type="button" class="preset-btn" data-preset="cool">Cool</button>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-header">
-              <span>Layers</span>
-            </div>
-            <div class="card-body">
-              <ul class="layers">
-                <li class="active"><span class="layer-label"><span class="mini-dot"></span> Background</span><span>Locked</span></li>
-                <li><span class="layer-label"><span class="mini-dot orange"></span> Highlights</span><span>5%</span></li>
-                <li><span class="layer-label"><span class="mini-dot purple"></span> Glow</span><span>12%</span></li>
-                <li><span class="layer-label"><span class="mini-dot red"></span> Mask</span><span>Off</span></li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-header">
-              <span>Info</span>
-            </div>
-            <div class="card-body meta-grid">
-              <div class="stat">
-                <div class="label">Zoom</div>
-                <div class="value" id="zoomValue">100%</div>
-              </div>
-              <div class="stat">
-                <div class="label">Rotate</div>
-                <div class="value" id="rotationValue">0°</div>
-              </div>
-              <div class="stat">
-                <div class="label">Format</div>
-                <div class="value" id="formatValue">None</div>
-              </div>
-              <div class="stat">
-                <div class="label">Quality</div>
-                <div class="value">8/10</div>
-              </div>
-            </div>
-          </div>
-        </aside>
+      <div class="bottom-bar">
+        <div class="controls">Move: A/D or ←/→ • Jump: W, ↑, or Space</div>
+        <button id="restartBtn" type="button">Restart</button>
       </div>
     </div>
 
     <script>
-      const canvas = document.getElementById('editorCanvas');
+      const canvas = document.getElementById('gameCanvas');
       const ctx = canvas.getContext('2d');
-      const emptyState = document.getElementById('emptyState');
-      const dropZone = document.getElementById('dropZone');
-      const imageLoader = document.getElementById('imageLoader');
+      const scoreValue = document.getElementById('scoreValue');
+      const coinValue = document.getElementById('coinValue');
+      const livesValue = document.getElementById('livesValue');
+      const restartBtn = document.getElementById('restartBtn');
 
-      const controls = {
-        brightness: document.getElementById('brightness'),
-        contrast: document.getElementById('contrast'),
-        saturation: document.getElementById('saturation'),
-        warmth: document.getElementById('warmth'),
-        blur: document.getElementById('blur'),
-        grayscale: document.getElementById('grayscale'),
-        hue: document.getElementById('hue'),
-        vignette: document.getElementById('vignette')
-      };
-
-      const outputs = {
-        brightness: document.getElementById('brightnessValue'),
-        contrast: document.getElementById('contrastValue'),
-        saturation: document.getElementById('saturationValue'),
-        warmth: document.getElementById('warmthValue'),
-        blur: document.getElementById('blurValue'),
-        grayscale: document.getElementById('grayscaleValue'),
-        hue: document.getElementById('hueValue'),
-        vignette: document.getElementById('vignetteValue')
-      };
-
-      const state = {
-        image: null,
-        zoom: 1,
-        rotation: 0,
-        flipX: false,
-        flipY: false,
-        panX: 0,
-        panY: 0,
-      };
+      const keys = {};
 
       function clamp(value, min, max) {
         return Math.min(Math.max(value, min), max);
       }
 
-      function buildFilterString() {
-        const brightness = Number(controls.brightness.value);
-        const contrast = Number(controls.contrast.value);
-        const saturation = Number(controls.saturation.value);
-        const grayscale = Number(controls.grayscale.value);
-        const blur = Number(controls.blur.value);
-        const hue = Number(controls.hue.value);
-        const warmth = Number(controls.warmth.value);
-
-        let warmthFilter = 'saturate(1)';
-        if (warmth > 0) warmthFilter = `saturate(${1 + warmth / 200})`;
-        if (warmth < 0) warmthFilter = `saturate(${1 + warmth / 300})`;
-
-        return [
-          `brightness(${brightness}%)`,
-          `contrast(${contrast}%)`,
-          `saturate(${saturation}%)`,
-          `grayscale(${grayscale}%)`,
-          `hue-rotate(${hue}deg)`,
-          `blur(${blur}px)`,
-          warmthFilter
-        ].join(' ');
+      function rectsOverlap(a, b) {
+        return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
       }
 
-      function updateOutputs() {
-        outputs.brightness.textContent = `${controls.brightness.value}%`;
-        outputs.contrast.textContent = `${controls.contrast.value}%`;
-        outputs.saturation.textContent = `${controls.saturation.value}%`;
-        outputs.warmth.textContent = `${controls.warmth.value}%`;
-        outputs.blur.textContent = `${Number(controls.blur.value).toFixed(1)}px`;
-        outputs.grayscale.textContent = `${controls.grayscale.value}%`;
-        outputs.hue.textContent = `${controls.hue.value}°`;
-        outputs.vignette.textContent = `${controls.vignette.value}%`;
-        document.getElementById('zoomValue').textContent = `${Math.round(state.zoom * 100)}%`;
-        document.getElementById('rotationValue').textContent = `${state.rotation}°`;
+      const world = {
+        width: 3900,
+        platforms: [
+          { x: 0, y: 500, w: 420, h: 40, kind: 'ground' },
+          { x: 500, y: 500, w: 340, h: 40, kind: 'ground' },
+          { x: 950, y: 500, w: 430, h: 40, kind: 'ground' },
+          { x: 1480, y: 500, w: 660, h: 40, kind: 'ground' },
+          { x: 2200, y: 500, w: 430, h: 40, kind: 'ground' },
+          { x: 2720, y: 500, w: 610, h: 40, kind: 'ground' },
+          { x: 3400, y: 500, w: 500, h: 40, kind: 'ground' },
+          { x: 200, y: 430, w: 150, h: 18, kind: 'step' },
+          { x: 620, y: 390, w: 150, h: 18, kind: 'step' },
+          { x: 1120, y: 430, w: 120, h: 18, kind: 'step' },
+          { x: 1550, y: 360, w: 150, h: 18, kind: 'step' },
+          { x: 1890, y: 420, w: 150, h: 18, kind: 'step' },
+          { x: 2360, y: 350, w: 160, h: 18, kind: 'step' },
+          { x: 2850, y: 395, w: 150, h: 18, kind: 'step' },
+          { x: 3150, y: 330, w: 160, h: 18, kind: 'step' },
+          { x: 1300, y: 440, w: 80, h: 60, kind: 'pipe' },
+          { x: 1760, y: 400, w: 80, h: 100, kind: 'pipe' },
+          { x: 2470, y: 420, w: 90, h: 80, kind: 'pipe' },
+          { x: 2980, y: 410, w: 90, h: 90, kind: 'pipe' }
+        ],
+        coins: [
+          { x: 310, y: 390, r: 10, collected: false },
+          { x: 660, y: 350, r: 10, collected: false },
+          { x: 1160, y: 390, r: 10, collected: false },
+          { x: 1600, y: 320, r: 10, collected: false },
+          { x: 1940, y: 380, r: 10, collected: false },
+          { x: 2415, y: 310, r: 10, collected: false },
+          { x: 2900, y: 355, r: 10, collected: false },
+          { x: 3195, y: 290, r: 10, collected: false },
+          { x: 1380, y: 390, r: 10, collected: false },
+          { x: 3500, y: 460, r: 10, collected: false }
+        ],
+        enemies: [
+          { x: 620, y: 470, w: 28, h: 30, minX: 540, maxX: 800, dir: 1, speed: 1.2, alive: true },
+          { x: 1215, y: 470, w: 28, h: 30, minX: 1060, maxX: 1440, dir: 1, speed: 1.4, alive: true },
+          { x: 1850, y: 470, w: 28, h: 30, minX: 1680, maxX: 2080, dir: -1, speed: 1.5, alive: true },
+          { x: 2760, y: 470, w: 28, h: 30, minX: 2720, maxX: 3240, dir: 1, speed: 1.5, alive: true }
+        ],
+        goal: { x: 3720, y: 250, w: 14, h: 250 }
+      };
+
+      const state = {
+        score: 0,
+        coins: 0,
+        lives: 3,
+        cameraX: 0,
+        status: 'title'
+      };
+
+      const player = {
+        x: 70,
+        y: 410,
+        w: 28,
+        h: 42,
+        vx: 0,
+        vy: 0,
+        speed: 4.2,
+        jumpPower: 13.5,
+        onGround: false,
+        facing: 1,
+        invuln: 0,
+        respawnX: 70,
+        respawnY: 410
+      };
+
+      function updateHud() {
+        scoreValue.textContent = state.score;
+        coinValue.textContent = state.coins;
+        livesValue.textContent = state.lives;
       }
 
-      function renderCanvas() {
-        updateOutputs();
-        const { width, height } = canvas;
-        ctx.clearRect(0, 0, width, height);
+      function resetPlayer() {
+        player.x = player.respawnX;
+        player.y = player.respawnY;
+        player.vx = 0;
+        player.vy = 0;
+        player.onGround = false;
+        player.invuln = 90;
+      }
 
-        if (!state.image) {
+      function resetGame() {
+        state.score = 0;
+        state.coins = 0;
+        state.lives = 3;
+        state.cameraX = 0;
+        state.status = 'title';
+        player.respawnX = 70;
+        player.respawnY = 410;
+        world.coins.forEach((coin) => { coin.collected = false; });
+        world.enemies.forEach((enemy) => { enemy.alive = true; enemy.x = enemy.minX + 10; });
+        resetPlayer();
+        updateHud();
+      }
+
+      function loseLife() {
+        if (player.invuln > 0) return;
+        state.lives -= 1;
+        updateHud();
+
+        if (state.lives <= 0) {
+          state.status = 'gameover';
           return;
         }
 
-        const img = state.image;
-        const maxWidth = width * 0.82;
-        const maxHeight = height * 0.76;
-        const aspectRatio = img.width / img.height;
+        resetPlayer();
+      }
 
-        let drawWidth = maxWidth;
-        let drawHeight = drawWidth / aspectRatio;
-
-        if (drawHeight > maxHeight) {
-          drawHeight = maxHeight;
-          drawWidth = drawHeight * aspectRatio;
-        }
-
-        drawWidth *= state.zoom;
-        drawHeight *= state.zoom;
-
-        const offsetX = width / 2 + state.panX;
-        const offsetY = height / 2 + state.panY;
-
-        ctx.save();
-        ctx.translate(offsetX, offsetY);
-        ctx.rotate((state.rotation * Math.PI) / 180);
-        ctx.scale(state.flipX ? -1 : 1, state.flipY ? -1 : 1);
-        ctx.translate(-drawWidth / 2, -drawHeight / 2);
-        ctx.filter = buildFilterString();
-        ctx.drawImage(img, 0, 0, drawWidth, drawHeight);
-        ctx.restore();
-
-        const vignetteAmount = Number(controls.vignette.value) / 100;
-        if (vignetteAmount > 0) {
-          const gradient = ctx.createRadialGradient(
-            width / 2,
-            height / 2,
-            Math.min(width, height) * 0.16,
-            width / 2,
-            height / 2,
-            Math.max(width, height) * 0.72
-          );
-
-          gradient.addColorStop(0, 'rgba(0, 0, 0, 0)');
-          gradient.addColorStop(1, `rgba(0, 0, 0, ${0.42 + vignetteAmount * 0.65})`);
-          ctx.fillStyle = gradient;
-          ctx.fillRect(0, 0, width, height);
+      function collectCoin(coin) {
+        if (coin.collected) return;
+        const dx = player.x + player.w / 2 - coin.x;
+        const dy = player.y + player.h / 2 - coin.y;
+        if (Math.abs(dx) < 26 && Math.abs(dy) < 26) {
+          coin.collected = true;
+          state.coins += 1;
+          state.score += 25;
+          updateHud();
         }
       }
 
-      function updateImageMetadata(fileName) {
-        document.getElementById('formatValue').textContent = fileName ? fileName.split('.').pop().toUpperCase() : 'None';
+      function handleEnemyCollision(enemy) {
+        if (!enemy.alive) return;
+
+        const playerBox = { x: player.x + 4, y: player.y + 3, w: player.w - 8, h: player.h - 3 };
+        const enemyBox = { x: enemy.x, y: enemy.y, w: enemy.w, h: enemy.h };
+
+        if (!rectsOverlap(playerBox, enemyBox)) return;
+
+        const stomped = player.vy > 0 && player.y + player.h <= enemy.y + 14;
+        if (stomped) {
+          player.vy = -8.2;
+          enemy.alive = false;
+          state.score += 100;
+          updateHud();
+        } else {
+          loseLife();
+        }
       }
 
-      function handleImageFile(file) {
-        if (!file || !file.type.startsWith('image/')) {
+      function updatePlayer() {
+        const left = !!keys.a || !!keys.arrowleft;
+        const right = !!keys.d || !!keys.arrowright;
+        const jump = !!keys.w || !!keys.arrowup || !!keys[' '];
+
+        let move = 0;
+        if (left) move -= 1;
+        if (right) move += 1;
+
+        if (move !== 0) {
+          player.vx = move * player.speed;
+          player.facing = move;
+        } else {
+          player.vx *= 0.82;
+          if (Math.abs(player.vx) < 0.1) player.vx = 0;
+        }
+
+        if (jump && player.onGround) {
+          player.vy = -player.jumpPower;
+          player.onGround = false;
+        }
+
+        player.vy += 0.55;
+
+        const previousX = player.x;
+        player.x += player.vx;
+
+        for (const platform of world.platforms) {
+          const block = { x: platform.x, y: platform.y, w: platform.w, h: platform.h };
+          if (!rectsOverlap({ x: player.x, y: player.y, w: player.w, h: player.h }, block)) continue;
+
+          if (previousX + player.w <= platform.x + 6 && player.vx > 0) {
+            player.x = platform.x - player.w;
+            player.vx = 0;
+          } else if (previousX >= platform.x + platform.w - 6 && player.vx < 0) {
+            player.x = platform.x + platform.w;
+            player.vx = 0;
+          }
+        }
+
+        const previousY = player.y;
+        player.y += player.vy;
+        player.onGround = false;
+
+        for (const platform of world.platforms) {
+          const block = { x: platform.x, y: platform.y, w: platform.w, h: platform.h };
+          if (!rectsOverlap({ x: player.x, y: player.y, w: player.w, h: player.h }, block)) continue;
+
+          if (previousY + player.h <= platform.y + 10 && player.vy >= 0) {
+            player.y = platform.y - player.h;
+            player.vy = 0;
+            player.onGround = true;
+          } else if (previousY >= platform.y + platform.h - 10 && player.vy < 0) {
+            player.y = platform.y + platform.h;
+            player.vy = 0;
+          }
+        }
+
+        player.x = clamp(player.x, 0, world.width - player.w);
+
+        if (player.y > canvas.height + 120) {
+          loseLife();
+        }
+
+        if (player.invuln > 0) player.invuln -= 1;
+      }
+
+      function updateEnemies() {
+        for (const enemy of world.enemies) {
+          if (!enemy.alive) continue;
+          enemy.x += enemy.speed * enemy.dir;
+          if (enemy.x <= enemy.minX || enemy.x + enemy.w >= enemy.maxX) {
+            enemy.dir *= -1;
+            enemy.x = clamp(enemy.x, enemy.minX, enemy.maxX - enemy.w);
+          }
+          handleEnemyCollision(enemy);
+        }
+      }
+
+      function updateCoins() {
+        world.coins.forEach(collectCoin);
+      }
+
+      function updateGoal() {
+        const playerBox = { x: player.x, y: player.y, w: player.w, h: player.h };
+        const goalBox = { x: world.goal.x, y: world.goal.y, w: world.goal.w, h: world.goal.h };
+        if (rectsOverlap(playerBox, goalBox)) {
+          state.score += 500;
+          state.status = 'win';
+          updateHud();
+        }
+      }
+
+      function update() {
+        if (state.status !== 'play') return;
+        updatePlayer();
+        updateEnemies();
+        updateCoins();
+        updateGoal();
+        state.cameraX = clamp(player.x - canvas.width * 0.35, 0, world.width - canvas.width);
+      }
+
+      function drawBackground() {
+        const sky = ctx.createLinearGradient(0, 0, 0, canvas.height);
+        sky.addColorStop(0, '#6ad5ff');
+        sky.addColorStop(0.7, '#cdefff');
+        sky.addColorStop(1, '#f6fbff');
+        ctx.fillStyle = sky;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.fillStyle = '#ffd95c';
+        ctx.beginPath();
+        ctx.arc(760, 82, 52, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = 'rgba(255,255,255,0.8)';
+        for (let i = 0; i < 10; i++) {
+          const x = ((i * 210) - (state.cameraX * 0.12)) % (canvas.width + 220) - 120;
+          const y = 80 + (i % 3) * 32;
+          ctx.beginPath();
+          ctx.arc(x, y, 26, 0, Math.PI * 2);
+          ctx.arc(x + 26, y - 8, 24, 0, Math.PI * 2);
+          ctx.arc(x + 54, y + 2, 22, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        ctx.fillStyle = '#a5da9f';
+        for (let i = 0; i < 12; i++) {
+          const x = (i * 220) - (state.cameraX * 0.3);
+          ctx.beginPath();
+          ctx.moveTo(x, 470);
+          ctx.lineTo(x + 70, 300);
+          ctx.lineTo(x + 150, 470);
+          ctx.fill();
+        }
+      }
+
+      function drawPlatform(platform) {
+        const x = platform.x - state.cameraX;
+        const y = platform.y;
+
+        if (platform.kind === 'pipe') {
+          ctx.fillStyle = '#2ec96a';
+          ctx.fillRect(x, y + 12, platform.w, platform.h - 12);
+          ctx.fillStyle = '#1aa853';
+          ctx.fillRect(x + 10, y, platform.w - 20, 14);
+          ctx.fillStyle = '#9cf1be';
+          ctx.fillRect(x + 16, y + 20, platform.w - 32, 8);
           return;
         }
 
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          const img = new Image();
-          img.onload = () => {
-            state.image = img;
-            emptyState.classList.add('hidden');
-            updateImageMetadata(file.name);
-            renderCanvas();
-          };
-          img.src = event.target.result;
-        };
-        reader.readAsDataURL(file);
+        ctx.fillStyle = platform.kind === 'ground' ? '#54c14d' : '#cc7a35';
+        ctx.fillRect(x, y, platform.w, platform.h);
+
+        ctx.fillStyle = platform.kind === 'ground' ? '#2d7c2c' : '#9d5322';
+        ctx.fillRect(x, y, platform.w, 8);
+
+        if (platform.kind === 'step') {
+          ctx.fillStyle = '#f8d88a';
+          ctx.fillRect(x + 5, y + 6, platform.w - 10, 5);
+        }
       }
 
-      function handleFiles(files) {
-        const file = files && files[0];
-        handleImageFile(file);
+      function drawCoins() {
+        for (const coin of world.coins) {
+          if (coin.collected) continue;
+          const x = coin.x - state.cameraX;
+          const y = coin.y;
+          ctx.fillStyle = '#ffd85a';
+          ctx.beginPath();
+          ctx.arc(x, y, coin.r, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillStyle = '#fff3b0';
+          ctx.fillRect(x - 2, y - 6, 4, 12);
+        }
       }
 
-      Object.values(controls).forEach((input) => {
-        input.addEventListener('input', renderCanvas);
-      });
+      function drawEnemies() {
+        for (const enemy of world.enemies) {
+          if (!enemy.alive) continue;
+          const x = enemy.x - state.cameraX;
+          const y = enemy.y;
 
-      document.getElementById('resetBtn').addEventListener('click', () => {
-        Object.entries(controls).forEach(([key, input]) => {
-          if (key === 'brightness') input.value = 100;
-          if (key === 'contrast') input.value = 100;
-          if (key === 'saturation') input.value = 100;
-          if (key === 'warmth') input.value = 0;
-          if (key === 'blur') input.value = 0;
-          if (key === 'grayscale') input.value = 0;
-          if (key === 'hue') input.value = 0;
-          if (key === 'vignette') input.value = 0;
-        });
+          ctx.fillStyle = '#db4a4a';
+          ctx.fillRect(x, y, enemy.w, enemy.h);
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(x + 5, y + 8, 6, 6);
+          ctx.fillRect(x + enemy.w - 11, y + 8, 6, 6);
+          ctx.fillStyle = '#1a1a1a';
+          ctx.fillRect(x + 7, y + 10, 2, 2);
+          ctx.fillRect(x + enemy.w - 9, y + 10, 2, 2);
+          ctx.fillStyle = '#ffefef';
+          ctx.fillRect(x + 9, y + 18, 10, 4);
+        }
+      }
 
-        state.zoom = 1;
-        state.rotation = 0;
-        state.flipX = false;
-        state.flipY = false;
-        state.panX = 0;
-        state.panY = 0;
-        renderCanvas();
-      });
+      function drawGoal() {
+        const x = world.goal.x - state.cameraX;
+        const y = world.goal.y;
 
-      document.getElementById('rotateLeftBtn')?.addEventListener('click', () => {
-        state.rotation = (state.rotation - 90 + 360) % 360;
-        renderCanvas();
-      });
+        ctx.fillStyle = '#ebf6ff';
+        ctx.fillRect(x, y, 12, world.goal.h);
+        ctx.fillStyle = '#ffd857';
+        ctx.beginPath();
+        ctx.moveTo(x + 12, y + 14);
+        ctx.lineTo(x + 52, y + 30);
+        ctx.lineTo(x + 12, y + 46);
+        ctx.fill();
+      }
 
-      document.getElementById('rotateRightBtn')?.addEventListener('click', () => {
-        state.rotation = (state.rotation + 90) % 360;
-        renderCanvas();
-      });
+      function drawPlayer() {
+        const x = player.x - state.cameraX;
+        const y = player.y;
 
-      document.getElementById('flipHBtn')?.addEventListener('click', () => {
-        state.flipX = !state.flipX;
-        renderCanvas();
-      });
+        const blink = player.invuln > 0 && Math.floor(player.invuln / 6) % 2 === 0;
+        if (blink) return;
 
-      document.getElementById('flipVBtn')?.addEventListener('click', () => {
-        state.flipY = !state.flipY;
-        renderCanvas();
-      });
+        ctx.fillStyle = '#ffd59a';
+        ctx.fillRect(x + 8, y + 4, 12, 12);
+        ctx.fillStyle = '#f6aa28';
+        ctx.fillRect(x + 6, y + 14, 16, 18);
+        ctx.fillStyle = '#2b6df8';
+        ctx.fillRect(x + 4, y + 18, 20, 14);
 
-      document.getElementById('zoomInBtn').addEventListener('click', () => {
-        state.zoom = clamp(state.zoom + 0.1, 0.5, 2.5);
-        renderCanvas();
-      });
+        ctx.fillStyle = '#1a1a1a';
+        ctx.fillRect(x + 8, y + 8, 2, 2);
+        ctx.fillRect(x + 17, y + 8, 2, 2);
 
-      document.getElementById('zoomOutBtn').addEventListener('click', () => {
-        state.zoom = clamp(state.zoom - 0.1, 0.5, 2.5);
-        renderCanvas();
-      });
+        ctx.fillStyle = '#1a1a1a';
+        ctx.fillRect(x + 7, y + 26, 5, 16); 
+        ctx.fillRect(x + 16, y + 26, 5, 16);
+        ctx.fillRect(x + 4, y + 30, 4, 12);
+        ctx.fillRect(x + 20, y + 30, 4, 12);
+      }
 
-      document.querySelector('.panel-button.primary')?.addEventListener('click', () => {
-        if (!state.image) return;
+      function drawOverlay() {
+        if (state.status === 'play') return;
 
-        const exportCanvas = document.createElement('canvas');
-        const img = state.image;
-        const exportCtx = exportCanvas.getContext('2d');
+        ctx.fillStyle = 'rgba(15, 24, 34, 0.18)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        const ratio = img.width / img.height;
-        const width = 2000;
-        const height = Math.round(width / ratio);
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '900 46px Segoe UI';
+        const title = state.status === 'title' ? 'Press any key to start' : state.status === 'win' ? 'You Win!' : 'Game Over';
+        ctx.fillText(title, canvas.width / 2, canvas.height / 2 - 16);
 
-        exportCanvas.width = width;
-        exportCanvas.height = height;
+        ctx.font = '700 18px Segoe UI';
+        ctx.fillStyle = '#dfeeff';
+        const sub = state.status === 'title' ? 'Use A/D or arrow keys to move' : 'Press restart or any key to play again';
+        ctx.fillText(sub, canvas.width / 2, canvas.height / 2 + 24);
+      }
 
-        exportCtx.clearRect(0, 0, width, height);
-        exportCtx.save();
-        exportCtx.translate(width / 2, height / 2);
-        exportCtx.rotate((state.rotation * Math.PI) / 180);
-        exportCtx.scale(state.flipX ? -1 : 1, state.flipY ? -1 : 1);
-        exportCtx.filter = buildFilterString();
-        exportCtx.drawImage(img, -width / 2, -height / 2, width, height);
-        exportCtx.restore();
+      function render() {
+        drawBackground();
+        world.platforms.forEach(drawPlatform);
+        drawCoins();
+        drawEnemies();
+        drawGoal();
+        drawPlayer();
+        drawOverlay();
+      }
 
-        const vignetteAmount = Number(controls.vignette.value) / 100;
-        if (vignetteAmount > 0) {
-          const gradient = exportCtx.createRadialGradient(
-            width / 2,
-            height / 2,
-            Math.min(width, height) * 0.18,
-            width / 2,
-            height / 2,
-            Math.max(width, height) * 0.75
-          );
-          gradient.addColorStop(0, 'rgba(0, 0, 0, 0)');
-          gradient.addColorStop(1, `rgba(0, 0, 0, ${0.45 + vignetteAmount * 0.55})`);
-          exportCtx.fillStyle = gradient;
-          exportCtx.fillRect(0, 0, width, height);
+      function startGame() {
+        state.status = 'play';
+      }
+
+      let lastTime = 0;
+      function gameLoop(timestamp) {
+        const dt = timestamp - lastTime || 16.67;
+        lastTime = timestamp;
+
+        if (state.status === 'play') {
+          update();
         }
 
-        const link = document.createElement('a');
-        link.download = 'edited-photo.png';
-        link.href = exportCanvas.toDataURL('image/png');
-        link.click();
-      });
+        render();
+        requestAnimationFrame(gameLoop);
+      }
 
-      document.querySelectorAll('[data-preset]').forEach((button) => {
-        button.addEventListener('click', () => {
-          const preset = button.dataset.preset;
-          const presets = {
-            original: { brightness: 100, contrast: 100, saturation: 100, warmth: 0, blur: 0, grayscale: 0, hue: 0, vignette: 0 },
-            vivid: { brightness: 110, contrast: 125, saturation: 150, warmth: 12, blur: 0, grayscale: 0, hue: 0, vignette: 4 },
-            cinematic: { brightness: 95, contrast: 135, saturation: 105, warmth: 18, blur: 0.5, grayscale: 0, hue: 8, vignette: 18 },
-            mono: { brightness: 108, contrast: 120, saturation: 20, warmth: 0, blur: 0, grayscale: 78, hue: 0, vignette: 8 },
-            warm: { brightness: 112, contrast: 120, saturation: 130, warmth: 30, blur: 0, grayscale: 0, hue: 12, vignette: 6 },
-            cool: { brightness: 96, contrast: 110, saturation: 90, warmth: -20, blur: 0, grayscale: 0, hue: 190, vignette: 10 }
-          };
-
-          const values = presets[preset];
-          Object.entries(values).forEach(([key, value]) => {
-            controls[key].value = value;
-          });
-
-          renderCanvas();
-        });
-      });
-
-      ['dragenter', 'dragover'].forEach((eventName) => {
-        dropZone.addEventListener(eventName, (event) => {
+      document.addEventListener('keydown', (event) => {
+        const key = event.key.toLowerCase();
+        if (['arrowleft', 'arrowright', 'arrowup', 'arrowdown', ' ', 'a', 'd', 'w', 's'].includes(key) || event.code === 'Space') {
           event.preventDefault();
-          dropZone.classList.add('dragging');
-        });
+        }
+
+        keys[key] = true;
+
+        if (state.status !== 'play') {
+          if (state.status === 'title' || state.status === 'gameover' || state.status === 'win') {
+            if (state.status === 'gameover' || state.status === 'win') {
+              resetGame();
+            }
+            startGame();
+          }
+        }
       });
 
-      ['dragleave', 'drop'].forEach((eventName) => {
-        dropZone.addEventListener(eventName, (event) => {
-          event.preventDefault();
-          dropZone.classList.remove('dragging');
-        });
+      document.addEventListener('keyup', (event) => {
+        const key = event.key.toLowerCase();
+        keys[key] = false;
       });
 
-      dropZone.addEventListener('drop', (event) => {
-        handleFiles(event.dataTransfer.files);
+      restartBtn.addEventListener('click', () => {
+        resetGame();
+        startGame();
       });
 
-      imageLoader.addEventListener('change', (event) => {
-        handleFiles(event.target.files);
-      });
-
-      document.querySelectorAll('.tool-icon').forEach((tool) => {
-        tool.addEventListener('click', () => {
-          document.querySelectorAll('.tool-icon').forEach((item) => item.classList.remove('active'));
-          tool.classList.add('active');
-        });
-      });
-
-      renderCanvas();
+      resetGame();
+      updateHud();
+      requestAnimationFrame(gameLoop);
     </script>
   </body>
 </html>
