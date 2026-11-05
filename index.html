@@ -1,643 +1,357 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Super Pixel Plumber</title>
-    <style>
-      :root {
-        --sky-top: #6ad5ff;
-        --sky-mid: #bbf1ff;
-        --sky-bottom: #f4fbff;
-        --ground: #49b548;
-        --ground-dark: #2d8a32;
-        --grass: #7ce76d;
-        --brick: #d17a36;
-        --brick-dark: #9b4d1d;
-        --pipe: #1cc45f;
-        --pipe-dark: #0d8d47;
-        --coin: #ffd85a;
-        --block: #f8d36b;
-        --block-dark: #d39a32;
-        --enemy: #de4c4c;
-        --enemy-dark: #a52d2d;
-        --shadow: rgba(0, 0, 0, 0.18);
-        --panel: rgba(12, 18, 30, 0.82);
-        --text: #f7fbff;
-        --muted: #caebff;
-      }
-
-      * { box-sizing: border-box; }
-
-      html, body {
-        margin: 0;
-        height: 100%;
-        background: linear-gradient(180deg, #0b1221 0%, #101b2d 100%);
-        color: var(--text);
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      }
-
-      body {
-        display: grid;
-        place-items: center;
-        padding: 20px;
-      }
-
-      .game-shell {
-        width: min(96vw, 1100px);
-        border: 3px solid rgba(255,255,255,0.12);
-        border-radius: 20px;
-        overflow: hidden;
-        box-shadow: 0 25px 60px rgba(0,0,0,0.42);
-        background: rgba(8, 13, 20, 0.7);
-      }
-
-      .hud {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 18px;
-        padding: 14px 18px;
-        background: rgba(12,18,28,0.9);
-        border-bottom: 3px solid rgba(255,255,255,0.08);
-      }
-
-      .brand {
-        font-size: 0.84rem;
-        font-weight: 900;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
-      }
-
-      .stats {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-      }
-
-      .stat {
-        min-width: 94px;
-        text-align: center;
-        padding: 8px 10px;
-        border-radius: 12px;
-        border: 1px solid rgba(255,255,255,0.08);
-        background: rgba(255,255,255,0.04);
-      }
-
-      .stat .label {
-        display: block;
-        color: var(--muted);
-        font-size: 0.58rem;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-      }
-
-      .stat .value {
-        display: block;
-        margin-top: 5px;
-        font-size: 1.1rem;
-        font-weight: 900;
-      }
-
-      canvas {
-        display: block;
-        width: 100%;
-        height: auto;
-        aspect-ratio: 16 / 9;
-        background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-mid) 65%, var(--sky-bottom) 100%);
-      }
-
-      .bottom-bar {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-        padding: 12px 18px 16px;
-        background: rgba(8, 13, 20, 0.9);
-        border-top: 3px solid rgba(255,255,255,0.08);
-      }
-
-      .controls {
-        color: var(--muted);
-        font-size: 0.8rem;
-      }
-
-      button {
-        appearance: none;
-        border: none;
-        background: linear-gradient(135deg, #ffe266, #ffbf56);
-        color: #1a160b;
-        font-weight: 900;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        border-radius: 999px;
-        padding: 10px 16px;
-        cursor: pointer;
-        box-shadow: 0 10px 18px rgba(255, 191, 86, 0.24);
-      }
-
-      button:hover {
-        filter: brightness(1.05);
-      }
-
-      @media (max-width: 700px) {
-        .hud,
-        .bottom-bar {
-          flex-direction: column;
-          align-items: stretch;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <div class="game-shell">
-      <div class="hud">
-        <div class="brand">Super Pixel Plumber</div>
-        <div class="stats">
-          <div class="stat"><span class="label">Score</span><span class="value" id="scoreValue">0</span></div>
-          <div class="stat"><span class="label">Coins</span><span class="value" id="coinValue">0</span></div>
-          <div class="stat"><span class="label">Lives</span><span class="value" id="livesValue">3</span></div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#101114" />
+  <title>Cutout Studio — AI Rotoscope</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #101114;
+      --panel: #191a1f;
+      --panel-2: #202127;
+      --line: #303139;
+      --text: #f3f2f5;
+      --muted: #9c9ba6;
+      --accent: #c4f06b;
+      --accent-dark: #98c545;
+      --purple: #aa91ff;
+      --danger: #ff777d;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(ellipse at 50% -20%, #282631 0, var(--bg) 58%);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    button { font: inherit; }
+    .app { max-width: 1440px; margin: 0 auto; padding: 0 34px 42px; }
+    header { height: 82px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,.08); }
+    .brand { display: flex; align-items: center; gap: 12px; font-size: 15px; font-weight: 750; letter-spacing: -.03em; }
+    .brand-mark { width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center; color: #14170e; background: var(--accent); font-size: 18px; }
+    .brand span:last-child { color: var(--muted); font-weight: 500; }
+    .local-badge { border: 1px solid var(--line); background: rgba(255,255,255,.035); color: #c4c2cc; padding: 8px 11px; border-radius: 99px; font-size: 11px; letter-spacing: .04em; }
+    .local-badge i { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); margin-right: 7px; box-shadow: 0 0 10px #c4f06b88; }
+    main { padding-top: 40px; }
+    .intro { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin-bottom: 26px; }
+    .eyebrow { color: var(--accent); text-transform: uppercase; letter-spacing: .18em; font-weight: 750; font-size: 10px; margin-bottom: 12px; }
+    h1 { font-size: clamp(30px, 4vw, 46px); line-height: 1.05; letter-spacing: -.055em; margin: 0; font-weight: 680; }
+    .intro p { color: var(--muted); font-size: 14px; margin: 12px 0 0; max-width: 540px; line-height: 1.6; }
+    .workspace { display: grid; grid-template-columns: minmax(0, 1fr) 285px; gap: 18px; align-items: stretch; }
+    .preview-card, .sidebar { border: 1px solid var(--line); border-radius: 15px; background: rgba(25,26,31,.91); overflow: hidden; }
+    .preview-top { height: 52px; border-bottom: 1px solid var(--line); display:flex; align-items:center; justify-content:space-between; padding: 0 17px; }
+    .preview-title { font-size: 12px; font-weight: 650; color: #dad9df; }
+    .preview-state { color: var(--muted); font-size: 11px; display:flex; align-items:center; gap:7px; }
+    .state-dot { width: 7px; height: 7px; border-radius:50%; background:#696a72; }
+    .state-dot.ready { background:var(--accent); box-shadow:0 0 8px #c4f06b88; }
+    .stage-wrap { padding: 16px; }
+    .stage { position:relative; aspect-ratio:16/9; width:100%; overflow:hidden; border-radius:9px; background-color:#202128; background-image: linear-gradient(45deg,#282930 25%,transparent 25%),linear-gradient(-45deg,#282930 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#282930 75%),linear-gradient(-45deg,transparent 75%,#282930 75%); background-size:20px 20px; background-position:0 0,0 10px,10px -10px,-10px 0; }
+    #output { display:block; width:100%; height:100%; object-fit:contain; }
+    #sourceVideo { display:none; }
+    .empty-state { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:24px; transition: .2s ease; }
+    .empty-state.hidden { opacity:0; pointer-events:none; }
+    .upload-icon { width:54px; height:54px; display:grid; place-items:center; border-radius:16px; border:1px solid #44434e; background:#25252d; color:var(--accent); margin-bottom:17px; }
+    .empty-state h2 { font-size:16px; margin:0 0 7px; font-weight:650; }
+    .empty-state p { font-size:12px; color:var(--muted); margin:0 0 18px; }
+    .button { border:1px solid #41414a; border-radius:8px; padding:9px 13px; background:#282930; color:var(--text); font-size:12px; cursor:pointer; transition:.15s; }
+    .button:hover { background:#34353d; border-color:#595a65; }
+    .button:disabled { opacity:.45; cursor:not-allowed; }
+    .button.primary { background:var(--accent); color:#171a10; border-color:var(--accent); font-weight:750; }
+    .button.primary:hover { background:#d3fb85; }
+    .button.export { width:100%; margin-top:12px; padding:11px; }
+    .transport { display:flex; align-items:center; gap:13px; padding:0 17px 15px; }
+    .icon-button { border:0; background:transparent; color:#e4e3e9; padding:4px; cursor:pointer; display:grid; place-items:center; }
+    .timeline { height:4px; flex:1; border-radius:99px; background:#3a3b43; position:relative; cursor:pointer; }
+    .timeline-fill { position:absolute; inset:0 auto 0 0; width:0; border-radius:99px; background:var(--accent); pointer-events:none; }
+    .timecode { color:var(--muted); font-variant-numeric:tabular-nums; font-size:10px; white-space:nowrap; }
+    .sidebar { padding:0 17px 17px; }
+    .panel-heading { font-size:12px; font-weight:700; padding:19px 0 15px; border-bottom:1px solid var(--line); }
+    .setting { padding:17px 0 15px; border-bottom:1px solid var(--line); }
+    .setting-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; font-size:11px; color:#dedde3; }
+    .setting-note { color:var(--muted); font-size:10px; line-height:1.55; margin:8px 0 0; }
+    .select { appearance:none; width:100%; padding:9px 10px; border:1px solid #393a43; border-radius:7px; background:#222329; color:#e6e5eb; font-size:11px; }
+    input[type=range] { appearance:none; width:100%; height:3px; border-radius:5px; background:#484952; outline:none; }
+    input[type=range]::-webkit-slider-thumb { appearance:none; width:12px; height:12px; background:var(--accent); border:2px solid #171a10; border-radius:50%; cursor:pointer; }
+    .range-value { color:var(--accent); font-variant-numeric:tabular-nums; }
+    .color-row { display:flex; align-items:center; gap:9px; }
+    .color-input { width:29px; height:25px; padding:0; border:1px solid #454650; border-radius:5px; background:transparent; }
+    .color-row .select { flex:1; }
+    .export-note { font-size:10px; line-height:1.55; color:var(--muted); margin:10px 0 0; }
+    .model-status { display:flex; gap:9px; align-items:flex-start; margin-top:17px; padding:11px; border:1px solid #34353d; background:#202127; border-radius:8px; font-size:10px; line-height:1.5; color:#b6b5bf; }
+    .model-status strong { color:#e6e5eb; font-weight:650; }
+    .status-icon { color:var(--purple); flex:none; }
+    .toast { position:fixed; bottom:22px; left:50%; transform:translate(-50%,20px); opacity:0; transition:.25s; background:#282930; border:1px solid #484952; box-shadow:0 12px 30px #0007; border-radius:9px; padding:11px 15px; font-size:12px; z-index:5; pointer-events:none; }
+    .toast.show { transform:translate(-50%,0); opacity:1; }
+    .dragging .stage { outline:2px solid var(--accent); outline-offset:-2px; }
+    @media(max-width:900px) { .workspace { grid-template-columns:1fr; } .sidebar { display:grid; grid-template-columns:1fr 1fr; column-gap:22px; } .panel-heading { grid-column:1/-1; } .model-status { align-self:center; } }
+    @media(max-width:600px) { .app{padding:0 16px 30px} header{height:66px} main{padding-top:28px}.intro{display:block}.intro p{font-size:13px}.workspace{gap:12px}.stage-wrap{padding:9px}.sidebar{display:block}.local-badge{font-size:0}.local-badge i{margin:0}.preview-top{padding:0 11px} }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="brand"><div class="brand-mark">✳</div><div>cutout<span>studio</span></div></div>
+      <div class="local-badge"><i></i>YOUR VIDEO STAYS ON THIS DEVICE</div>
+    </header>
+    <main>
+      <section class="intro">
+        <div><div class="eyebrow">AI video workspace</div><h1>Make the subject<br />stand out.</h1><p>Drop in a clip and let AI separate the person from the background. Preview a clean cutout and export your result.</p></div>
+      </section>
+      <section class="workspace" aria-label="Rotoscope workspace">
+        <div class="preview-card">
+          <div class="preview-top"><div class="preview-title">Preview</div><div class="preview-state"><span class="state-dot" id="stateDot"></span><span id="stateLabel">Waiting for video</span></div></div>
+          <div class="stage-wrap"><div class="stage" id="dropZone">
+            <canvas id="output" width="960" height="540" aria-label="Video cutout preview"></canvas>
+            <video id="sourceVideo" playsinline crossorigin="anonymous"></video>
+            <div class="empty-state" id="emptyState"><div class="upload-icon"><svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5M5 14v5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-5"/></svg></div><h2>Drop a video to get started</h2><p>MP4, MOV, WebM and more · processed in your browser</p><button class="button" id="chooseButton" type="button">Choose video</button></div>
+          </div></div>
+          <div class="transport"><button class="icon-button" id="playButton" aria-label="Play" disabled><svg id="playIcon" width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M4 2.8v10.4c0 .6.7.9 1.2.6l8-5.2a.7.7 0 0 0 0-1.2l-8-5.2A.7.7 0 0 0 4 2.8Z"/></svg></button><span class="timecode" id="currentTime">00:00</span><div class="timeline" id="timeline" aria-label="Seek video"><div class="timeline-fill" id="timelineFill"></div></div><span class="timecode" id="duration">00:00</span><button class="button" id="replaceButton" type="button">Replace</button></div>
         </div>
-      </div>
+        <aside class="sidebar">
+          <div class="panel-heading">Cutout settings</div>
+          <div class="setting"><div class="setting-head"><label for="quality">Segmentation quality</label></div><select class="select" id="quality"><option value="1">High detail</option><option value="0">Faster processing</option></select><p class="setting-note">High detail is best for hair and edges. The first run downloads the AI model.</p></div>
+          <div class="setting"><div class="setting-head"><label for="edge">Edge softness</label><span class="range-value" id="edgeValue">35%</span></div><input id="edge" type="range" min="0" max="100" value="35" /><p class="setting-note">Smooth the mask edge for a more natural cutout.</p></div>
+          <div class="setting"><div class="setting-head"><label for="background">Preview background</label></div><div class="color-row"><select class="select" id="background"><option value="transparent">Transparent</option><option value="color">Solid color</option></select><input class="color-input" id="backgroundColor" type="color" value="#6b5cff" aria-label="Background color" /></div></div>
+          <button class="button primary export" id="exportButton" type="button" disabled>↓ &nbsp; Export cutout video</button>
+          <p class="export-note">Exports in real time as WebM. Transparent video support depends on your browser and video player.</p>
+          <div class="model-status"><span class="status-icon">✦</span><div><strong>AI segmentation</strong><br />Runs locally in your browser. Your video is never uploaded.</div></div>
+        </aside>
+      </section>
+      <input id="fileInput" type="file" accept="video/*" hidden />
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status"></div>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/selfie_segmentation.js" crossorigin="anonymous"></script>
+  <script>
+    const video = document.getElementById('sourceVideo');
+    const canvas = document.getElementById('output');
+    const ctx = canvas.getContext('2d', { alpha: true });
+    const maskCanvas = document.createElement('canvas');
+    const maskCtx = maskCanvas.getContext('2d', { willReadFrequently: true });
+    const fileInput = document.getElementById('fileInput');
+    const emptyState = document.getElementById('emptyState');
+    const playButton = document.getElementById('playButton');
+    const exportButton = document.getElementById('exportButton');
+    const stateLabel = document.getElementById('stateLabel');
+    const stateDot = document.getElementById('stateDot');
+    const edgeSlider = document.getElementById('edge');
+    let segmenter = null;
+    let currentUrl = null;
+    let busy = false;
+    let ready = false;
+    let recording = null;
+    let recorderChunks = [];
+    let lastProcessedTime = -1;
+    let toastTimer;
 
-      <canvas id="gameCanvas" width="960" height="540"></canvas>
-
-      <div class="bottom-bar">
-        <div class="controls">Move: A/D or ←/→ • Jump: W, ↑, or Space</div>
-        <button id="restartBtn" type="button">Restart</button>
-      </div>
-    </div>
-
-    <script>
-      const canvas = document.getElementById('gameCanvas');
-      const ctx = canvas.getContext('2d');
-      const scoreValue = document.getElementById('scoreValue');
-      const coinValue = document.getElementById('coinValue');
-      const livesValue = document.getElementById('livesValue');
-      const restartBtn = document.getElementById('restartBtn');
-
-      const keys = {};
-
-      function clamp(value, min, max) {
-        return Math.min(Math.max(value, min), max);
+    function setStatus(label, isReady = false) {
+      stateLabel.textContent = label;
+      stateDot.classList.toggle('ready', isReady);
+    }
+    function toast(message) {
+      const el = document.getElementById('toast');
+      el.textContent = message;
+      el.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => el.classList.remove('show'), 3200);
+    }
+    function formatTime(seconds) {
+      if (!Number.isFinite(seconds)) return '00:00';
+      const mins = Math.floor(seconds / 60);
+      const secs = Math.floor(seconds % 60);
+      return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+    }
+    function setCanvasSize() {
+      const maxWidth = 960;
+      const ratio = video.videoWidth / video.videoHeight || 16 / 9;
+      canvas.width = Math.min(maxWidth, video.videoWidth || maxWidth);
+      canvas.height = Math.round(canvas.width / ratio);
+      maskCanvas.width = canvas.width;
+      maskCanvas.height = canvas.height;
+    }
+    function compositeFrame(results) {
+      if (!results || !results.image || !results.segmentationMask) return;
+      const w = canvas.width, h = canvas.height;
+      maskCtx.clearRect(0, 0, w, h);
+      maskCtx.drawImage(results.segmentationMask, 0, 0, w, h);
+      const mask = maskCtx.getImageData(0, 0, w, h);
+      const softness = Number(edgeSlider.value) / 100;
+      for (let i = 0; i < mask.data.length; i += 4) {
+        const confidence = mask.data[i];
+        const threshold = Math.round((1 - softness) * 150);
+        mask.data[i + 3] = Math.max(0, Math.min(255, Math.round((confidence - threshold) * (255 / Math.max(1, 255 - threshold)))));
+        mask.data[i] = mask.data[i + 1] = mask.data[i + 2] = 255;
       }
-
-      function rectsOverlap(a, b) {
-        return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
+      maskCtx.putImageData(mask, 0, 0);
+      ctx.clearRect(0, 0, w, h);
+      if (document.getElementById('background').value === 'color') {
+        ctx.fillStyle = document.getElementById('backgroundColor').value;
+        ctx.fillRect(0, 0, w, h);
       }
-
-      const world = {
-        width: 3900,
-        platforms: [
-          { x: 0, y: 500, w: 420, h: 40, kind: 'ground' },
-          { x: 500, y: 500, w: 340, h: 40, kind: 'ground' },
-          { x: 950, y: 500, w: 430, h: 40, kind: 'ground' },
-          { x: 1480, y: 500, w: 660, h: 40, kind: 'ground' },
-          { x: 2200, y: 500, w: 430, h: 40, kind: 'ground' },
-          { x: 2720, y: 500, w: 610, h: 40, kind: 'ground' },
-          { x: 3400, y: 500, w: 500, h: 40, kind: 'ground' },
-          { x: 200, y: 430, w: 150, h: 18, kind: 'step' },
-          { x: 620, y: 390, w: 150, h: 18, kind: 'step' },
-          { x: 1120, y: 430, w: 120, h: 18, kind: 'step' },
-          { x: 1550, y: 360, w: 150, h: 18, kind: 'step' },
-          { x: 1890, y: 420, w: 150, h: 18, kind: 'step' },
-          { x: 2360, y: 350, w: 160, h: 18, kind: 'step' },
-          { x: 2850, y: 395, w: 150, h: 18, kind: 'step' },
-          { x: 3150, y: 330, w: 160, h: 18, kind: 'step' },
-          { x: 1300, y: 440, w: 80, h: 60, kind: 'pipe' },
-          { x: 1760, y: 400, w: 80, h: 100, kind: 'pipe' },
-          { x: 2470, y: 420, w: 90, h: 80, kind: 'pipe' },
-          { x: 2980, y: 410, w: 90, h: 90, kind: 'pipe' }
-        ],
-        coins: [
-          { x: 310, y: 390, r: 10, collected: false },
-          { x: 660, y: 350, r: 10, collected: false },
-          { x: 1160, y: 390, r: 10, collected: false },
-          { x: 1600, y: 320, r: 10, collected: false },
-          { x: 1940, y: 380, r: 10, collected: false },
-          { x: 2415, y: 310, r: 10, collected: false },
-          { x: 2900, y: 355, r: 10, collected: false },
-          { x: 3195, y: 290, r: 10, collected: false },
-          { x: 1380, y: 390, r: 10, collected: false },
-          { x: 3500, y: 460, r: 10, collected: false }
-        ],
-        enemies: [
-          { x: 620, y: 470, w: 28, h: 30, minX: 540, maxX: 800, dir: 1, speed: 1.2, alive: true },
-          { x: 1215, y: 470, w: 28, h: 30, minX: 1060, maxX: 1440, dir: 1, speed: 1.4, alive: true },
-          { x: 1850, y: 470, w: 28, h: 30, minX: 1680, maxX: 2080, dir: -1, speed: 1.5, alive: true },
-          { x: 2760, y: 470, w: 28, h: 30, minX: 2720, maxX: 3240, dir: 1, speed: 1.5, alive: true }
-        ],
-        goal: { x: 3720, y: 250, w: 14, h: 250 }
-      };
-
-      const state = {
-        score: 0,
-        coins: 0,
-        lives: 3,
-        cameraX: 0,
-        status: 'title'
-      };
-
-      const player = {
-        x: 70,
-        y: 410,
-        w: 28,
-        h: 42,
-        vx: 0,
-        vy: 0,
-        speed: 4.2,
-        jumpPower: 13.5,
-        onGround: false,
-        facing: 1,
-        invuln: 0,
-        respawnX: 70,
-        respawnY: 410
-      };
-
-      function updateHud() {
-        scoreValue.textContent = state.score;
-        coinValue.textContent = state.coins;
-        livesValue.textContent = state.lives;
+      ctx.drawImage(results.image, 0, 0, w, h);
+      ctx.globalCompositeOperation = 'destination-in';
+      ctx.drawImage(maskCanvas, 0, 0, w, h);
+      ctx.globalCompositeOperation = 'source-over';
+    }
+    async function initSegmenter() {
+      if (segmenter) return segmenter;
+      if (typeof SelfieSegmentation === 'undefined') throw new Error('The AI model could not load. Check your internet connection and try again.');
+      setStatus('Loading AI model…');
+      segmenter = new SelfieSegmentation({ locateFile: file => `https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/${file}` });
+      segmenter.setOptions({ modelSelection: Number(document.getElementById('quality').value), selfieMode: false });
+      segmenter.onResults(compositeFrame);
+      await segmenter.initialize();
+      return segmenter;
+    }
+    async function processFrame() {
+      if (!ready || video.readyState < 2 || busy || video.paused || video.ended) return;
+      if (lastProcessedTime === video.currentTime) return;
+      busy = true;
+      lastProcessedTime = video.currentTime;
+      try { await segmenter.send({ image: video }); }
+      catch (error) { console.error(error); setStatus('Processing error'); }
+      finally { busy = false; }
+    }
+    async function animationLoop() {
+      if (ready && !video.paused && !video.ended) await processFrame();
+      requestAnimationFrame(animationLoop);
+    }
+    async function loadVideo(file) {
+      if (!file || !file.type.startsWith('video/')) { toast('Please choose a video file.'); return; }
+      if (currentUrl) URL.revokeObjectURL(currentUrl);
+      currentUrl = URL.createObjectURL(file);
+      ready = false;
+      video.pause();
+      video.src = currentUrl;
+      video.load();
+      try {
+        await new Promise((resolve, reject) => {
+          video.onloadedmetadata = resolve;
+          video.onerror = () => reject(new Error('This video could not be opened by your browser.'));
+        });
+        setCanvasSize();
+        emptyState.classList.add('hidden');
+        playButton.disabled = false;
+        exportButton.disabled = false;
+        document.getElementById('duration').textContent = formatTime(video.duration);
+        document.getElementById('currentTime').textContent = '00:00';
+        document.getElementById('timelineFill').style.width = '0%';
+        setStatus('Loading AI model…');
+        await initSegmenter();
+        ready = true;
+        lastProcessedTime = -1;
+        setStatus('AI ready', true);
+        await processFrameAtCurrentTime();
+      } catch (error) {
+        console.error(error);
+        setStatus('Could not load video');
+        toast(error.message || 'Could not load this video.');
       }
+    }
+    async function processFrameAtCurrentTime() {
+      if (!segmenter || video.readyState < 2 || busy) return;
+      busy = true;
+      try { await segmenter.send({ image: video }); }
+      catch (error) { console.error(error); }
+      finally { busy = false; }
+    }
+    function openPicker() { fileInput.click(); }
+    document.getElementById('chooseButton').addEventListener('click', openPicker);
+    document.getElementById('replaceButton').addEventListener('click', openPicker);
+    fileInput.addEventListener('change', event => { if (event.target.files[0]) loadVideo(event.target.files[0]); event.target.value = ''; });
+    const dropZone = document.getElementById('dropZone');
+    ['dragenter', 'dragover'].forEach(type => dropZone.addEventListener(type, event => { event.preventDefault(); document.body.classList.add('dragging'); }));
+    ['dragleave', 'drop'].forEach(type => dropZone.addEventListener(type, event => { event.preventDefault(); document.body.classList.remove('dragging'); }));
+    dropZone.addEventListener('drop', event => { const file = [...event.dataTransfer.files].find(item => item.type.startsWith('video/')); if (file) loadVideo(file); else toast('Drop a video file to get started.'); });
+    document.addEventListener('dragover', event => event.preventDefault());
+    document.addEventListener('drop', event => event.preventDefault());
 
-      function resetPlayer() {
-        player.x = player.respawnX;
-        player.y = player.respawnY;
-        player.vx = 0;
-        player.vy = 0;
-        player.onGround = false;
-        player.invuln = 90;
-      }
+    playButton.addEventListener('click', async () => {
+      if (!ready) return;
+      if (video.paused) {
+        try { await video.play(); } catch { toast('Your browser could not play this video.'); }
+      } else video.pause();
+    });
+    video.addEventListener('play', () => {
+      document.getElementById('playIcon').innerHTML = '<path d="M3.5 2.5h3.8v11H3.5zM8.7 2.5h3.8v11H8.7z"/>';
+      setStatus('Processing', true);
+    });
+    video.addEventListener('pause', () => {
+      document.getElementById('playIcon').innerHTML = '<path d="M4 2.8v10.4c0 .6.7.9 1.2.6l8-5.2a.7.7 0 0 0 0-1.2l-8-5.2A.7.7 0 0 0 4 2.8Z"/>';
+      if (ready) { setStatus('AI ready', true); processFrameAtCurrentTime(); }
+    });
+    video.addEventListener('timeupdate', () => {
+      document.getElementById('currentTime').textContent = formatTime(video.currentTime);
+      document.getElementById('timelineFill').style.width = `${video.duration ? video.currentTime / video.duration * 100 : 0}%`;
+    });
+    video.addEventListener('seeked', () => { lastProcessedTime = -1; processFrameAtCurrentTime(); });
+    video.addEventListener('ended', () => { if (recording && recording.state === 'recording') recording.stop(); });
+    document.getElementById('timeline').addEventListener('click', event => {
+      if (!ready || !video.duration) return;
+      const rect = event.currentTarget.getBoundingClientRect();
+      video.currentTime = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width)) * video.duration;
+    });
+    edgeSlider.addEventListener('input', () => { document.getElementById('edgeValue').textContent = `${edgeSlider.value}%`; lastProcessedTime = -1; });
+    document.getElementById('quality').addEventListener('change', async () => {
+      if (!segmenter) return;
+      try {
+        await segmenter.setOptions({ modelSelection: Number(document.getElementById('quality').value), selfieMode: false });
+        lastProcessedTime = -1;
+        processFrameAtCurrentTime();
+      } catch (error) { console.error(error); toast('Could not change segmentation quality.'); }
+    });
+    ['background', 'backgroundColor'].forEach(id => document.getElementById(id).addEventListener('input', () => { lastProcessedTime = -1; processFrameAtCurrentTime(); }));
 
-      function resetGame() {
-        state.score = 0;
-        state.coins = 0;
-        state.lives = 3;
-        state.cameraX = 0;
-        state.status = 'title';
-        player.respawnX = 70;
-        player.respawnY = 410;
-        world.coins.forEach((coin) => { coin.collected = false; });
-        world.enemies.forEach((enemy) => { enemy.alive = true; enemy.x = enemy.minX + 10; });
-        resetPlayer();
-        updateHud();
-      }
-
-      function loseLife() {
-        if (player.invuln > 0) return;
-        state.lives -= 1;
-        updateHud();
-
-        if (state.lives <= 0) {
-          state.status = 'gameover';
-          return;
+    exportButton.addEventListener('click', async () => {
+      if (!ready || !canvas.captureStream || !window.MediaRecorder) { toast('Video export is not supported by this browser.'); return; }
+      if (recording && recording.state === 'recording') return;
+      const wasPaused = video.paused;
+      if (video.ended || video.currentTime >= video.duration) video.currentTime = 0;
+      try {
+        const canvasStream = canvas.captureStream(30);
+        const tracks = [...canvasStream.getVideoTracks()];
+        const capture = video.captureStream || video.mozCaptureStream;
+        if (capture) {
+          const sourceStream = capture.call(video);
+          tracks.push(...sourceStream.getAudioTracks());
         }
-
-        resetPlayer();
+        const stream = new MediaStream(tracks);
+        const mimeType = ['video/webm;codecs=vp9,opus', 'video/webm;codecs=vp8,opus', 'video/webm'].find(type => MediaRecorder.isTypeSupported(type));
+        recording = new MediaRecorder(stream, mimeType ? { mimeType } : undefined);
+        recorderChunks = [];
+        recording.ondataavailable = event => { if (event.data.size) recorderChunks.push(event.data); };
+        recording.onstop = () => {
+          const blob = new Blob(recorderChunks, { type: recording.mimeType || 'video/webm' });
+          const link = document.createElement('a');
+          link.href = URL.createObjectURL(blob);
+          link.download = 'cutout-video.webm';
+          link.click();
+          setTimeout(() => URL.revokeObjectURL(link.href), 1500);
+          stream.getTracks().forEach(track => track.stop());
+          exportButton.disabled = false;
+          exportButton.textContent = '↓  Export cutout video';
+          if (wasPaused) video.pause();
+          toast('Your cutout video is ready.');
+          recording = null;
+        };
+        recording.start(250);
+        exportButton.disabled = true;
+        exportButton.textContent = 'Recording cutout…';
+        video.currentTime = 0;
+        await video.play();
+        toast('Export is recording in real time. Keep this tab open.');
+      } catch (error) {
+        console.error(error);
+        if (recording && recording.state === 'recording') recording.stop();
+        else { exportButton.disabled = false; exportButton.textContent = '↓  Export cutout video'; }
+        toast('Could not start export in this browser.');
       }
-
-      function collectCoin(coin) {
-        if (coin.collected) return;
-        const dx = player.x + player.w / 2 - coin.x;
-        const dy = player.y + player.h / 2 - coin.y;
-        if (Math.abs(dx) < 26 && Math.abs(dy) < 26) {
-          coin.collected = true;
-          state.coins += 1;
-          state.score += 25;
-          updateHud();
-        }
-      }
-
-      function handleEnemyCollision(enemy) {
-        if (!enemy.alive) return;
-
-        const playerBox = { x: player.x + 4, y: player.y + 3, w: player.w - 8, h: player.h - 3 };
-        const enemyBox = { x: enemy.x, y: enemy.y, w: enemy.w, h: enemy.h };
-
-        if (!rectsOverlap(playerBox, enemyBox)) return;
-
-        const stomped = player.vy > 0 && player.y + player.h <= enemy.y + 14;
-        if (stomped) {
-          player.vy = -8.2;
-          enemy.alive = false;
-          state.score += 100;
-          updateHud();
-        } else {
-          loseLife();
-        }
-      }
-
-      function updatePlayer() {
-        const left = !!keys.a || !!keys.arrowleft;
-        const right = !!keys.d || !!keys.arrowright;
-        const jump = !!keys.w || !!keys.arrowup || !!keys[' '];
-
-        let move = 0;
-        if (left) move -= 1;
-        if (right) move += 1;
-
-        if (move !== 0) {
-          player.vx = move * player.speed;
-          player.facing = move;
-        } else {
-          player.vx *= 0.82;
-          if (Math.abs(player.vx) < 0.1) player.vx = 0;
-        }
-
-        if (jump && player.onGround) {
-          player.vy = -player.jumpPower;
-          player.onGround = false;
-        }
-
-        player.vy += 0.55;
-
-        const previousX = player.x;
-        player.x += player.vx;
-
-        for (const platform of world.platforms) {
-          const block = { x: platform.x, y: platform.y, w: platform.w, h: platform.h };
-          if (!rectsOverlap({ x: player.x, y: player.y, w: player.w, h: player.h }, block)) continue;
-
-          if (previousX + player.w <= platform.x + 6 && player.vx > 0) {
-            player.x = platform.x - player.w;
-            player.vx = 0;
-          } else if (previousX >= platform.x + platform.w - 6 && player.vx < 0) {
-            player.x = platform.x + platform.w;
-            player.vx = 0;
-          }
-        }
-
-        const previousY = player.y;
-        player.y += player.vy;
-        player.onGround = false;
-
-        for (const platform of world.platforms) {
-          const block = { x: platform.x, y: platform.y, w: platform.w, h: platform.h };
-          if (!rectsOverlap({ x: player.x, y: player.y, w: player.w, h: player.h }, block)) continue;
-
-          if (previousY + player.h <= platform.y + 10 && player.vy >= 0) {
-            player.y = platform.y - player.h;
-            player.vy = 0;
-            player.onGround = true;
-          } else if (previousY >= platform.y + platform.h - 10 && player.vy < 0) {
-            player.y = platform.y + platform.h;
-            player.vy = 0;
-          }
-        }
-
-        player.x = clamp(player.x, 0, world.width - player.w);
-
-        if (player.y > canvas.height + 120) {
-          loseLife();
-        }
-
-        if (player.invuln > 0) player.invuln -= 1;
-      }
-
-      function updateEnemies() {
-        for (const enemy of world.enemies) {
-          if (!enemy.alive) continue;
-          enemy.x += enemy.speed * enemy.dir;
-          if (enemy.x <= enemy.minX || enemy.x + enemy.w >= enemy.maxX) {
-            enemy.dir *= -1;
-            enemy.x = clamp(enemy.x, enemy.minX, enemy.maxX - enemy.w);
-          }
-          handleEnemyCollision(enemy);
-        }
-      }
-
-      function updateCoins() {
-        world.coins.forEach(collectCoin);
-      }
-
-      function updateGoal() {
-        const playerBox = { x: player.x, y: player.y, w: player.w, h: player.h };
-        const goalBox = { x: world.goal.x, y: world.goal.y, w: world.goal.w, h: world.goal.h };
-        if (rectsOverlap(playerBox, goalBox)) {
-          state.score += 500;
-          state.status = 'win';
-          updateHud();
-        }
-      }
-
-      function update() {
-        if (state.status !== 'play') return;
-        updatePlayer();
-        updateEnemies();
-        updateCoins();
-        updateGoal();
-        state.cameraX = clamp(player.x - canvas.width * 0.35, 0, world.width - canvas.width);
-      }
-
-      function drawBackground() {
-        const sky = ctx.createLinearGradient(0, 0, 0, canvas.height);
-        sky.addColorStop(0, '#6ad5ff');
-        sky.addColorStop(0.7, '#cdefff');
-        sky.addColorStop(1, '#f6fbff');
-        ctx.fillStyle = sky;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        ctx.fillStyle = '#ffd95c';
-        ctx.beginPath();
-        ctx.arc(760, 82, 52, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.fillStyle = 'rgba(255,255,255,0.8)';
-        for (let i = 0; i < 10; i++) {
-          const x = ((i * 210) - (state.cameraX * 0.12)) % (canvas.width + 220) - 120;
-          const y = 80 + (i % 3) * 32;
-          ctx.beginPath();
-          ctx.arc(x, y, 26, 0, Math.PI * 2);
-          ctx.arc(x + 26, y - 8, 24, 0, Math.PI * 2);
-          ctx.arc(x + 54, y + 2, 22, 0, Math.PI * 2);
-          ctx.fill();
-        }
-
-        ctx.fillStyle = '#a5da9f';
-        for (let i = 0; i < 12; i++) {
-          const x = (i * 220) - (state.cameraX * 0.3);
-          ctx.beginPath();
-          ctx.moveTo(x, 470);
-          ctx.lineTo(x + 70, 300);
-          ctx.lineTo(x + 150, 470);
-          ctx.fill();
-        }
-      }
-
-      function drawPlatform(platform) {
-        const x = platform.x - state.cameraX;
-        const y = platform.y;
-
-        if (platform.kind === 'pipe') {
-          ctx.fillStyle = '#2ec96a';
-          ctx.fillRect(x, y + 12, platform.w, platform.h - 12);
-          ctx.fillStyle = '#1aa853';
-          ctx.fillRect(x + 10, y, platform.w - 20, 14);
-          ctx.fillStyle = '#9cf1be';
-          ctx.fillRect(x + 16, y + 20, platform.w - 32, 8);
-          return;
-        }
-
-        ctx.fillStyle = platform.kind === 'ground' ? '#54c14d' : '#cc7a35';
-        ctx.fillRect(x, y, platform.w, platform.h);
-
-        ctx.fillStyle = platform.kind === 'ground' ? '#2d7c2c' : '#9d5322';
-        ctx.fillRect(x, y, platform.w, 8);
-
-        if (platform.kind === 'step') {
-          ctx.fillStyle = '#f8d88a';
-          ctx.fillRect(x + 5, y + 6, platform.w - 10, 5);
-        }
-      }
-
-      function drawCoins() {
-        for (const coin of world.coins) {
-          if (coin.collected) continue;
-          const x = coin.x - state.cameraX;
-          const y = coin.y;
-          ctx.fillStyle = '#ffd85a';
-          ctx.beginPath();
-          ctx.arc(x, y, coin.r, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.fillStyle = '#fff3b0';
-          ctx.fillRect(x - 2, y - 6, 4, 12);
-        }
-      }
-
-      function drawEnemies() {
-        for (const enemy of world.enemies) {
-          if (!enemy.alive) continue;
-          const x = enemy.x - state.cameraX;
-          const y = enemy.y;
-
-          ctx.fillStyle = '#db4a4a';
-          ctx.fillRect(x, y, enemy.w, enemy.h);
-          ctx.fillStyle = '#ffffff';
-          ctx.fillRect(x + 5, y + 8, 6, 6);
-          ctx.fillRect(x + enemy.w - 11, y + 8, 6, 6);
-          ctx.fillStyle = '#1a1a1a';
-          ctx.fillRect(x + 7, y + 10, 2, 2);
-          ctx.fillRect(x + enemy.w - 9, y + 10, 2, 2);
-          ctx.fillStyle = '#ffefef';
-          ctx.fillRect(x + 9, y + 18, 10, 4);
-        }
-      }
-
-      function drawGoal() {
-        const x = world.goal.x - state.cameraX;
-        const y = world.goal.y;
-
-        ctx.fillStyle = '#ebf6ff';
-        ctx.fillRect(x, y, 12, world.goal.h);
-        ctx.fillStyle = '#ffd857';
-        ctx.beginPath();
-        ctx.moveTo(x + 12, y + 14);
-        ctx.lineTo(x + 52, y + 30);
-        ctx.lineTo(x + 12, y + 46);
-        ctx.fill();
-      }
-
-      function drawPlayer() {
-        const x = player.x - state.cameraX;
-        const y = player.y;
-
-        const blink = player.invuln > 0 && Math.floor(player.invuln / 6) % 2 === 0;
-        if (blink) return;
-
-        ctx.fillStyle = '#ffd59a';
-        ctx.fillRect(x + 8, y + 4, 12, 12);
-        ctx.fillStyle = '#f6aa28';
-        ctx.fillRect(x + 6, y + 14, 16, 18);
-        ctx.fillStyle = '#2b6df8';
-        ctx.fillRect(x + 4, y + 18, 20, 14);
-
-        ctx.fillStyle = '#1a1a1a';
-        ctx.fillRect(x + 8, y + 8, 2, 2);
-        ctx.fillRect(x + 17, y + 8, 2, 2);
-
-        ctx.fillStyle = '#1a1a1a';
-        ctx.fillRect(x + 7, y + 26, 5, 16); 
-        ctx.fillRect(x + 16, y + 26, 5, 16);
-        ctx.fillRect(x + 4, y + 30, 4, 12);
-        ctx.fillRect(x + 20, y + 30, 4, 12);
-      }
-
-      function drawOverlay() {
-        if (state.status === 'play') return;
-
-        ctx.fillStyle = 'rgba(15, 24, 34, 0.18)';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        ctx.textAlign = 'center';
-        ctx.fillStyle = '#ffffff';
-        ctx.font = '900 46px Segoe UI';
-        const title = state.status === 'title' ? 'Press any key to start' : state.status === 'win' ? 'You Win!' : 'Game Over';
-        ctx.fillText(title, canvas.width / 2, canvas.height / 2 - 16);
-
-        ctx.font = '700 18px Segoe UI';
-        ctx.fillStyle = '#dfeeff';
-        const sub = state.status === 'title' ? 'Use A/D or arrow keys to move' : 'Press restart or any key to play again';
-        ctx.fillText(sub, canvas.width / 2, canvas.height / 2 + 24);
-      }
-
-      function render() {
-        drawBackground();
-        world.platforms.forEach(drawPlatform);
-        drawCoins();
-        drawEnemies();
-        drawGoal();
-        drawPlayer();
-        drawOverlay();
-      }
-
-      function startGame() {
-        state.status = 'play';
-      }
-
-      let lastTime = 0;
-      function gameLoop(timestamp) {
-        const dt = timestamp - lastTime || 16.67;
-        lastTime = timestamp;
-
-        if (state.status === 'play') {
-          update();
-        }
-
-        render();
-        requestAnimationFrame(gameLoop);
-      }
-
-      document.addEventListener('keydown', (event) => {
-        const key = event.key.toLowerCase();
-        if (['arrowleft', 'arrowright', 'arrowup', 'arrowdown', ' ', 'a', 'd', 'w', 's'].includes(key) || event.code === 'Space') {
-          event.preventDefault();
-        }
-
-        keys[key] = true;
-
-        if (state.status !== 'play') {
-          if (state.status === 'title' || state.status === 'gameover' || state.status === 'win') {
-            if (state.status === 'gameover' || state.status === 'win') {
-              resetGame();
-            }
-            startGame();
-          }
-        }
-      });
-
-      document.addEventListener('keyup', (event) => {
-        const key = event.key.toLowerCase();
-        keys[key] = false;
-      });
-
-      restartBtn.addEventListener('click', () => {
-        resetGame();
-        startGame();
-      });
-
-      resetGame();
-      updateHud();
-      requestAnimationFrame(gameLoop);
-    </script>
-  </body>
+    });
+    window.addEventListener('beforeunload', () => { if (currentUrl) URL.revokeObjectURL(currentUrl); });
+    requestAnimationFrame(animationLoop);
+  </script>
+</body>
 </html>
