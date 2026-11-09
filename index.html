@@ -3,228 +3,86 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#07111f" />
-  <title>Friendly Neighborhood — A Spider-Hero Animation</title>
+  <meta name="theme-color" content="#101114" />
+  <title>Orbit — AI chat and search</title>
   <style>
-    :root { color-scheme: dark; --ink:#f4f7ff; --muted:#a8b6ca; --red:#e43b45; --blue:#1456a0; }
-    * { box-sizing:border-box; }
-    body { margin:0; min-height:100vh; display:grid; place-items:center; padding:24px; color:var(--ink); font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif; background:radial-gradient(ellipse at 50% 0%,#1b3555 0,#0a1422 45%,#050a12 100%); }
-    .frame { width:min(1120px,100%); }
-    header { display:flex; align-items:center; justify-content:space-between; gap:20px; margin:0 2px 14px; }
-    .brand { display:flex; align-items:center; gap:11px; font-size:12px; font-weight:800; letter-spacing:.16em; text-transform:uppercase; }
-    .mark { width:32px; height:32px; display:grid; place-items:center; border-radius:10px; color:white; background:linear-gradient(145deg,#fa525b,#a90f23); box-shadow:0 5px 22px #e43b4544; font-size:18px; }
-    .live { color:#b8c5d8; font-size:10px; letter-spacing:.15em; text-transform:uppercase; }
-    .live i { display:inline-block; width:7px; height:7px; margin-right:8px; border-radius:50%; background:#7ce6c0; box-shadow:0 0 12px #7ce6c0; }
-    .scene { position:relative; overflow:hidden; border:1px solid #53678166; border-radius:18px; background:#091422; box-shadow:0 28px 90px #0009, inset 0 1px #ffffff12; }
-    canvas { display:block; width:100%; aspect-ratio:16/9; }
-    .caption { position:absolute; left:clamp(18px,4vw,48px); top:clamp(18px,4vw,44px); pointer-events:none; text-shadow:0 2px 22px #07111f; }
-    .eyebrow { color:#ff747a; font-size:10px; font-weight:800; letter-spacing:.24em; text-transform:uppercase; }
-    h1 { margin:9px 0 7px; font-size:clamp(24px,4.6vw,48px); line-height:.97; letter-spacing:-.055em; }
-    .sub { margin:0; color:#c2ccda; font-size:clamp(10px,1.35vw,13px); }
-    .controls { position:absolute; right:18px; bottom:17px; display:flex; align-items:center; gap:10px; }
-    .controls span { color:#d5deeb; font-size:10px; letter-spacing:.12em; text-transform:uppercase; }
-    button { display:grid; place-items:center; width:40px; height:40px; border:1px solid #ffffff3b; border-radius:50%; color:white; background:#101c2dbb; backdrop-filter:blur(8px); cursor:pointer; transition:transform .18s,background .18s; }
-    button:hover { transform:scale(1.07); background:#253852; }
-    button:focus-visible { outline:2px solid #ff747a; outline-offset:3px; }
-    button svg { width:15px; height:15px; }
-    .footer { display:flex; justify-content:space-between; gap:20px; margin:12px 3px 0; color:#8292a8; font-size:10px; }
-    @media(max-width:600px) { body{padding:12px}.scene{border-radius:12px}.caption{left:16px;top:15px}.eyebrow{font-size:8px}.sub{max-width:180px;line-height:1.4}.controls{right:10px;bottom:10px}.controls span{display:none}.footer{font-size:9px} }
-    @media(prefers-reduced-motion:reduce) { * { scroll-behavior:auto !important; } }
+    :root{color-scheme:dark;--bg:#101114;--panel:#17181c;--panel2:#202126;--line:#303137;--text:#f2f2f3;--muted:#a5a6ad;--accent:#b9f4d0;--blue:#8eb8ff}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh}
+    button,textarea{font:inherit}button{color:inherit;cursor:pointer}.app{min-height:100vh;display:grid;grid-template-columns:260px minmax(0,1fr)}
+    aside{border-right:1px solid var(--line);padding:20px 14px;display:flex;flex-direction:column;gap:18px;background:#131417}.brand{display:flex;align-items:center;gap:10px;padding:2px 8px;font-size:17px;font-weight:700;letter-spacing:-.03em}.brand-icon{width:30px;height:30px;border-radius:10px;background:var(--accent);color:#15211a;display:grid;place-items:center;font-size:18px}
+    .new-chat{border:1px solid #44454c;background:transparent;border-radius:12px;padding:10px 12px;text-align:left;display:flex;gap:10px;align-items:center}.new-chat:hover,.search-button:hover{background:#24252a}.hint{color:var(--muted);font-size:12px;padding:0 9px;margin:2px 0}.sidebar-bottom{margin-top:auto;color:#85868e;font-size:12px;padding:10px}
+    main{min-width:0;display:flex;flex-direction:column;height:100vh;height:100dvh}.topbar{height:64px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 clamp(16px,4vw,48px);background:#101114ee}.model{font-weight:600}.model small{font-weight:400;color:var(--muted);margin-left:6px}.top-actions{display:flex;gap:8px}.search-button{border:1px solid var(--line);background:transparent;border-radius:10px;padding:8px 12px;font-size:13px}
+    .conversation{flex:1;overflow:auto;padding:30px 20px 24px}.inner{width:min(760px,100%);margin:0 auto}.welcome{min-height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:30px 0 70px}.welcome-mark{width:56px;height:56px;border-radius:20px;background:#242a27;color:var(--accent);display:grid;place-items:center;font-size:28px;margin-bottom:20px}.welcome h1{font-size:clamp(28px,5vw,42px);line-height:1.12;letter-spacing:-.045em;margin:0 0 10px}.welcome p{color:var(--muted);margin:0 0 28px}.suggestions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;width:min(620px,100%)}.suggestion{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:13px;text-align:left;color:#dedee2;font-size:13px}.suggestion:hover{border-color:#666870;background:#1d1e23}
+    .messages{display:flex;flex-direction:column;gap:24px;padding-bottom:24px}.message{display:flex;gap:12px;align-items:flex-start}.avatar{flex:0 0 30px;height:30px;border-radius:10px;background:#28292f;display:grid;place-items:center;font-size:13px}.message.user .avatar{background:#303943;color:var(--blue)}.message-content{min-width:0;white-space:pre-wrap;overflow-wrap:anywhere;padding-top:3px}.message.assistant .message-content{color:#e5e5e8}.message-content p{margin:0 0 12px}.message-content p:last-child{margin-bottom:0}.status{color:var(--muted);font-size:13px;padding:0 0 12px 42px}
+    .composer-wrap{padding:10px 20px 18px}.composer{width:min(760px,100%);margin:0 auto;border:1px solid #484950;border-radius:18px;background:#1c1d21;padding:10px 12px 8px;box-shadow:0 12px 40px #0003}.composer textarea{display:block;width:100%;resize:none;max-height:180px;min-height:42px;border:0;outline:0;background:transparent;color:var(--text);padding:8px 5px}.composer textarea::placeholder{color:#909198}.composer-row{display:flex;align-items:center;justify-content:space-between}.composer-note{color:#85868e;font-size:11px;padding-left:4px}.tools{display:flex;gap:7px}.icon-button{width:36px;height:36px;border:0;border-radius:11px;background:transparent;color:#c5c6cb;display:grid;place-items:center}.icon-button:hover{background:#303137}.icon-button.active{color:var(--accent);background:#29352e}.send{background:var(--accent);color:#17221a;font-size:18px;font-weight:700}.send:hover{background:#d0f9df}.icon-button:disabled{opacity:.45;cursor:not-allowed}.disclaimer{text-align:center;color:#797a82;font-size:11px;margin:9px auto 0;max-width:760px}.toast{position:fixed;left:50%;bottom:105px;transform:translateX(-50%);background:#2b2c31;border:1px solid #4a4b52;color:#eee;padding:10px 14px;border-radius:10px;font-size:13px;display:none;max-width:calc(100vw - 32px);z-index:5}
+    @media(max-width:700px){.app{grid-template-columns:1fr}aside{display:none}.topbar{height:56px}.conversation{padding:22px 16px}.composer-wrap{padding:8px 12px 12px}.suggestions{grid-template-columns:1fr}.welcome{padding-bottom:30px}.top-actions .search-button{padding:7px 9px}}
   </style>
 </head>
 <body>
-  <main class="frame">
-    <header>
-      <div class="brand"><span class="mark" aria-hidden="true">✳</span> Friendly Neighborhood</div>
-      <div class="live"><i></i>New York · after dark</div>
-    </header>
-    <section class="scene" aria-label="Animated superhero swinging over a New York city skyline">
-      <canvas id="scene" aria-label="A red-and-blue spider-themed hero swings between city buildings at night"></canvas>
-      <div class="caption"><div class="eyebrow">A little more than friendly</div><h1>THE CITY<br>IS YOURS.</h1><p class="sub">One more swing before sunrise.</p></div>
-      <div class="controls"><span id="motionLabel">Animation playing</span><button id="toggle" type="button" aria-label="Pause animation" title="Pause animation"><svg id="toggleIcon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M4 3h3v10H4zm5 0h3v10H9z"/></svg></button></div>
-    </section>
-    <div class="footer"><span>AN ORIGINAL SPIDER-HERO TRIBUTE</span><span>Press space or use the pause button</span></div>
-  </main>
+  <div class="app">
+    <aside aria-label="Sidebar">
+      <div class="brand"><span class="brand-icon" aria-hidden="true">✳</span> Orbit</div>
+      <button class="new-chat" id="newChat"><span aria-hidden="true">＋</span> New chat</button>
+      <p class="hint">Your chats will appear here.</p>
+      <div class="sidebar-bottom">Ask, explore, and discover.<br>Voice input works in supported browsers.</div>
+    </aside>
+    <main>
+      <header class="topbar"><div class="model">Orbit <small>AI assistant</small></div><div class="top-actions"><button class="search-button" id="googleSearch" type="button" title="Search Google">⌕ &nbsp;Google Search</button></div></header>
+      <section class="conversation" id="conversation" aria-live="polite" aria-label="Conversation">
+        <div class="inner" id="content">
+          <div class="welcome" id="welcome"><div class="welcome-mark" aria-hidden="true">✳</div><h1>What can I help with?</h1><p>Ask a question, explore an idea, or search the web.</p>
+            <div class="suggestions"><button class="suggestion">Explain something complicated in simple terms</button><button class="suggestion">Help me plan a fun weekend</button><button class="suggestion">Give me ideas for a creative project</button><button class="suggestion">What should I learn next?</button></div>
+          </div>
+          <div class="messages" id="messages"></div><div class="status" id="status" hidden></div>
+        </div>
+      </section>
+      <div class="composer-wrap"><form class="composer" id="chatForm"><textarea id="prompt" rows="1" aria-label="Message Orbit" placeholder="Message Orbit..."></textarea><div class="composer-row"><span class="composer-note">Ask anything</span><div class="tools"><button class="icon-button" id="mic" type="button" aria-label="Talk to Orbit" title="Talk to Orbit">🎙</button><button class="icon-button" id="speak" type="button" aria-label="Read answers aloud" title="Read answers aloud">🔊</button><button class="icon-button send" id="send" type="submit" aria-label="Send message">↑</button></div></div></form><p class="disclaimer">AI can make mistakes. Check important information.</p></div>
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status"></div>
 <script>
 (() => {
-  const canvas = document.getElementById('scene');
-  const ctx = canvas.getContext('2d');
-  const toggle = document.getElementById('toggle');
-  const icon = document.getElementById('toggleIcon');
-  const motionLabel = document.getElementById('motionLabel');
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let paused = reduceMotion;
-  let startedAt = performance.now();
-  let pauseAt = startedAt;
-  const W = 1200, H = 675;
-
-  function resize() {
-    const rect = canvas.getBoundingClientRect();
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    canvas.width = Math.round(rect.width * dpr);
-    canvas.height = Math.round(rect.height * dpr);
+  // Connect this to your own server-side AI proxy. Keep API keys on the server, never in this page.
+  const CHAT_API = '/api/chat';
+  const form=document.getElementById('chatForm'), input=document.getElementById('prompt'), messages=document.getElementById('messages');
+  const welcome=document.getElementById('welcome'), status=document.getElementById('status'), toast=document.getElementById('toast');
+  let busy=false, latestAnswer='';
+  function notify(text){toast.textContent=text;toast.style.display='block';clearTimeout(notify.timer);notify.timer=setTimeout(()=>toast.style.display='none',3600)}
+  function addMessage(role,text){
+    welcome.hidden=true;
+    const row=document.createElement('div');row.className='message '+role;
+    const avatar=document.createElement('div');avatar.className='avatar';avatar.setAttribute('aria-hidden','true');avatar.textContent=role==='user'?'You':'✳';
+    const body=document.createElement('div');body.className='message-content';body.textContent=text;
+    row.append(avatar,body);messages.append(row);document.getElementById('conversation').scrollTop=document.getElementById('conversation').scrollHeight;return body;
   }
-  window.addEventListener('resize', resize);
-  resize();
-
-  function roundedRect(x,y,w,h,r,fill) {
-    ctx.fillStyle=fill; ctx.beginPath(); ctx.roundRect(x,y,w,h,r); ctx.fill();
+  async function sendMessage(text){
+    text=text.trim();if(!text||busy)return;
+    addMessage('user',text);input.value='';resizeInput();busy=true;document.getElementById('send').disabled=true;
+    status.hidden=false;status.textContent='Thinking…';
+    try{
+      const response=await fetch(CHAT_API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:text})});
+      if(!response.ok)throw new Error('The AI service is not available yet.');
+      const data=await response.json();const answer=data.reply||data.answer||data.message;
+      if(typeof answer!=='string'||!answer)throw new Error('The AI service returned an empty answer.');
+      latestAnswer=answer;addMessage('assistant',answer);
+    }catch(error){
+      const explanation=error instanceof TypeError
+        ? 'Chat service is not connected yet. Add a server-side POST /api/chat endpoint that accepts {"message":"..."} and returns {"reply":"..."}. Google Search and voice input are available now.'
+        : error.message;
+      addMessage('assistant',explanation);
+    }finally{busy=false;status.hidden=true;document.getElementById('send').disabled=false;input.focus()}
   }
-  function line(x1,y1,x2,y2,color,width) {
-    ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.strokeStyle=color; ctx.lineWidth=width; ctx.lineCap='round'; ctx.stroke();
-  }
-  function city(seed, x, base, width, height, color, windows=true) {
-    ctx.fillStyle=color;
-    ctx.beginPath(); ctx.moveTo(x,base); ctx.lineTo(x,base-height+12);
-    let step=0;
-    while (step<width) {
-      const notch=12+((seed*19+step*7)%29);
-      ctx.lineTo(x+step,base-height+(step===0?0:notch));
-      step+=18+((seed+step)%17);
-      ctx.lineTo(x+Math.min(step,width),base-height+(step===0?0:notch));
-    }
-    ctx.lineTo(x+width,base); ctx.closePath(); ctx.fill();
-    if(windows) {
-      for(let wx=x+9;wx<x+width-5;wx+=17) for(let wy=base-height+24;wy<base-15;wy+=25) {
-        const lit=((Math.floor(wx*3+wy*7+seed*31)%9)<3);
-        if(lit) { ctx.fillStyle=(seed%2?'#f6c875':'#9bc7e8'); ctx.globalAlpha=.3+((wx+wy)%4)*.1; ctx.fillRect(wx,wy,4,8); }
-      }
-      ctx.globalAlpha=1;
-    }
-  }
-  function drawBackground(t) {
-    const sky=ctx.createLinearGradient(0,0,0,H);
-    sky.addColorStop(0,'#101e38'); sky.addColorStop(.52,'#172a43'); sky.addColorStop(1,'#34445a');
-    ctx.fillStyle=sky; ctx.fillRect(0,0,W,H);
-    const glow=ctx.createRadialGradient(870,150,10,870,150,380);
-    glow.addColorStop(0,'#eb9d7930'); glow.addColorStop(1,'#eb9d7900'); ctx.fillStyle=glow; ctx.fillRect(450,0,750,500);
-    ctx.fillStyle='#f4e7c9'; ctx.globalAlpha=.86; ctx.beginPath(); ctx.arc(926,119,38,0,Math.PI*2); ctx.fill(); ctx.globalAlpha=1;
-    ctx.fillStyle='#17263c'; ctx.beginPath(); ctx.arc(943,105,36,0,Math.PI*2); ctx.fill();
-    for(let i=0;i<75;i++) {
-      const x=(i*173+31)%W, y=(i*83+21)%310;
-      ctx.globalAlpha=.25+((i*13)%7)*.07; ctx.fillStyle='#e7eefb'; ctx.fillRect(x,y,1.5,1.5);
-    }
-    ctx.globalAlpha=1;
-    const drift=(t*.025)%150;
-    for(let i=0;i<12;i++) city(i+2,i*120-drift,520,132,110+((i*47)%130),'#18283d');
-    for(let i=0;i<13;i++) city(i+17,i*105-((t*.055)%105),590,119,150+((i*31)%145),'#101d30');
-    // Rooftops framing the swing
-    city(41,-35,675,240,290,'#0b1728',false);
-    city(53,1000,675,260,350,'#0a1626',false);
-    ctx.fillStyle='#23374b'; ctx.fillRect(0,590,W,85);
-    // A few rooftop silhouettes and warm windows
-    for(let i=0;i<18;i++) {
-      const x=(i*79+14)%W; const y=610+(i*19)%54;
-      ctx.fillStyle=i%3===0?'#e7aa5c':'#52718b'; ctx.globalAlpha=.34; ctx.fillRect(x,y,3,7);
-    }
-    ctx.globalAlpha=1;
-    const haze=ctx.createLinearGradient(0,420,0,640); haze.addColorStop(0,'#91a7bd00'); haze.addColorStop(1,'#9babc51c'); ctx.fillStyle=haze; ctx.fillRect(0,400,W,260);
-  }
-  function spiderEmblem() {
-    ctx.save(); ctx.translate(0,-20); ctx.strokeStyle='#101b2a'; ctx.lineWidth=3; ctx.lineCap='round';
-    line(-2,-3,-12,-14,'#101b2a',3); line(-4,0,-17,-3,'#101b2a',3); line(-3,4,-13,15,'#101b2a',3);
-    line(2,-3,12,-14,'#101b2a',3); line(4,0,17,-3,'#101b2a',3); line(3,4,13,15,'#101b2a',3);
-    ctx.beginPath(); ctx.ellipse(0,0,4,8,0,0,Math.PI*2); ctx.fillStyle='#101b2a'; ctx.fill(); ctx.restore();
-  }
-  function drawHero(x,y,tilt,t) {
-    ctx.save(); ctx.translate(x,y); ctx.rotate(tilt);
-    // Thin cinematic rim light
-    ctx.shadowColor='#69bfff99'; ctx.shadowBlur=22;
-    // Web line hand
-    const armWave=Math.sin(t*2.7)*7;
-    line(-4,-37,-43,-94+armWave,'#d7e5f1',2.2);
-    ctx.shadowBlur=0;
-    // Legs in a tucked, airborne pose
-    line(-8,26,-32,58,'#b82232',17); line(-32,58,-57,68,'#b82232',15);
-    line(9,27,34,53,'#0b417f',18); line(34,53,53,47,'#c92b3a',15);
-    // Boot accents
-    line(-60,68,-49,70,'#111d2b',5); line(49,47,59,45,'#111d2b',5);
-    // Torso silhouette and blue suit
-    ctx.beginPath(); ctx.moveTo(-17,-42); ctx.quadraticCurveTo(-25,-20,-16,17); ctx.lineTo(-8,38); ctx.quadraticCurveTo(8,43,20,29); ctx.lineTo(22,-12); ctx.quadraticCurveTo(18,-36,12,-44); ctx.closePath();
-    const suit=ctx.createLinearGradient(-18,-35,20,35); suit.addColorStop(0,'#e9434b'); suit.addColorStop(.45,'#d92f3e'); suit.addColorStop(.46,'#145ba3'); suit.addColorStop(1,'#0b3268'); ctx.fillStyle=suit; ctx.fill();
-    ctx.strokeStyle='#101c2a'; ctx.lineWidth=2; ctx.stroke();
-    // Chest web arcs and spider mark
-    ctx.save(); ctx.beginPath(); ctx.rect(-19,-38,42,76); ctx.clip();
-    ctx.strokeStyle='#ff9b9d88'; ctx.lineWidth=.85;
-    for(let yy=-34;yy<5;yy+=10) { ctx.beginPath(); ctx.moveTo(-22,yy); ctx.quadraticCurveTo(0,yy+9,24,yy); ctx.stroke(); }
-    for(let xx=-24;xx<25;xx+=10) { ctx.beginPath(); ctx.moveTo(xx,-44); ctx.quadraticCurveTo(xx-7,-10,xx+5,9); ctx.stroke(); }
-    ctx.restore(); spiderEmblem();
-    // Arms: one reaching toward the web, one trailing behind
-    line(-13,-34,-29,-57,'#d83342',14); line(-29,-57,-43,-94+armWave,'#d83342',12);
-    line(14,-30,37,-12,'#12569b',15); line(37,-12,48,8,'#d83342',12);
-    // Gloves
-    ctx.fillStyle='#151f2c'; ctx.beginPath(); ctx.arc(-43,-94+armWave,6,0,Math.PI*2); ctx.fill();
-    // Neck and mask
-    ctx.fillStyle='#c92d3c'; roundedRect(-7,-51,14,15,5,'#c92d3c');
-    const head=ctx.createRadialGradient(-7,-76,2,0,-74,26); head.addColorStop(0,'#f14b53'); head.addColorStop(1,'#a8172b');
-    ctx.fillStyle=head; ctx.beginPath(); ctx.ellipse(0,-76,20,25,-.08,0,Math.PI*2); ctx.fill(); ctx.strokeStyle='#111d2b'; ctx.lineWidth=2; ctx.stroke();
-    // Mask web pattern
-    ctx.strokeStyle='#691928'; ctx.lineWidth=.8;
-    for(let a=-2;a<=2;a++) { ctx.beginPath(); ctx.moveTo(a*7,-98); ctx.lineTo(a*8,-55); ctx.stroke(); }
-    for(let yy=-91;yy<-60;yy+=8) { ctx.beginPath(); ctx.ellipse(0,yy,17-(Math.abs(yy+76)*.08),4,0,0,Math.PI*2); ctx.stroke(); }
-    // Expressive white lenses
-    ctx.fillStyle='#f2f4ee'; ctx.strokeStyle='#17202c'; ctx.lineWidth=2;
-    ctx.beginPath(); ctx.moveTo(-17,-81); ctx.quadraticCurveTo(-9,-87,-3,-80); ctx.lineTo(-6,-70); ctx.quadraticCurveTo(-13,-69,-17,-75); ctx.closePath(); ctx.fill(); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(17,-81); ctx.quadraticCurveTo(9,-87,3,-80); ctx.lineTo(6,-70); ctx.quadraticCurveTo(13,-69,17,-75); ctx.closePath(); ctx.fill(); ctx.stroke();
-    ctx.restore();
-  }
-  function drawWeb(anchorX,anchorY,handX,handY,t) {
-    ctx.save(); ctx.strokeStyle='#d9e8f4'; ctx.lineWidth=1.5; ctx.globalAlpha=.85;
-    ctx.beginPath(); ctx.moveTo(anchorX,anchorY); ctx.quadraticCurveTo(anchorX+14,anchorY+42,handX,handY); ctx.stroke();
-    // A subtle glint travelling along the strand
-    const p=(t*1.6)%1; const gx=anchorX+(handX-anchorX)*p, gy=anchorY+(handY-anchorY)*p;
-    ctx.fillStyle='#fff'; ctx.globalAlpha=.8; ctx.beginPath(); ctx.arc(gx,gy,2,0,Math.PI*2); ctx.fill(); ctx.restore();
-  }
-  function draw(t) {
-    const rect=canvas.getBoundingClientRect();
-    const dpr=Math.min(window.devicePixelRatio||1,2);
-    ctx.setTransform(canvas.width/W,0,0,canvas.height/H,0,0);
-    drawBackground(t);
-    // Foreground rooftop ledges add depth
-    ctx.fillStyle='#07111f'; ctx.beginPath(); ctx.moveTo(0,650); ctx.lineTo(0,611); ctx.lineTo(170,611); ctx.lineTo(202,638); ctx.lineTo(292,638); ctx.lineTo(320,675); ctx.lineTo(0,675); ctx.fill();
-    ctx.fillStyle='#0a1525'; ctx.beginPath(); ctx.moveTo(930,675); ctx.lineTo(965,625); ctx.lineTo(1077,625); ctx.lineTo(1104,601); ctx.lineTo(1200,601); ctx.lineTo(1200,675); ctx.fill();
-    const swing=Math.sin(t*1.05);
-    const x=705+swing*220;
-    const y=218+Math.cos(t*1.05)*82;
-    const tilt=.22+swing*.32;
-    const handX=x-43*Math.cos(tilt)-(-94+Math.sin(t*2.7)*7)*Math.sin(tilt);
-    const handY=y-43*Math.sin(tilt)+(-94+Math.sin(t*2.7)*7)*Math.cos(tilt);
-    drawWeb(822,12,handX,handY,t);
-    // Speed streaks behind the hero
-    ctx.globalAlpha=.16; ctx.strokeStyle='#d7e9ff'; ctx.lineWidth=2;
-    for(let i=0;i<5;i++){ const sy=y-50+i*25; ctx.beginPath(); ctx.moveTo(x-180-i*13,sy); ctx.lineTo(x-115-i*9,sy-7); ctx.stroke(); }
-    ctx.globalAlpha=1;
-    drawHero(x,y,tilt,t);
-    // Gentle vignette and film-like grain flecks
-    const vignette=ctx.createRadialGradient(W/2,H/2,170,W/2,H/2,760); vignette.addColorStop(0,'#00000000'); vignette.addColorStop(1,'#0207119c'); ctx.fillStyle=vignette; ctx.fillRect(0,0,W,H);
-    ctx.fillStyle='#ffffff'; ctx.globalAlpha=.035;
-    for(let i=0;i<45;i++){ const px=(i*277+Math.floor(t*9))%W, py=(i*149+Math.floor(t*13))%H; ctx.fillRect(px,py,1,1); }
-    ctx.globalAlpha=1;
-  }
-  function frame(now) {
-    if(!paused) draw((now-startedAt)/1000);
-    requestAnimationFrame(frame);
-  }
-  function setPaused(value) {
-    if(value===paused) return;
-    paused=value;
-    if(paused) pauseAt=performance.now();
-    else startedAt+=performance.now()-pauseAt;
-    motionLabel.textContent=paused?'Animation paused':'Animation playing';
-    toggle.setAttribute('aria-label',paused?'Play animation':'Pause animation');
-    toggle.title=paused?'Play animation':'Pause animation';
-    icon.innerHTML=paused?'<path d="M5 2.8v10.4c0 .6.7.9 1.2.6l7.5-5.2a.7.7 0 0 0 0-1.2l-7.5-5.2A.7.7 0 0 0 5 2.8Z"/>':'<path d="M4 3h3v10H4zm5 0h3v10H9z"/>';
-  }
-  toggle.addEventListener('click',()=>setPaused(!paused));
-  window.addEventListener('keydown',event=>{ if(event.code==='Space' && !['BUTTON','INPUT'].includes(document.activeElement.tagName)){ event.preventDefault(); setPaused(!paused); } });
-  if(paused) {
-    motionLabel.textContent='Animation paused';
-    toggle.setAttribute('aria-label','Play animation');
-    toggle.title='Play animation';
-    icon.innerHTML='<path d="M5 2.8v10.4c0 .6.7.9 1.2.6l7.5-5.2a.7.7 0 0 0 0-1.2l-7.5-5.2A.7.7 0 0 0 5 2.8Z"/>';
-  }
-  draw(0);
-  requestAnimationFrame(frame);
+  form.addEventListener('submit',e=>{e.preventDefault();sendMessage(input.value)});
+  function resizeInput(){input.style.height='auto';input.style.height=Math.min(input.scrollHeight,180)+'px'}
+  input.addEventListener('input',resizeInput);input.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();form.requestSubmit()}});
+  document.querySelectorAll('.suggestion').forEach(button=>button.addEventListener('click',()=>{input.value=button.textContent;form.requestSubmit()}));
+  document.getElementById('newChat').addEventListener('click',()=>{messages.replaceChildren();welcome.hidden=false;latestAnswer='';input.focus()});
+  document.getElementById('googleSearch').addEventListener('click',()=>{const query=input.value.trim()||latestAnswer;if(!query){notify('Type a question first, then choose Google Search.');input.focus();return}window.open('https://www.google.com/search?q='+encodeURIComponent(query),'_blank','noopener,noreferrer')});
+  const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+  const mic=document.getElementById('mic');
+  if(!SpeechRecognition){mic.addEventListener('click',()=>notify('Voice input is not supported in this browser. Try Chrome or Edge.'))}
+  else{const recognition=new SpeechRecognition();recognition.lang=navigator.language||'en-US';recognition.interimResults=false;recognition.onstart=()=>mic.classList.add('active');recognition.onend=()=>mic.classList.remove('active');recognition.onerror=()=>notify('Could not hear that. Check microphone permission and try again.');recognition.onresult=e=>{input.value=(input.value+' '+e.results[0][0].transcript).trim();resizeInput();input.focus()};mic.addEventListener('click',()=>{try{recognition.start()}catch(_){recognition.stop()}})}
+  document.getElementById('speak').addEventListener('click',()=>{if(!latestAnswer){notify('There is no answer to read aloud yet.');return}if(!('speechSynthesis'in window)){notify('Read aloud is not supported in this browser.');return}speechSynthesis.cancel();speechSynthesis.speak(new SpeechSynthesisUtterance(latestAnswer))});
 })();
 </script>
 </body>
